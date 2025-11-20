@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instituto Anjos do Leite | Cuidar e Transformar</title>
+    <meta name="description" content="Promovendo saúde, vínculo e acolhimento para mães e famílias.">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Fontes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Configuração de Cores -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        lilac: { main: '#BCA6E1', deep: '#8A78B7', dark: '#5a4b7a', light: '#F3EEFA' },
+                        blue: { baby: '#9CC8F2', light: '#E6F2FC' },
+                        gold: { main: '#D9A441', light: '#F4E5C4', hover: '#C28E2E' },
+                        text: { main: '#7A7A7A', dark: '#333333' }
+                    },
+                    fontFamily: {
+                        sans: ['Lato', 'sans-serif'],
+                        header: ['Montserrat', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
+                        'glow': '0 0 20px rgba(217, 164, 65, 0.6)',
+                        'card': '0 10px 30px -5px rgba(0, 0, 0, 0.1)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="text-text-main antialiased bg-slate-50 selection:bg-lilac-main selection:text-white relative">
+
+    <!-- LOADER -->
+    <div id="loader">
+        <div class="flex flex-col items-center animate-fade-in-up">
+            <img src="img/logo.png" alt="Anjos do Leite" class="w-32 md:w-40 mb-8 object-contain">
+            <div class="w-48 md:w-64 h-1 bg-gray-100 rounded-full overflow-hidden">
+                <div id="loader-bar" class="h-full bg-gold-main w-0 rounded-full"></div>
+            </div>
+            <p class="text-lilac-deep text-xs font-bold tracking-[0.2em] mt-4 uppercase opacity-60">Carregando</p>
+        </div>
+    </div>
+
+    <!-- MENU FLUTUANTE -->
+    <nav class="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
+        <div class="glass-nav rounded-full px-6 py-3 shadow-glass flex items-center justify-between w-full max-w-5xl transition-all duration-300">
+            <a href="#" class="block hover:opacity-80 transition-opacity">
+                <img src="img/logo.png" alt="Anjos do Leite" class="h-10 w-auto object-contain">
+            </a>
+
+            <ul class="hidden md:flex items-center gap-8 font-header text-sm font-semibold text-text-dark">
+                <li><a href="#quem-somos" class="hover:text-lilac-deep transition-colors">Quem Somos</a></li>
+                <li><a href="#projetos" class="hover:text-lilac-deep transition-colors">Projetos</a></li>
+                <li><a href="#como-apoiar" class="hover:text-lilac-deep transition-colors">Como Apoiar</a></li>
+                <li><a href="#diretoria" class="hover:text-lilac-deep transition-colors">Transparência</a></li>
+            </ul>
+
+            <a href="#contato" class="hidden md:flex btn-gold bg-gold-main text-white px-6 py-2 rounded-full font-bold text-sm items-center justify-center shadow-md">
+                Fale Conosco
+            </a>
+
+            <button id="mobile-menu-btn" class="md:hidden text-lilac-deep">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-0 bg-white z-40 transform translate-x-full transition-transform duration-300 pt-24 px-6 flex flex-col gap-6 md:hidden">
+        <a href="#quem-somos" class="text-xl font-header font-bold text-text-dark border-b pb-2 mobile-link">Quem Somos</a>
+        <a href="#projetos" class="text-xl font-header font-bold text-text-dark border-b pb-2 mobile-link">Projetos</a>
+        <a href="#como-apoiar" class="text-xl font-header font-bold text-text-dark border-b pb-2 mobile-link">Como Apoiar</a>
+        <a href="#diretoria" class="text-xl font-header font-bold text-text-dark border-b pb-2 mobile-link">Transparência</a>
+        <a href="#contato" class="text-xl font-header font-bold text-gold-main border-b pb-2 mobile-link">Contato</a>
+        <button id="close-mobile-menu" class="absolute top-6 right-6 text-text-dark">
+            <i data-lucide="x" width="32" height="32"></i>
+        </button>
+    </div>
+
+    <!-- HERO SECTION -->
+    <header class="relative w-full min-h-screen flex items-center justify-center pt-32 md:pt-40 pb-20 overflow-hidden">
+        <div class="absolute -top-20 -right-20 w-96 h-96 bg-lilac-main/20 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-lilac-light to-transparent z-0"></div>
+
+        <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center z-10 relative">
+            <div class="space-y-6 md:pr-10">
+                <div class="inline-flex items-center gap-2 bg-white/80 backdrop-blur px-3 py-1 rounded-full shadow-sm border border-gold-light">
+                    <span class="w-2 h-2 rounded-full bg-gold-main animate-pulse"></span>
+                    <span class="text-xs font-bold text-gold-main tracking-wide uppercase">ONG Sem fins lucrativos</span>
+                </div>
+                
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-header font-extrabold text-text-dark leading-tight">
+                    Cuidar desde<br>a <span class="text-lilac-deep">gestação</span>,<br>
+                    transformar para a <span class="text-gold-main relative inline-block">
+                        vida inteira
+                        <svg class="absolute w-full h-3 -bottom-1 left-0 text-gold-main/30" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="3" fill="none"/></svg>
+                    </span>.
+                </h1>
+
+                <p class="text-lg text-text-main leading-relaxed max-w-lg">
+                    Promovemos saúde, vínculo e acolhimento para mães e bebês através da educação em amamentação e primeira infância.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                    <a href="#como-apoiar" class="btn-gold bg-gold-main text-white px-8 py-4 rounded-full font-bold text-center shadow-glow flex items-center justify-center gap-2">
+                        Quero Apoiar
+                        <i data-lucide="heart" width="18"></i>
+                    </a>
+                    
+                    <a href="#quem-somos" class="px-8 py-4 rounded-full font-bold text-lilac-deep border-2 border-lilac-deep/20 hover:bg-lilac-light hover:scale-105 transition-all text-center flex items-center justify-center gap-2">
+                        Conheça Nossa História
+                        <i data-lucide="arrow-right" width="18"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="relative mt-10 md:mt-0">
+                <div class="absolute inset-0 bg-gold-main/10 rounded-[2rem] transform rotate-3 translate-x-4 translate-y-4"></div>
+                <img src="https://images.unsplash.com/photo-1555252333-9f8e92e65df9?q=80&w=2070&auto=format&fit=crop" alt="Mãe amamentando bebê com afeto" class="relative rounded-[2rem] shadow-2xl w-full object-cover h-[400px] md:h-[500px]">
+                
+                <div class="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-glass max-w-xs animate-[bounce_3s_infinite]">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-blue-baby/20 p-2 rounded-full text-blue-500">
+                            <i data-lucide="users" width="24"></i>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-bold text-text-dark">+25 Mil</p>
+                            <p class="text-xs text-text-main uppercase font-bold">Famílias Acolhidas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- QUEM SOMOS -->
+    <section id="quem-somos" class="py-24 bg-white relative">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-16 items-center mb-16">
+                <div class="relative order-2 md:order-1">
+                    <div class="absolute inset-0 bg-lilac-deep/10 rounded-[2rem] transform -rotate-2 -translate-x-2 translate-y-2"></div>
+                    <img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=1500&auto=format&fit=crop" alt="Enfermeira cuidando de bebê" class="relative rounded-[2rem] shadow-xl w-full object-cover h-[450px]">
+                </div>
+
+                <div class="order-1 md:order-2 space-y-8">
+                    <h2 class="text-3xl md:text-4xl font-header font-bold text-lilac-deep flex items-center gap-3">
+                        <i data-lucide="book-open-text" class="text-gold-main w-8 h-8"></i>
+                        Nossa História
+                    </h2>
+                    <div class="prose text-text-main leading-relaxed space-y-6 md:text-lg">
+                        <p>O Instituto Anjos do Leite nasceu do leite que nutre, da dor que cala e do propósito que transforma. Surgiu da escuta respeitosa de mães que queriam amamentar, mas se sentiam sozinhas.</p>
+                        <p>Eu sou <strong>Sandra Abreu</strong>, enfermeira com 26 anos de atuação e fundadora da Anjos do Leite. Ao ouvir mulheres, entendi que o cuidado não começa no peito, começa na gestação.</p>
+                        <blockquote class="border-l-4 border-gold-main pl-6 italic text-text-dark bg-gold-light/20 py-4 pr-4 rounded-r-lg text-base md:text-xl font-medium">
+                            "Ninguém deveria maternar sozinha. Quando falta apoio, o desamparo chega antes do bebê."
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-lilac-light p-8 rounded-2xl border border-lilac-main/20 hover:shadow-lg transition-shadow flex gap-4">
+                    <div class="bg-white p-3 rounded-full h-fit shadow-sm text-lilac-deep">
+                        <i data-lucide="target" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-header font-bold text-lilac-deep mb-3">Missão</h3>
+                        <p class="text-text-main text-base">Promover saúde, vínculo, cuidado e acolhimento para mães, bebês e famílias através da educação em amamentação.</p>
+                    </div>
+                </div>
+
+                <div class="bg-blue-light p-8 rounded-2xl border border-blue-baby/20 hover:shadow-lg transition-shadow flex gap-4">
+                    <div class="bg-white p-3 rounded-full h-fit shadow-sm text-blue-500">
+                        <i data-lucide="telescope" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-header font-bold text-blue-500 mb-3">Visão</h3>
+                        <p class="text-text-main text-base">Construir uma Baixada Santista onde nenhuma mulher materne sozinha e onde o começo da vida seja digno.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJETOS -->
+    <section id="projetos" class="py-24 bg-gradient-to-b from-lilac-light/30 to-white overflow-hidden">
+        <div class="container mx-auto px-6 mb-12 text-center">
+            <span class="text-gold-main font-bold tracking-widest uppercase text-sm">O Que Fazemos</span>
+            <h2 class="text-3xl md:text-4xl font-header font-bold text-text-dark mt-2">Projetos e Ações</h2>
+            <p class="text-text-main mt-4 max-w-2xl mx-auto">
+                Nossos pilares de atuação para transformar a realidade local.
+            </p>
+        </div>
+
+        <div class="relative w-full h-[420px] flex items-center justify-center">
+            <div class="carousel-mask-left hidden md:block"></div>
+            <div class="carousel-mask-right hidden md:block"></div>
+
+            <div class="carousel-container w-full px-4 md:px-0" id="project-carousel">
+                <div class="carousel-track" id="track">
+                    <!-- Cards do Carrossel -->
+                    <div class="min-w-[280px] w-[280px] h-[360px] bg-white rounded-3xl shadow-card border border-gray-100 group flex flex-col items-center text-center p-6 hover:-translate-y-2 transition-transform duration-300 select-none">
+                        <div class="w-20 h-20 bg-lilac-light rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                            <i data-lucide="users" class="text-lilac-deep w-10 h-10"></i>
+                        </div>
+                        <h3 class="text-xl font-header font-bold text-text-dark mb-2 leading-tight">Hora do Mamaço</h3>
+                        <div class="w-10 h-1 bg-gold-main rounded-full mb-3"></div>
+                        <p class="text-text-main text-sm leading-snug line-clamp-5">Evento anual de mobilização social que reúne mães amamentando simultaneamente.</p>
+                    </div>
+
+                    <div class="min-w-[280px] w-[280px] h-[360px] bg-white rounded-3xl shadow-card border border-gray-100 group flex flex-col items-center text-center p-6 hover:-translate-y-2 transition-transform duration-300 select-none">
+                        <div class="w-20 h-20 bg-blue-light rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                            <i data-lucide="baby" class="text-blue-500 w-10 h-10"></i>
+                        </div>
+                        <h3 class="text-xl font-header font-bold text-text-dark mb-2 leading-tight">Oficinas Educativas</h3>
+                        <div class="w-10 h-1 bg-blue-300 rounded-full mb-3"></div>
+                        <p class="text-text-main text-sm leading-snug line-clamp-5">Encontros presenciais e online para gestantes e famílias abordando cuidados com o recém-nascido.</p>
+                    </div>
+
+                    <div class="min-w-[280px] w-[280px] h-[360px] bg-white rounded-3xl shadow-card border border-gray-100 group flex flex-col items-center text-center p-6 hover:-translate-y-2 transition-transform duration-300 select-none">
+                        <div class="w-20 h-20 bg-gold-light/40 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                            <i data-lucide="graduation-cap" class="text-gold-hover w-10 h-10"></i>
+                        </div>
+                        <h3 class="text-xl font-header font-bold text-text-dark mb-2 leading-tight">Formação Técnica</h3>
+                        <div class="w-10 h-1 bg-gold-main rounded-full mb-3"></div>
+                        <p class="text-text-main text-sm leading-snug line-clamp-5">Cursos baseados em evidências científicas para capacitação contínua de profissionais da saúde.</p>
+                    </div>
+
+                    <div class="min-w-[280px] w-[280px] h-[360px] bg-white rounded-3xl shadow-card border border-gray-100 group flex flex-col items-center text-center p-6 hover:-translate-y-2 transition-transform duration-300 select-none">
+                        <div class="w-20 h-20 bg-lilac-light rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                            <i data-lucide="heart-handshake" class="text-lilac-deep w-10 h-10"></i>
+                        </div>
+                        <h3 class="text-xl font-header font-bold text-text-dark mb-2 leading-tight">Acolhimento</h3>
+                        <div class="w-10 h-1 bg-lilac-main rounded-full mb-3"></div>
+                        <p class="text-text-main text-sm leading-snug line-clamp-5">Atendimento humanizado a famílias em vulnerabilidade social, garantindo que o apoio chegue onde é mais necessário.</p>
+                    </div>
+
+                     <div class="min-w-[280px] w-[280px] h-[360px] bg-white rounded-3xl shadow-card border border-gray-100 group flex flex-col items-center text-center p-6 hover:-translate-y-2 transition-transform duration-300 select-none">
+                        <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                            <i data-lucide="megaphone" class="text-gray-600 w-10 h-10"></i>
+                        </div>
+                        <h3 class="text-xl font-header font-bold text-text-dark mb-2 leading-tight">Advocacy</h3>
+                        <div class="w-10 h-1 bg-gray-400 rounded-full mb-3"></div>
+                        <p class="text-text-main text-sm leading-snug line-clamp-5">Defesa de direitos, atuação junto a secretarias e instituições para políticas públicas de proteção à maternidade.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- COMO APOIAR -->
+    <section id="como-apoiar" class="py-24 bg-lilac-deep text-white relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-header font-bold text-gold-main">Faça Parte da Transformação</h2>
+                <p class="mt-4 text-lilac-light max-w-2xl mx-auto text-lg">O cuidado precisa ser coletivo. Veja como você pode contribuir.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Card Empresas (Com Infos e Popup) -->
+                <div class="bg-white/10 backdrop-blur border border-white/20 p-8 rounded-2xl text-center hover:bg-white/20 transition-colors group flex flex-col items-center justify-between">
+                    <div class="flex flex-col items-center w-full">
+                        <i data-lucide="building-2" class="text-gold-main w-12 h-12 mx-auto mb-4 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="text-xl font-bold mb-2">Empresas</h3>
+                        <p class="text-sm text-lilac-light mb-6">Seja um parceiro institucional e apoie nossa causa.</p>
+                        
+                        <!-- INFOS ADICIONADAS -->
+                        <ul class="text-sm text-lilac-light/80 space-y-2 mb-4 text-left inline-block w-fit mx-auto">
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-gold-main"></i> Responsabilidade Social</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-gold-main"></i> Incentivos Fiscais</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-gold-main"></i> Fortalecimento de Marca</li>
+                        </ul>
+                    </div>
+                    <button onclick="openModal('empresa')" class="btn-gold bg-white text-lilac-deep px-6 py-2 rounded-full font-bold text-sm hover:bg-gold-main hover:text-white transition-colors w-full block mt-4">Saiba mais</button>
+                </div>
+
+                <!-- Card Pessoa Física (QR Code) -->
+                <div class="bg-white p-8 rounded-2xl text-center transform md:-translate-y-6 shadow-2xl relative flex flex-col items-center">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gold-main text-white text-xs font-bold px-4 py-1 rounded-full shadow-md">MAIS IMPORTANTE</div>
+                    <i data-lucide="gift" class="text-lilac-deep w-12 h-12 mx-auto mb-4"></i>
+                    <h3 class="text-xl font-bold text-text-dark mb-2">Doação Pessoa Física</h3>
+                    <p class="text-sm text-text-main mb-6">Qualquer valor ajuda.</p>
+                    <div class="bg-gray-100 p-2 rounded-lg mb-2 inline-block">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=pix@institutoanjosdoleite.org.br" alt="QR Code" class="w-28 h-28 mix-blend-multiply opacity-80">
+                    </div>
+                    <p class="text-xs text-text-main font-mono mt-2">Chave PIX (Exemplo)</p>
+                </div>
+
+                <!-- Card Voluntariado (Com Infos e Popup) -->
+                <div class="bg-white/10 backdrop-blur border border-white/20 p-8 rounded-2xl text-center hover:bg-white/20 transition-colors group flex flex-col items-center justify-between">
+                    <div class="flex flex-col items-center w-full">
+                        <i data-lucide="hand-heart" class="text-gold-main w-12 h-12 mx-auto mb-4 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="text-xl font-bold mb-2">Voluntariado</h3>
+                        <p class="text-sm text-lilac-light mb-6">Doe seu tempo e talento. Precisamos de você.</p>
+
+                        <!-- INFOS ADICIONADAS -->
+                         <ul class="text-sm text-lilac-light/80 space-y-2 mb-4 text-left inline-block w-fit mx-auto">
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-gold-main"></i> Apoio em Eventos</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-gold-main"></i> Profissionais de Saúde</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-gold-main"></i> Suporte Administrativo</li>
+                        </ul>
+                    </div>
+                    <button onclick="openModal('voluntario')" class="btn-gold bg-white text-lilac-deep px-6 py-2 rounded-full font-bold text-sm hover:bg-gold-main hover:text-white transition-colors w-full block mt-4">Inscreva-se</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DIRETORIA -->
+    <section id="diretoria" class="py-20 bg-slate-50">
+        <div class="container mx-auto px-6">
+            <div class="flex items-center justify-center gap-2 mb-10">
+                <i data-lucide="shield-check" class="text-lilac-main"></i>
+                <h2 class="text-2xl font-header font-bold text-text-dark uppercase tracking-wide">Transparência</h2>
+            </div>
+
+            <div class="max-w-5xl mx-auto bg-white rounded-3xl shadow-sm overflow-hidden flex flex-col md:flex-row">
+                <div class="md:w-1/3 relative h-64 md:h-auto">
+                     <div class="absolute inset-0 bg-lilac-deep/30 z-10"></div>
+                    <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover absolute inset-0" alt="Equipe unida">
+                    <div class="absolute bottom-6 left-6 z-20 text-white">
+                         <h4 class="font-header font-bold text-xl">Nossa Governança</h4>
+                         <p class="text-sm opacity-90">Ética e seriedade</p>
+                    </div>
+                </div>
+
+                <div class="md:w-2/3 p-8 md:p-12 grid md:grid-cols-2 gap-8">
+                    <div class="border-l-4 border-lilac-deep pl-6">
+                        <h3 class="text-lg font-bold text-lilac-deep mb-4">Conselho Diretor</h3>
+                        <ul class="space-y-3 text-sm">
+                            <li><span class="font-bold text-text-dark">Sandra Abreu da Silva</span> <br><span class="text-gold-main text-xs font-semibold uppercase">Presidente</span></li>
+                            <li><span class="font-bold text-text-dark">Roseane de Souza</span> <br><span class="text-gold-main text-xs font-semibold uppercase">Secretária</span></li>
+                            <li><span class="font-bold text-text-dark">Maria Rosa Venade</span> <br><span class="text-gold-main text-xs font-semibold uppercase">Tesoureira</span></li>
+                        </ul>
+                    </div>
+                    <div class="border-l-4 border-blue-baby pl-6">
+                        <h3 class="text-lg font-bold text-blue-500 mb-4">Conselho Fiscal</h3>
+                        <ul class="space-y-3 text-sm">
+                            <li><span class="font-bold text-text-dark">Giulia Waismann</span> <br><span class="text-blue-400 text-xs font-semibold uppercase">Titular</span></li>
+                            <li><span class="font-bold text-text-dark">Aline Cristina</span> <br><span class="text-blue-400 text-xs font-semibold uppercase">Suplente</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="contato" class="bg-lilac-dark text-white pt-20 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-10 mb-16">
+                <div class="col-span-1 md:col-span-1">
+                    <a href="#" class="block mb-6">
+                        <img src="img/logo.png" alt="Anjos do Leite" class="h-12 w-auto object-contain brightness-0 invert opacity-90 hover:opacity-100 transition-opacity">
+                    </a>
+                    <p class="text-lilac-light text-sm leading-relaxed opacity-90">
+                        Transformando vidas desde a gestação. Uma organização séria comprometida com o futuro da primeira infância.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-header font-bold text-lg mb-6 text-gold-main">Menu</h4>
+                    <ul class="space-y-3 text-sm text-lilac-light">
+                        <li><a href="#quem-somos" class="hover:text-white transition-colors">Nossa História</a></li>
+                        <li><a href="#projetos" class="hover:text-white transition-colors">Projetos Sociais</a></li>
+                        <li><a href="#transparencia" class="hover:text-white transition-colors">Prestação de Contas</a></li>
+                        <li><a href="#voluntariado" class="hover:text-white transition-colors">Seja Voluntário</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-header font-bold text-lg mb-6 text-gold-main">Contato</h4>
+                    <ul class="space-y-4 text-sm text-lilac-light">
+                        <li class="flex items-start gap-3"><i data-lucide="map-pin" class="w-5 h-5 mt-0.5 text-gold-main"></i><span>Santos - SP<br>Atuação em toda Baixada Santista</span></li>
+                        <li class="flex items-center gap-3"><i data-lucide="mail" class="w-5 h-5 text-gold-main"></i> institutoanjosdoleite@gmail.com</li>
+                        <li class="flex items-center gap-3"><i data-lucide="phone" class="w-5 h-5 text-gold-main"></i> (13) 99171-3975</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-header font-bold text-lg mb-6 text-gold-main">Fique por dentro</h4>
+                    <p class="text-xs text-lilac-light mb-4">Receba novidades sobre nossos eventos e ações.</p>
+                    <form class="flex flex-col gap-3">
+                        <input type="email" placeholder="Seu e-mail" class="bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-gold-main text-white placeholder-lilac-light/50">
+                        <button class="btn-gold bg-gold-main text-white font-bold text-sm py-2 rounded-lg hover:bg-white hover:text-gold-main transition-colors">Inscrever-se</button>
+                    </form>
+                    <div class="flex gap-4 mt-6">
+                        <a href="#" class="bg-white/10 p-2 rounded-full hover:bg-gold-main hover:text-white transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                        <a href="#" class="bg-white/10 p-2 rounded-full hover:bg-gold-main hover:text-white transition-colors"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                        <a href="https://wa.me/5513991713975" class="bg-white/10 p-2 rounded-full hover:bg-green-500 hover:text-white transition-colors"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-lilac-light/60">
+                <p>&copy; 2024 Instituto Anjos do Leite. Todos os direitos reservados.</p>
+                <div class="flex items-center gap-4">
+                     <a href="https://wa.me/5511964956563?text=Olá,%20gostaria%20de%20realizar%20um%20orçamento" target="_blank" class="hover:text-gold-main transition-colors font-bold tracking-wide text-white/80 hover:text-white">
+                        Desenvolvido por FUTURADESIGN
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL EMPRESAS -->
+    <div id="modal-empresa" class="fixed inset-0 z-[60] hidden flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeModal('empresa')"></div>
+        <div class="bg-white rounded-2xl p-8 w-full max-w-md mx-4 relative shadow-2xl animate-scale-up">
+            <button onclick="closeModal('empresa')" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors">
+                <i data-lucide="x"></i>
+            </button>
+            
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-lilac-light rounded-full flex items-center justify-center mx-auto mb-3 text-lilac-deep">
+                    <i data-lucide="building-2"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-text-dark">Cadastro Empresa</h3>
+                <p class="text-sm text-text-main">Preencha para iniciarmos uma parceria.</p>
+            </div>
+
+            <form onsubmit="sendWhatsappEmpresa(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-text-main uppercase mb-1">Nome da Empresa</label>
+                    <input type="text" id="empresa-nome" required class="w-full border border-gray-200 rounded-lg px-4 py-2 focus:outline-none focus:border-gold-main">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-text-main uppercase mb-1">Responsável</label>
+                    <input type="text" id="empresa-responsavel" required class="w-full border border-gray-200 rounded-lg px-4 py-2 focus:outline-none focus:border-gold-main">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-text-main uppercase mb-1">Tipo de Apoio</label>
+                    <select id="empresa-tipo" class="w-full border border-gray-200 rounded-lg px-4 py-2 focus:outline-none focus:border-gold-main bg-white">
+                        <option value="Financeiro">Financeiro</option>
+                        <option value="Serviços">Serviços</option>
+                        <option value="Produtos">Produtos</option>
+                        <option value="Outro">Outro</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-gold-main text-white font-bold py-3 rounded-lg hover:bg-gold-hover transition-colors flex items-center justify-center gap-2">
+                    Enviar no WhatsApp <i data-lucide="send" width="16"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL VOLUNTARIADO -->
+    <div id="modal-voluntario" class="fixed inset-0 z-[60] hidden flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeModal('voluntario')"></div>
+        <div class="bg-white rounded-2xl p-8 w-full max-w-md mx-4 relative shadow-2xl animate-scale-up">
+            <button onclick="closeModal('voluntario')" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors">
+                <i data-lucide="x"></i>
+            </button>
+            
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-blue-light rounded-full flex items-center justify-center mx-auto mb-3 text-blue-500">
+                    <i data-lucide="hand-heart"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-text-dark">Seja Voluntário</h3>
+                <p class="text-sm text-text-main">Junte-se a nós nessa missão.</p>
+            </div>
+
+            <form onsubmit="sendWhatsappVoluntario(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-text-main uppercase mb-1">Nome Completo</label>
+                    <input type="text" id="voluntario-nome" required class="w-full border border-gray-200 rounded-lg px-4 py-2 focus:outline-none focus:border-gold-main">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-text-main uppercase mb-1">Área de Atuação</label>
+                    <input type="text" id="voluntario-area" placeholder="Ex: Enfermagem, Marketing, Apoio..." required class="w-full border border-gray-200 rounded-lg px-4 py-2 focus:outline-none focus:border-gold-main">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-text-main uppercase mb-1">Disponibilidade</label>
+                    <select id="voluntario-tempo" class="w-full border border-gray-200 rounded-lg px-4 py-2 focus:outline-none focus:border-gold-main bg-white">
+                        <option value="Semanal">Semanal</option>
+                        <option value="Quinzenal">Quinzenal</option>
+                        <option value="Eventual">Eventual (Eventos)</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-lilac-main text-white font-bold py-3 rounded-lg hover:bg-lilac-deep transition-colors flex items-center justify-center gap-2">
+                    Enviar no WhatsApp <i data-lucide="send" width="16"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

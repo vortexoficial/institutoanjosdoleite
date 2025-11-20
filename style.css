@@ -1,0 +1,114 @@
+/* style.css */
+
+/* --- RESET E BASICS --- */
+body { overflow-x: hidden; }
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f8f8f8; }
+::-webkit-scrollbar-thumb { background: #BCA6E1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #8A78B7; }
+
+/* --- ANIMAÇÃO FADE-IN-UP (Para o Loader) --- */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 20px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+.animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* --- LOADER --- */
+#loader {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: white;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transition: opacity 0.8s ease-out, visibility 0.8s; /* Fade Out Suave */
+}
+
+#loader-bar {
+    transition: width 1.5s ease-in-out; /* Animação da barra enchendo */
+}
+
+/* --- BOTÃO GOLD (SHEEN MAIS LENTO: 6s) --- */
+.btn-gold {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 1;
+}
+
+.btn-gold::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.8), transparent);
+    transform: skewX(-25deg);
+    /* ANIMAÇÃO MAIS LENTA (6s) */
+    animation: shine 6s infinite;
+    pointer-events: none;
+    z-index: 2;
+}
+
+@keyframes shine {
+    0% { left: -100%; }
+    20% { left: 200%; }
+    100% { left: 200%; }
+}
+
+.btn-gold:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(217, 164, 65, 0.5);
+}
+
+/* --- MENU GLASS --- */
+.glass-nav {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+/* --- CARROSSEL --- */
+.carousel-container {
+    overflow: hidden;
+    position: relative;
+    cursor: grab;
+    touch-action: pan-y;
+}
+.carousel-container:active { cursor: grabbing; }
+
+.carousel-track {
+    display: flex;
+    gap: 2rem;
+    width: max-content;
+    padding: 2rem 1rem;
+    align-items: center;
+}
+
+.carousel-mask-left {
+    position: absolute; left: 0; top: 0; bottom: 0; width: 120px;
+    background: linear-gradient(to right, #fcfcfe, transparent);
+    z-index: 10; pointer-events: none;
+}
+.carousel-mask-right {
+    position: absolute; right: 0; top: 0; bottom: 0; width: 120px;
+    background: linear-gradient(to left, #ffffff, transparent);
+    z-index: 10; pointer-events: none;
+}
+
+h1, h2, h3, h4 { font-family: 'Montserrat', sans-serif; }
+p, span, a, li { font-family: 'Lato', sans-serif; }

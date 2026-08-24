@@ -136,49 +136,132 @@
 <!-- ============================================================
      NOSSA HISTÓRIA
      ============================================================ -->
-<section class="secao" id="historia">
-  <div class="container historia__grade">
-    <div class="historia__foto" data-anima="esquerda">
-      <img src="/assets/img/historia.svg" data-img="historia" width="1000" height="1250"
-           alt="Atendimento do Instituto Anjos do Leite ao longo dos anos" loading="lazy">
-    </div>
+<section class="secao historia" id="historia">
+  <div class="container">
 
-    <div class="historia__texto">
-      <div class="cabecalho-secao" data-anima="cima">
+    <!-- Abertura: a frase de impacto e o contexto lado a lado -->
+    <div class="historia__abertura">
+      <div data-anima="cima">
         <p class="etiqueta">Nossa história</p>
-        <h2>Antes mesmo de existir como Instituto, já existia uma missão.</h2>
+        <h2>
+          Antes mesmo de existir<br>
+          como Instituto, já existia<br>
+          uma <em>missão</em>.
+        </h2>
       </div>
 
-      <p data-anima="cima">
+      <p class="historia__lead" data-anima="cima">
         Durante 28 anos de atuação na enfermagem e mais de duas décadas dedicadas ao
         aleitamento materno, milhares de mães cruzaram nosso caminho. Cada atendimento
-        revelou uma realidade comum: muitas mulheres desejavam amamentar, mas enfrentavam
-        esse desafio sem informação, apoio ou acolhimento.
-      </p>
-
-      <p data-anima="cima">
-        Foi dessa experiência que nasceu a Anjos do Leite e, posteriormente, o
-        <span class="destaque">Instituto Anjos do Leite de Apoio à Amamentação e à Primeira Infância</span>.
-      </p>
-
-      <p data-anima="cima">
-        Hoje o Instituto desenvolve projetos voltados à promoção da amamentação, da primeira
-        infância, da educação em saúde, da capacitação de profissionais e do fortalecimento
-        das famílias, acreditando que investir no começo da vida é transformar toda a sociedade.
-      </p>
-
-      <blockquote class="historia__citacao" data-anima="cima">
-        Acredito que toda mãe merece ser acolhida, toda família merece apoio e toda criança
-        merece um começo de vida saudável.
-      </blockquote>
-
-      <p style="margin-top:1.75rem" data-anima="cima">
-        <a class="link-seta" href="/fundadora.html">
-          Conheça Sandra Abreu, fundadora e presidente
-          <svg aria-hidden="true"><use href="#i-arrow-right"/></svg>
-        </a>
+        revelou uma realidade comum: <strong>muitas mulheres desejavam amamentar, mas
+        enfrentavam esse desafio sem informação, apoio ou acolhimento.</strong>
       </p>
     </div>
+
+    <!-- Faixa panorâmica -->
+    <figure class="historia__faixa" data-anima="cima">
+      <img src="/assets/img/historia.svg" data-img="historia" width="1800" height="760"
+           alt="Atendimento do Instituto Anjos do Leite" loading="lazy">
+      <figcaption>Cada atendimento é uma família que passa a ter a quem recorrer.</figcaption>
+    </figure>
+
+    <!-- Trajetória -->
+    <div class="trilha" id="trilha">
+      <span class="trilha__linha" aria-hidden="true">
+        <span class="trilha__progresso" id="trilhaProgresso"></span>
+      </span>
+
+      <ol class="trilha__marcos">
+        <li class="marco" data-passo>
+          <span class="marco__ano">1998</span>
+          <span class="marco__ponto" aria-hidden="true"></span>
+          <div class="marco__corpo">
+            <h3>Começa o caminho na saúde</h3>
+            <p>
+              O primeiro passo vem como auxiliar de enfermagem, depois como técnica.
+              Era o início de 28 anos dedicados ao cuidado materno-infantil.
+            </p>
+          </div>
+        </li>
+
+        <li class="marco" data-passo>
+          <span class="marco__ano">2006</span>
+          <span class="marco__ponto" aria-hidden="true"></span>
+          <div class="marco__corpo">
+            <h3>Enfermeira formada, causa definida</h3>
+            <p>
+              A graduação em Enfermagem consolida a carreira e aponta a direção: o
+              aleitamento materno deixa de ser parte do trabalho e passa a ser o trabalho.
+            </p>
+          </div>
+        </li>
+
+        <li class="marco" data-passo>
+          <span class="marco__ano">Anos 2000</span>
+          <span class="marco__ponto" aria-hidden="true"></span>
+          <div class="marco__corpo">
+            <h3>Nasce a assessoria em amamentação</h3>
+            <p>
+              Com o título de Especialista em Aleitamento Materno vem o pioneirismo na
+              Assessoria Especializada em Amamentação da Baixada Santista. Mais de 27 mil
+              atendimentos depois, a conta que importa não é essa: é a de quantas famílias
+              deixaram de enfrentar isso sozinhas.
+            </p>
+          </div>
+        </li>
+
+        <li class="marco" data-passo>
+          <span class="marco__ano">2012</span>
+          <span class="marco__ponto" aria-hidden="true"></span>
+          <div class="marco__corpo">
+            <h3>A causa vai para a rua</h3>
+            <p>
+              Começa a participação na organização da Hora do Mamaço Santos e, desde 2022,
+              a coordenação do movimento. O que era atendimento individual vira mobilização
+              pública pelo direito de amamentar.
+            </p>
+          </div>
+        </li>
+
+        <li class="marco marco--destaque" data-passo>
+          <span class="marco__ano">Hoje</span>
+          <span class="marco__ponto" aria-hidden="true"></span>
+          <div class="marco__corpo">
+            <h3>O Instituto Anjos do Leite</h3>
+            <p>
+              Foi dessa experiência que nasceu a Anjos do Leite e, depois, o
+              <strong>Instituto Anjos do Leite de Apoio à Amamentação e à Primeira Infância</strong>.
+              Hoje o Instituto desenvolve projetos de promoção da amamentação, da primeira
+              infância, da educação em saúde, da capacitação de profissionais e do
+              fortalecimento das famílias, acreditando que investir no começo da vida é
+              transformar toda a sociedade.
+            </p>
+            <a class="link-seta" href="/projetos.html">
+              Ver os projetos em andamento
+              <svg aria-hidden="true"><use href="#i-arrow-right"/></svg>
+            </a>
+          </div>
+        </li>
+      </ol>
+    </div>
+
+    <!-- Fechamento -->
+    <figure class="assinatura" data-anima="cima">
+      <svg class="assinatura__aspas" aria-hidden="true"><use href="#i-quote"/></svg>
+      <blockquote>
+        Acredito que toda mãe merece ser acolhida, toda família merece apoio e toda
+        criança merece um começo de vida saudável.
+      </blockquote>
+      <figcaption>
+        <strong>Sandra Abreu</strong>
+        <span>Fundadora e presidente do Instituto</span>
+        <a class="link-seta" href="/fundadora.html">
+          Conheça a trajetória completa
+          <svg aria-hidden="true"><use href="#i-arrow-right"/></svg>
+        </a>
+      </figcaption>
+    </figure>
+
   </div>
 </section>
 

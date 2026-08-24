@@ -87,7 +87,7 @@ const ESPACOS = [
   { arquivo: "hero-5", largura: 1600, altura: 1100, titulo: "Ações sociais", legenda: "O Instituto na comunidade" },
 
   // História e fundadora
-  { arquivo: "historia", largura: 1000, altura: 1250, titulo: "Nossa história", legenda: "Atendimento ao longo dos anos" },
+  { arquivo: "historia", largura: 1800, altura: 760, titulo: "Nossa história", legenda: "Foto panorâmica: atendimento ou Hora do Mamaço" },
   { arquivo: "fundadora", largura: 1000, altura: 1250, titulo: "Sandra Abreu", legenda: "Fundadora e presidente" },
 
   // Projetos

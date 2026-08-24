@@ -177,6 +177,12 @@
       el.style.opacity = "1";
       el.style.transform = "none";
     });
+    // a trajetória entra pronta: trilho cheio e todos os marcos acesos
+    var barraTrilha = document.getElementById("trilhaProgresso");
+    if (barraTrilha) barraTrilha.style.height = "100%";
+    document.querySelectorAll("[data-passo]").forEach(function (p) {
+      p.classList.add("ativo");
+    });
     mostrarContadores();
     return;
   }
@@ -295,6 +301,76 @@
   });
 
   /* ============================================================
+     4b. TRAJETÓRIA
+     Trilho que se preenche conforme a página rola e marcos que
+     acendem ao entrar na tela. Mesma mecânica da linha do tempo do
+     Central Dente, que já se provou em produção.
+     ============================================================ */
+
+  var trilha = document.getElementById("trilha");
+  if (trilha) {
+    var progresso = document.getElementById("trilhaProgresso");
+    var passos = trilha.querySelectorAll("[data-passo]");
+    var linha = trilha.querySelector(".trilha__linha");
+
+    /* A linha termina no centro do último ponto, e não no fim do
+       bloco: sobra de trilho depois do último marco dá impressão de
+       conteúdo faltando. Se este cálculo falhar, o CSS já deixa a
+       linha inteira, então nada quebra. */
+    function ajustarFimDaLinha() {
+      var ultimo = trilha.querySelector(".marco:last-child .marco__ponto");
+      if (!ultimo || !linha) return;
+      // volta ao estado do CSS antes de medir, senão a medida anterior
+      // contamina a nova
+      linha.style.height = "";
+      linha.style.bottom = "";
+      var topo = linha.getBoundingClientRect().top;
+      var centro = ultimo.getBoundingClientRect().top + ultimo.offsetHeight / 2;
+      linha.style.bottom = "auto";
+      linha.style.height = Math.max(0, centro - topo) + "px";
+    }
+
+    // refreshInit roda antes de o ScrollTrigger recalcular posições,
+    // inclusive a cada redimensionamento: é o lugar certo para mexer
+    // no layout sem cair em laço de refresh
+    ScrollTrigger.addEventListener("refreshInit", ajustarFimDaLinha);
+    ajustarFimDaLinha();
+
+    gsap.fromTo(
+      progresso,
+      { height: "0%" },
+      {
+        height: "100%",
+        ease: "none",
+        scrollTrigger: {
+          trigger: trilha,
+          start: "top 62%",
+          end: "bottom 78%",
+          scrub: 0.6
+        }
+      }
+    );
+
+    passos.forEach(function (passo) {
+      ScrollTrigger.create({
+        trigger: passo,
+        start: "top 74%",
+        onEnter: function () { passo.classList.add("ativo"); },
+        onLeaveBack: function () { passo.classList.remove("ativo"); }
+      });
+
+      gsap.from(passo.querySelector(".marco__corpo"), {
+        opacity: 0,
+        x: window.innerWidth > 767 ? 28 : 0,
+        y: window.innerWidth > 767 ? 0 : 22,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: { trigger: passo, start: "top 86%", once: true }
+      });
+    });
+  }
+
+  /* ============================================================
      5. CONTADORES
      ============================================================ */
 
@@ -338,7 +414,7 @@
   });
 
   // as fotos das seções ganham um respiro ao rolar
-  gsap.utils.toArray(".historia__foto img").forEach(function (img) {
+  gsap.utils.toArray(".historia__faixa img").forEach(function (img) {
     gsap.fromTo(
       img,
       { scale: 1.12 },

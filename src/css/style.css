@@ -875,49 +875,222 @@ ul, ol { list-style: none; padding: 0; }
    HISTÓRIA
    ============================================================ */
 
-.historia__grade {
+/* ---------- Abertura editorial ----------
+   Título e contexto lado a lado, sem foto no meio: a foto vem
+   depois, em faixa larga, e a leitura começa pelo texto. */
+
+.historia__abertura {
   display: grid;
-  gap: clamp(2.5rem, 1.5rem + 4vw, 4.5rem);
-  align-items: center;
+  gap: clamp(1.25rem, 1rem + 2vw, 3rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 1.5rem + 2vw, 3rem);
 }
 @media (min-width: 900px) {
-  .historia__grade { grid-template-columns: 0.85fr 1fr; }
+  .historia__abertura { grid-template-columns: 1fr 1fr; }
 }
 
-.historia__foto {
+.historia__abertura h2 {
+  font-size: var(--t-h2);
+  letter-spacing: -0.015em;
+}
+.historia__abertura h2 em {
+  font-style: normal;
+  color: var(--roxo);
+}
+
+.historia__lead {
+  font-size: var(--t-corpo-g);
+  color: var(--texto-medio);
+  border-left: 2px solid var(--roxo-linha);
+  padding-left: clamp(1rem, 2vw, 1.75rem);
+}
+.historia__lead strong { color: var(--texto); font-weight: 700; }
+
+/* ---------- Faixa panorâmica ---------- */
+
+.historia__faixa {
   position: relative;
+  margin: 0 0 clamp(2.5rem, 2rem + 3vw, 4.5rem);
   border-radius: var(--raio-g);
   overflow: hidden;
   box-shadow: var(--sombra-alta);
-  aspect-ratio: 4 / 5;
+  background: var(--roxo-escuro);
+  aspect-ratio: 16 / 9;
 }
-.historia__foto img {
-  width: 100%; height: 100%;
+@media (min-width: 768px) {
+  .historia__faixa { aspect-ratio: 21 / 8; }
+}
+.historia__faixa img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
-
-.historia__texto p + p { margin-top: 1.15rem; }
-.historia__texto p {
-  color: var(--texto-medio);
-  font-size: var(--t-corpo-g);
-}
-.historia__texto .destaque {
-  color: var(--texto);
-  font-weight: 700;
-}
-
-.historia__citacao {
-  margin-top: 2rem;
-  padding: 1.5rem 1.75rem;
-  border-left: 4px solid var(--ambar);
-  background: var(--roxo-suave);
-  border-radius: 0 var(--raio) var(--raio) 0;
+.historia__faixa figcaption {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 3rem clamp(1.25rem, 3vw, 2.25rem) clamp(1rem, 2vw, 1.5rem);
+  background: linear-gradient(to top, rgba(46, 12, 70, 0.82), transparent);
+  color: #fff;
   font-family: var(--fonte-titulo);
-  font-size: clamp(1rem, 0.95rem + 0.4vw, 1.15rem);
+  font-size: clamp(0.85rem, 0.8rem + 0.25vw, 1rem);
   font-weight: 600;
-  font-style: italic;
-  color: var(--roxo-escuro);
 }
+
+/* ---------- Trajetória ----------
+   Mesma mecânica da linha do tempo do Central Dente (trilho que
+   preenche ao rolar, marcador que acende), com composição própria:
+   o ano ocupa uma coluna à esquerda e o texto respira sem caixa. */
+
+.trilha {
+  --coluna-ano: clamp(76px, 11vw, 132px);
+  --coluna-trilho: clamp(30px, 4vw, 48px);
+  position: relative;
+  max-width: 940px;
+}
+
+.trilha__linha {
+  position: absolute;
+  top: 0.75rem;
+  bottom: 0.75rem;
+  left: calc(var(--coluna-ano) + var(--coluna-trilho) / 2 - 1px);
+  width: 2px;
+  background: var(--roxo-linha);
+  border-radius: 2px;
+}
+.trilha__progresso {
+  display: block;
+  width: 100%;
+  height: 0;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--roxo) 0%, var(--ambar) 100%);
+}
+
+.marco {
+  display: grid;
+  grid-template-columns: var(--coluna-ano) var(--coluna-trilho) 1fr;
+  grid-template-areas: "ano ponto corpo";
+  align-items: start;
+}
+.marco + .marco { margin-top: clamp(1.75rem, 1.25rem + 2vw, 3rem); }
+
+.marco__ano {
+  grid-area: ano;
+  text-align: right;
+  padding-top: 0.15rem;
+  font-family: var(--fonte-titulo);
+  font-size: clamp(1rem, 0.9rem + 0.6vw, 1.5rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--texto-claro);
+  transition: color 0.45s ease;
+}
+
+.marco__ponto {
+  grid-area: ponto;
+  justify-self: center;
+  margin-top: 0.45rem;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid var(--roxo-linha);
+  transition: border-color 0.45s ease, box-shadow 0.45s ease, transform 0.45s ease;
+}
+
+/* Estado aceso: chega junto com o preenchimento do trilho */
+.marco.ativo .marco__ano { color: var(--roxo); }
+.marco.ativo .marco__ponto {
+  border-color: var(--ambar);
+  box-shadow: 0 0 0 6px rgba(251, 185, 33, 0.18);
+  transform: scale(1.12);
+}
+
+.marco__corpo {
+  grid-area: corpo;
+  padding-left: clamp(0.5rem, 1.5vw, 1.25rem);
+}
+.marco__corpo h3 {
+  font-size: clamp(1.05rem, 1rem + 0.45vw, 1.3rem);
+  margin-bottom: 0.5rem;
+}
+.marco__corpo p { color: var(--texto-medio); }
+.marco__corpo strong { color: var(--texto); font-weight: 700; }
+.marco__corpo .link-seta { margin-top: 0.75rem; }
+
+/* O último marco é o presente: ganha peso de bloco */
+.marco--destaque .marco__corpo {
+  background: var(--roxo-suave);
+  border-radius: var(--raio-g);
+  padding: clamp(1.25rem, 1rem + 1.5vw, 2rem);
+  margin-left: clamp(0.25rem, 1vw, 0.75rem);
+}
+.marco--destaque .marco__ano { color: var(--roxo); }
+
+@media (max-width: 767px) {
+  .trilha { --coluna-ano: 0px; --coluna-trilho: 28px; }
+  .trilha__linha { left: calc(var(--coluna-trilho) / 2 - 1px); }
+
+  .marco {
+    grid-template-columns: var(--coluna-trilho) 1fr;
+    grid-template-areas:
+      "ponto ano"
+      "ponto corpo";
+    column-gap: 0.5rem;
+  }
+  .marco__ano {
+    text-align: left;
+    margin-bottom: 0.35rem;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .marco__corpo { padding-left: 0; }
+}
+
+/* ---------- Assinatura de fechamento ----------
+   A citação sai da caixinha e vira uma peça tipográfica. */
+
+.assinatura {
+  margin: clamp(3rem, 2.5rem + 3vw, 5rem) 0 0;
+  max-width: 880px;
+  display: grid;
+  gap: 1.25rem;
+  justify-items: start;
+}
+
+.assinatura__aspas {
+  width: 40px;
+  height: 40px;
+  color: var(--ambar);
+}
+
+.assinatura blockquote {
+  font-family: var(--fonte-titulo);
+  font-size: clamp(1.2rem, 1rem + 1.1vw, 1.9rem);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--roxo-escuro);
+  text-wrap: balance;
+}
+
+.assinatura figcaption {
+  display: grid;
+  gap: 0.15rem;
+  padding-top: 1.25rem;
+  border-top: 2px solid var(--roxo-linha);
+  width: min(100%, 420px);
+}
+.assinatura figcaption strong {
+  font-family: var(--fonte-titulo);
+  font-size: 1.05rem;
+  color: var(--texto);
+}
+.assinatura figcaption span {
+  font-size: 0.92rem;
+  color: var(--texto-claro);
+}
+.assinatura figcaption .link-seta { margin-top: 0.4rem; }
 
 /* ============================================================
    MISSÃO, VISÃO E VALORES

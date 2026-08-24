@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1250" width="1000" height="1250" role="img" aria-label="Nossa história">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 760" width="1800" height="760" role="img" aria-label="Nossa história">
   <defs>
     <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#8B4BB8"/>
@@ -10,13 +10,13 @@
     </radialGradient>
   </defs>
 
-  <rect width="1000" height="1250" fill="url(#g)"/>
-  <rect width="1000" height="1250" fill="url(#brilho)"/>
+  <rect width="1800" height="760" fill="url(#g)"/>
+  <rect width="1800" height="760" fill="url(#brilho)"/>
 
-  <circle cx="860" cy="200" r="300" fill="#ffffff" opacity="0.05"/>
-  <circle cx="120" cy="1125" r="240" fill="#FBB921" opacity="0.09"/>
+  <circle cx="1548" cy="121.60000000000001" r="228" fill="#ffffff" opacity="0.05"/>
+  <circle cx="216" cy="684" r="182.4" fill="#FBB921" opacity="0.09"/>
 
-  <g transform="translate(500 556.25) scale(1.6129032258064515)">
+  <g transform="translate(900 338.2) scale(1.2258064516129032)">
     
     <g fill="#ffffff" opacity="0.2">
       <circle cx="0" cy="-108" r="52"/>
@@ -26,15 +26,15 @@
     </g>
   </g>
 
-  <g transform="translate(500 1050)" text-anchor="middle"
+  <g transform="translate(900 638.4)" text-anchor="middle"
      font-family="Montserrat, Segoe UI, Arial, sans-serif">
-    <text y="0" fill="#FBB921" font-size="38"
-          font-weight="700" letter-spacing="12"
+    <text y="0" fill="#FBB921" font-size="29"
+          font-weight="700" letter-spacing="9"
           opacity="0.95">ESPAÇO PARA FOTO</text>
-    <text y="85" fill="#ffffff"
-          font-size="55" font-weight="700"
+    <text y="65" fill="#ffffff"
+          font-size="42" font-weight="700"
           opacity="0.95">Nossa história</text>
-    <text y="140" fill="#ffffff" opacity="0.6"
-          font-size="34" font-weight="400">Atendimento ao longo dos anos</text>
+    <text y="106" fill="#ffffff" opacity="0.6"
+          font-size="26" font-weight="400">Foto panorâmica: atendimento ou Hora do Mamaço</text>
   </g>
 </svg>

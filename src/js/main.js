@@ -311,21 +311,31 @@
     var passos = trilha.querySelectorAll("[data-passo]");
     var linha = trilha.querySelector(".trilha__linha");
 
-    /* A linha termina no centro do último ponto, e não no fim do
-       bloco: sobra de trilho depois do último marco dá impressão de
-       conteúdo faltando. Se este cálculo falhar, o CSS já deixa a
-       linha inteira, então nada quebra. */
+    /* A linha vai do primeiro ao último ponto. Com o espaçamento
+       grande entre marcos, sobra de trilho nas pontas fica evidente e
+       parece conteúdo faltando. Se este cálculo falhar, o CSS já deixa
+       a linha inteira, então nada quebra. */
     function ajustarFimDaLinha() {
+      var primeiro = trilha.querySelector(".marco:first-child .marco__ponto");
       var ultimo = trilha.querySelector(".marco:last-child .marco__ponto");
-      if (!ultimo || !linha) return;
+      if (!primeiro || !ultimo || !linha) return;
+
       // volta ao estado do CSS antes de medir, senão a medida anterior
       // contamina a nova
-      linha.style.height = "";
+      linha.style.top = "";
       linha.style.bottom = "";
-      var topo = linha.getBoundingClientRect().top;
-      var centro = ultimo.getBoundingClientRect().top + ultimo.offsetHeight / 2;
+      linha.style.height = "";
+
+      var base = trilha.getBoundingClientRect().top;
+      var inicio = primeiro.getBoundingClientRect();
+      var fim = ultimo.getBoundingClientRect();
+
+      var y1 = inicio.top + inicio.height / 2 - base;
+      var y2 = fim.top + fim.height / 2 - base;
+
+      linha.style.top = y1 + "px";
       linha.style.bottom = "auto";
-      linha.style.height = Math.max(0, centro - topo) + "px";
+      linha.style.height = Math.max(0, y2 - y1) + "px";
     }
 
     // refreshInit roda antes de o ScrollTrigger recalcular posições,

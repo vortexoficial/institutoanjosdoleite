@@ -974,7 +974,10 @@ ul, ol { list-style: none; padding: 0; }
   z-index: 1;                 /* o marco passa na frente do trilho */
   display: grid;
   gap: 0.75rem;
-  padding: clamp(1.25rem, 2.5vw, 2rem) 0 clamp(1.25rem, 2.5vw, 2rem) var(--recuo);
+  /* mesma respiração do Benedito: 48 px no celular, 72 no computador,
+     acima e abaixo. É o espaço que dá tempo entre uma aparição e a
+     seguinte enquanto a página rola */
+  padding: clamp(3rem, 5vw, 4.5rem) 0 clamp(3rem, 5vw, 4.5rem) var(--recuo);
 }
 @media (min-width: 900px) {
   .marco {

@@ -20,14 +20,27 @@
 
     document.querySelectorAll("[data-img]").forEach(function (el) {
       var registro = mapa[el.getAttribute("data-img")];
-      if (!registro || !registro.url) return;
 
       if (el.tagName === "IMG") {
+        // guarda o espaço reservado original na primeira passada
+        if (!el.dataset.original) el.dataset.original = el.getAttribute("src") || "";
+
+        // foto removida no painel: volta ao espaço reservado, mesmo
+        // que a versão anterior já tenha sido aplicada pelo cache
+        if (!registro || !registro.url) {
+          if (el.dataset.original && el.getAttribute("src") !== el.dataset.original) {
+            el.setAttribute("src", el.dataset.original);
+          }
+          return;
+        }
+
         if (el.getAttribute("src") === registro.url) return;
         el.setAttribute("src", registro.url);
         el.removeAttribute("srcset");
         return;
       }
+
+      if (!registro || !registro.url) return;
 
       // Espaços que não são <img> (logo de parceiro, por exemplo):
       // o conteúdo de texto dá lugar à imagem enviada.

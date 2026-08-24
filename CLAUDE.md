@@ -11,8 +11,9 @@ Estado: 8 páginas no ar (home, fundadora, privacidade e as 5 de projeto). O men
 - Sempre rodar `node construir.js` depois de editar `src/`: o navegador carrega a `dist/`, não a `src/`.
 
 ## Como publicar
-- Ainda não publicado. Antes do primeiro deploy: criar o espaço de dados (`npx wrangler kv namespace create CMS`), colar o id em `wrangler.toml` e definir a variável `PAINEL_SENHA` no painel da Cloudflare.
+- No ar em https://instituto-anjos-do-leite.pages.dev desde 24/08/2026 (Cloudflare Pages, projeto instituto-anjos-do-leite, conta indesignleandro@gmail.com). O KV CMS já existe e está no wrangler.toml; a senha do painel é o segredo PAINEL_SENHA do projeto.
 - Deploy: `node construir.js --producao` e depois `npx wrangler pages deploy dist --project-name=instituto-anjos-do-leite --branch=main`.
+- Trocar a senha do painel: `npx wrangler pages secret put PAINEL_SENHA --project-name=instituto-anjos-do-leite` e publicar de novo.
 - Nunca publicar a raiz do projeto (subiria `node_modules` e `src/`). Nunca editar `dist/` à mão: é apagada a cada build.
 
 ## Estrutura

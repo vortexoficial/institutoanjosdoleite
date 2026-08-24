@@ -2,15 +2,8 @@ name = "instituto-anjos-do-leite"
 pages_build_output_dir = "dist"
 compatibility_date = "2026-07-01"
 
-# Armazenamento do painel (fotos trocadas e informações do Instituto).
-#
-# Antes do primeiro deploy, criar o espaço de dados e colar o id aqui:
-#   npx wrangler kv namespace create CMS
-#
-# Enquanto o id não existir, deixe estas três linhas comentadas: o site
-# continua funcionando com os espaços reservados do build, e o painel
-# avisa que o armazenamento ainda não foi configurado.
-#
-# [[kv_namespaces]]
-# binding = "CMS"
-# id = "cole-o-id-aqui"
+# Armazenamento do painel: fotos trocadas, projetos e informações do
+# Instituto. Criado em 24/08/2026 com "npx wrangler kv namespace create CMS".
+[[kv_namespaces]]
+binding = "CMS"
+id = "25ef7c062bbd42e5a7ca5e562f533c72"

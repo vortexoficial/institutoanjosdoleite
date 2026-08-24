@@ -206,15 +206,17 @@ ul, ol { list-style: none; padding: 0; }
   color: var(--roxo);
   margin-bottom: 0.9rem;
 }
+/* Losango âmbar no lugar da barra: o mesmo sinal que separa os
+   valores na faixa, então o site inteiro fala a mesma língua */
 .etiqueta::before {
   content: "";
-  width: 28px;
-  height: 3px;
+  width: 7px;
+  height: 7px;
   border-radius: 2px;
   background: var(--ambar);
+  transform: rotate(45deg);
   flex: none;
 }
-.cabecalho-secao--centro .etiqueta::before { display: none; }
 .secao--escura .etiqueta { color: var(--ambar); }
 
 .cabecalho-secao h2 { font-size: var(--t-h2); }

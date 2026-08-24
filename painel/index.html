@@ -13,12 +13,76 @@
 </head>
 <body>
 
-<!-- ---------- LOGIN ---------- -->
+<!--icones-->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="p-circle-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10" /> <line x1="12" x2="12" y1="8" y2="12" /> <line x1="12" x2="12.01" y1="16" y2="16" />
+  </symbol>
+  <symbol id="p-circle-check-big" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21.801 10A10 10 0 1 1 17 3.335" /> <path d="m9 11 3 3L22 4" />
+  </symbol>
+  <symbol id="p-external-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 3h6v6" /> <path d="M10 14 21 3" /> <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+  </symbol>
+  <symbol id="p-folder-kanban" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z" /> <path d="M8 10v4" /> <path d="M12 10v2" /> <path d="M16 10v6" />
+  </symbol>
+  <symbol id="p-image-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 5h6" /> <path d="M19 2v6" /> <path d="M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7.5" /> <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /> <circle cx="9" cy="9" r="2" />
+  </symbol>
+  <symbol id="p-images" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m22 11-1.296-1.296a2.4 2.4 0 0 0-3.408 0L11 16" /> <path d="M4 8a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2" /> <circle cx="13" cy="7" r="1" fill="currentColor" /> <rect x="8" y="2" width="14" height="14" rx="2" />
+  </symbol>
+  <symbol id="p-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect width="7" height="9" x="3" y="3" rx="1" /> <rect width="7" height="5" x="14" y="3" rx="1" /> <rect width="7" height="9" x="14" y="12" rx="1" /> <rect width="7" height="5" x="3" y="16" rx="1" />
+  </symbol>
+  <symbol id="p-lightbulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" /> <path d="M9 18h6" /> <path d="M10 22h4" />
+  </symbol>
+  <symbol id="p-log-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m16 17 5-5-5-5" /> <path d="M21 12H9" /> <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+  </symbol>
+  <symbol id="p-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 5h16" /> <path d="M4 12h16" /> <path d="M4 19h16" />
+  </symbol>
+  <symbol id="p-panel-left-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect width="18" height="18" x="3" y="3" rx="2" /> <path d="M9 3v18" /> <path d="m16 15-3-3 3-3" />
+  </symbol>
+  <symbol id="p-panel-left-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect width="18" height="18" x="3" y="3" rx="2" /> <path d="M9 3v18" /> <path d="m14 9 3 3-3 3" />
+  </symbol>
+  <symbol id="p-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /> <path d="m15 5 4 4" />
+  </symbol>
+  <symbol id="p-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 12h14" /> <path d="M12 5v14" />
+  </symbol>
+  <symbol id="p-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" /> <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7" /> <path d="M7 3v4a1 1 0 0 0 1 1h7" />
+  </symbol>
+  <symbol id="p-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" /> <circle cx="12" cy="12" r="3" />
+  </symbol>
+  <symbol id="p-trash-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 11v6" /> <path d="M14 11v6" /> <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /> <path d="M3 6h18" /> <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+  </symbol>
+  <symbol id="p-triangle-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /> <path d="M12 9v4" /> <path d="M12 17h.01" />
+  </symbol>
+  <symbol id="p-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 6 6 18" /> <path d="m6 6 12 12" />
+  </symbol>
+</svg>
+<!--/icones-->
+
+<!-- ============================================================
+     LOGIN
+     ============================================================ -->
 <section class="entrada" id="telaLogin">
   <form class="cartao-login" id="formLogin" autocomplete="on">
     <img src="/assets/logo-cor.webp" alt="Instituto Anjos do Leite" width="560" height="162">
     <h1>Painel do Instituto</h1>
-    <p>Entre para trocar as fotos e as informações do site.</p>
+    <p>Entre para cuidar das fotos, dos projetos e das informações do site.</p>
 
     <label for="senha">Senha</label>
     <input type="password" id="senha" name="password" autocomplete="current-password" required>
@@ -28,113 +92,239 @@
   </form>
 </section>
 
-<!-- ---------- PAINEL ---------- -->
-<div class="painel" id="telaPainel" hidden>
-  <header class="cabecalho">
-    <div class="cabecalho__interno">
-      <img src="/assets/logo-cor.webp" alt="Instituto Anjos do Leite" width="560" height="162">
-      <nav class="abas" id="abas">
-        <button class="aba ativa" type="button" data-aba="fotos">Fotos do site</button>
-        <button class="aba" type="button" data-aba="projetos">Projetos e ações</button>
-        <button class="aba" type="button" data-aba="informacoes">Informações</button>
-      </nav>
-      <div class="cabecalho__acoes">
-        <a class="botao botao--claro" href="/" target="_blank" rel="noopener">Ver o site</a>
-        <button class="botao botao--claro" type="button" id="botaoSair">Sair</button>
-      </div>
+<!-- ============================================================
+     PAINEL
+     ============================================================ -->
+<div class="app" id="telaPainel" hidden>
+
+  <!-- Barra lateral fixa, recolhível (padrão do painel do Rastreio) -->
+  <aside class="lateral" id="lateral">
+    <div class="lateral__marca">
+      <img class="lateral__logo" src="/assets/logo-cor.webp" alt="Instituto Anjos do Leite" width="560" height="162">
+      <img class="lateral__simbolo" src="/assets/favicon-32.png" alt="" width="32" height="32" aria-hidden="true">
     </div>
-  </header>
 
-  <main class="conteudo">
+    <nav class="lateral__nav" id="navegacao" aria-label="Seções do painel">
+      <button class="item ativo" type="button" data-aba="resumo">
+        <svg aria-hidden="true"><use href="#p-layout-dashboard"/></svg>
+        <span>Resumo</span>
+      </button>
+      <button class="item" type="button" data-aba="fotos">
+        <svg aria-hidden="true"><use href="#p-images"/></svg>
+        <span>Fotos</span>
+        <span class="item__conta" data-conta-fotos hidden>0</span>
+      </button>
+      <button class="item" type="button" data-aba="projetos">
+        <svg aria-hidden="true"><use href="#p-folder-kanban"/></svg>
+        <span>Projetos</span>
+        <span class="item__conta" data-conta-projetos hidden>0</span>
+      </button>
+      <button class="item" type="button" data-aba="informacoes">
+        <svg aria-hidden="true"><use href="#p-settings"/></svg>
+        <span>Informações</span>
+      </button>
+    </nav>
 
-    <!-- FOTOS -->
-    <section class="secao-painel" id="painelFotos">
-      <div class="intro">
-        <h2>Fotos do site</h2>
-        <p>
-          Clique em <strong>Trocar foto</strong>, escolha a imagem do computador ou do celular e pronto:
-          o site muda na hora. Prefira fotos deitadas (paisagem) com pelo menos 1600 pixels de largura,
-          em JPG ou WebP, até 8 MB.
-        </p>
-        <p class="alerta">
-          Só publique fotos de pessoas que autorizaram o uso da imagem por escrito, principalmente
-          quando aparecerem crianças.
-        </p>
+    <div class="lateral__rodape">
+      <button class="item" type="button" id="recolher" aria-label="Recolher menu">
+        <svg aria-hidden="true"><use href="#p-panel-left-close"/></svg>
+        <span>Recolher</span>
+      </button>
+    </div>
+  </aside>
+
+  <div class="conteudo">
+
+    <!-- Barra do topo -->
+    <header class="topo">
+      <img class="topo__marca" src="/assets/logo-cor.webp" alt="Instituto Anjos do Leite" width="560" height="162">
+      <h1 class="topo__titulo" id="tituloSecao">Resumo</h1>
+
+      <div class="topo__acoes">
+        <a class="botao botao--claro" href="/" target="_blank" rel="noopener">
+          <svg aria-hidden="true"><use href="#p-external-link"/></svg>
+          <span class="some-no-celular">Ver o site</span>
+        </a>
+        <button class="botao botao--claro" type="button" id="botaoSair" aria-label="Sair">
+          <svg aria-hidden="true"><use href="#p-log-out"/></svg>
+          <span class="some-no-celular">Sair</span>
+        </button>
       </div>
-      <div id="grupos"></div>
-    </section>
+    </header>
 
-    <!-- PROJETOS -->
-    <section class="secao-painel" id="painelProjetos" hidden>
-      <div class="intro">
-        <h2>Projetos e ações</h2>
-        <p>
-          Aqui o Instituto cria projetos novos, muda o texto dos que já existem e lista as
-          ações em andamento de cada um. Cada projeto é salvo sozinho, no próprio botão.
-        </p>
-        <p class="alerta">
-          O endereço da página é gerado a partir do nome do projeto. Mudar o nome muda o
-          endereço, e links antigos deixam de funcionar. Prefira ajustar o texto a renomear.
-        </p>
-      </div>
+    <main class="area">
 
-      <div class="barra-acoes">
-        <button class="botao botao--principal" type="button" id="novoProjeto">Criar projeto</button>
-      </div>
-
-      <div id="listaProjetos"></div>
-
-      <form class="editor" id="editorProjeto" hidden>
-        <h3 id="editorTitulo">Novo projeto</h3>
-
-        <label for="projetoNome">Nome do projeto</label>
-        <input type="text" id="projetoNome" maxlength="90" required>
-
-        <label for="projetoEtiqueta">Etiqueta (uma palavra que classifica)</label>
-        <input type="text" id="projetoEtiqueta" maxlength="30" placeholder="Acolhimento, Formação, Mobilização...">
-
-        <label for="projetoResumo">Resumo (aparece na lista da página inicial)</label>
-        <textarea id="projetoResumo" rows="3" maxlength="400"></textarea>
-
-        <label for="projetoTexto">Texto da página</label>
-        <textarea id="projetoTexto" rows="10" maxlength="6000"></textarea>
-        <span class="dica">Deixe uma linha em branco entre um parágrafo e outro.</span>
-
-        <label for="projetoAcoes">Ações em andamento</label>
-        <textarea id="projetoAcoes" rows="5" maxlength="2000"></textarea>
-        <span class="dica">Uma ação por linha. Aparecem em lista na página do projeto.</span>
-
-        <label for="projetoImagem">Identificador da foto</label>
-        <input type="text" id="projetoImagem" maxlength="60" placeholder="projeto-mae-acolhida">
-        <span class="dica">
-          Use o mesmo identificador que aparece na aba Fotos do site. A foto é enviada por lá.
-        </span>
-
-        <label class="linha-caixa">
-          <input type="checkbox" id="projetoPublicado" checked>
-          <span>Publicado no site</span>
-        </label>
-
-        <div class="editor__botoes">
-          <button class="botao botao--principal" type="submit" id="salvarProjeto">Salvar projeto</button>
-          <button class="botao botao--claro" type="button" id="cancelarProjeto">Cancelar</button>
+      <!-- ---------- RESUMO ---------- -->
+      <section class="painel-secao" id="painelResumo">
+        <div class="cabecalho">
+          <h2>Como está o site hoje</h2>
+          <p>Um retrato rápido do que já foi preenchido e do que ainda falta.</p>
         </div>
-      </form>
-    </section>
 
-    <!-- INFORMAÇÕES -->
-    <section class="secao-painel" id="painelInformacoes" hidden>
-      <div class="intro">
-        <h2>Informações do Instituto</h2>
-        <p>
-          Cada campo é salvo sozinho, no seu próprio botão. Deixe em branco para voltar ao texto
-          que está escrito no site.
-        </p>
-      </div>
-      <div class="campos" id="campos"></div>
-    </section>
+        <div class="indicadores">
+          <button class="indicador" type="button" data-ir="fotos">
+            <span class="indicador__icone"><svg aria-hidden="true"><use href="#p-images"/></svg></span>
+            <span class="indicador__dados">
+              <strong data-kpi-fotos>0</strong>
+              <span>Fotos publicadas</span>
+            </span>
+          </button>
 
-  </main>
+          <button class="indicador" type="button" data-ir="fotos">
+            <span class="indicador__icone indicador__icone--ambar"><svg aria-hidden="true"><use href="#p-image-plus"/></svg></span>
+            <span class="indicador__dados">
+              <strong data-kpi-espacos>0</strong>
+              <span>Espaços sem foto</span>
+            </span>
+          </button>
+
+          <button class="indicador" type="button" data-ir="projetos">
+            <span class="indicador__icone"><svg aria-hidden="true"><use href="#p-folder-kanban"/></svg></span>
+            <span class="indicador__dados">
+              <strong data-kpi-projetos>0</strong>
+              <span>Projetos publicados</span>
+            </span>
+          </button>
+
+          <button class="indicador" type="button" data-ir="projetos">
+            <span class="indicador__icone"><svg aria-hidden="true"><use href="#p-circle-check-big"/></svg></span>
+            <span class="indicador__dados">
+              <strong data-kpi-acoes>0</strong>
+              <span>Ações cadastradas</span>
+            </span>
+          </button>
+        </div>
+
+        <div class="resumo__grade">
+          <section class="cartao">
+            <h3>
+              <svg aria-hidden="true"><use href="#p-triangle-alert"/></svg>
+              O que falta
+            </h3>
+            <ul class="pendencias" data-pendencias></ul>
+          </section>
+
+          <section class="cartao">
+            <h3>
+              <svg aria-hidden="true"><use href="#p-lightbulb"/></svg>
+              Como usar
+            </h3>
+            <ol class="ajuda">
+              <li><strong>Fotos:</strong> cada espaço do site tem um lugar aqui. Escolha o arquivo e o site muda na hora.</li>
+              <li><strong>Projetos:</strong> crie projetos novos, escreva o texto da página e liste as ações em andamento.</li>
+              <li><strong>Informações:</strong> CNPJ, WhatsApp, endereço e os textos da página da fundadora.</li>
+              <li>Tudo é salvo item a item, no próprio botão. Não existe "salvar tudo".</li>
+            </ol>
+            <p class="ajuda__nota">
+              Publique só fotos de pessoas que autorizaram o uso da imagem por escrito,
+              principalmente quando aparecerem crianças.
+            </p>
+          </section>
+        </div>
+      </section>
+
+      <!-- ---------- FOTOS ---------- -->
+      <section class="painel-secao" id="painelFotos" hidden>
+        <div class="cabecalho">
+          <h2>Fotos do site</h2>
+          <p>
+            Clique em trocar, escolha a imagem e pronto. Prefira fotos deitadas com pelo menos
+            1600 pixels de largura, em JPG ou WebP, até 8 MB.
+          </p>
+        </div>
+        <div id="grupos"></div>
+      </section>
+
+      <!-- ---------- PROJETOS ---------- -->
+      <section class="painel-secao" id="painelProjetos" hidden>
+        <div class="cabecalho cabecalho--linha">
+          <div>
+            <h2>Projetos e ações</h2>
+            <p>Cada projeto tem sua página no site. As ações aparecem em lista, ao lado do texto.</p>
+          </div>
+          <button class="botao botao--principal" type="button" id="novoProjeto">
+            <svg aria-hidden="true"><use href="#p-plus"/></svg>
+            Criar projeto
+          </button>
+        </div>
+
+        <div class="alerta">
+          O endereço da página vem do nome do projeto. Mudar o nome muda o endereço, e links
+          antigos param de funcionar. Prefira ajustar o texto a renomear.
+        </div>
+
+        <div id="listaProjetos"></div>
+
+        <form class="editor" id="editorProjeto" hidden>
+          <h3 id="editorTitulo">Novo projeto</h3>
+
+          <label for="projetoNome">Nome do projeto</label>
+          <input type="text" id="projetoNome" maxlength="90" required>
+
+          <label for="projetoEtiqueta">Etiqueta</label>
+          <input type="text" id="projetoEtiqueta" maxlength="30" placeholder="Acolhimento, Formação, Mobilização...">
+
+          <label for="projetoResumo">Resumo (aparece na lista da página inicial)</label>
+          <textarea id="projetoResumo" rows="3" maxlength="400"></textarea>
+
+          <label for="projetoTexto">Texto da página</label>
+          <textarea id="projetoTexto" rows="10" maxlength="6000"></textarea>
+          <span class="dica">Deixe uma linha em branco entre um parágrafo e outro.</span>
+
+          <label for="projetoAcoes">Ações em andamento</label>
+          <textarea id="projetoAcoes" rows="5" maxlength="2000"></textarea>
+          <span class="dica">Uma ação por linha.</span>
+
+          <label for="projetoImagem">Identificador da foto</label>
+          <input type="text" id="projetoImagem" maxlength="60" placeholder="projeto-mae-acolhida">
+          <span class="dica">O mesmo identificador que aparece na aba Fotos. A imagem é enviada por lá.</span>
+
+          <label class="linha-caixa">
+            <input type="checkbox" id="projetoPublicado" checked>
+            <span>Publicado no site</span>
+          </label>
+
+          <div class="editor__botoes">
+            <button class="botao botao--principal" type="submit" id="salvarProjeto">
+              <svg aria-hidden="true"><use href="#p-save"/></svg>
+              Salvar projeto
+            </button>
+            <button class="botao botao--claro" type="button" id="cancelarProjeto">Cancelar</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- ---------- INFORMAÇÕES ---------- -->
+      <section class="painel-secao" id="painelInformacoes" hidden>
+        <div class="cabecalho">
+          <h2>Informações do Instituto</h2>
+          <p>Cada campo é salvo sozinho. Deixe em branco para voltar ao texto que está no site.</p>
+        </div>
+        <div class="campos" id="campos"></div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- No celular a navegação vira barra inferior -->
+  <nav class="barra-baixo" id="barraBaixo" aria-label="Seções do painel">
+    <button class="baixo ativo" type="button" data-aba="resumo">
+      <svg aria-hidden="true"><use href="#p-layout-dashboard"/></svg>
+      <span>Resumo</span>
+    </button>
+    <button class="baixo" type="button" data-aba="fotos">
+      <svg aria-hidden="true"><use href="#p-images"/></svg>
+      <span>Fotos</span>
+    </button>
+    <button class="baixo" type="button" data-aba="projetos">
+      <svg aria-hidden="true"><use href="#p-folder-kanban"/></svg>
+      <span>Projetos</span>
+    </button>
+    <button class="baixo" type="button" data-aba="informacoes">
+      <svg aria-hidden="true"><use href="#p-settings"/></svg>
+      <span>Dados</span>
+    </button>
+  </nav>
 </div>
 
 <div class="recado" id="recado" role="status" aria-live="polite"></div>

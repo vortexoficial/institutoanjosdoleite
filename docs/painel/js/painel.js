@@ -1,15 +1,17 @@
 /* ============================================================
    Painel do Instituto Anjos do Leite
 
-   Duas tarefas, e só isso: trocar as fotos do site e ajustar as
-   informações institucionais. Cada item é salvo sozinho, na hora,
-   no seu próprio botão.
+   Quatro seções: resumo, fotos, projetos e informações. Tudo é
+   salvo item a item, no próprio botão. Não existe "salvar tudo":
+   um formulário único apagaria o que não estivesse na tela e
+   travaria inteiro por causa de um campo inválido.
    ============================================================ */
 
 (function () {
   "use strict";
 
   var TOKEN = "iadl.painel.token";
+  var LATERAL = "iadl.painel.lateral";
 
   /* ---------- Mapa dos espaços de foto do site ----------
      Para acrescentar um espaço novo: coloque data-img="chave" no
@@ -28,8 +30,8 @@
     {
       titulo: "Página inicial: seções",
       espacos: [
-        { chave: "historia", rotulo: "Nossa história", nota: "Foto vertical, ao lado do texto" },
-        { chave: "fundadora", rotulo: "Fundadora", nota: "Sandra Abreu (página da fundadora)" }
+        { chave: "historia", rotulo: "Nossa história", nota: "Foto larga, entre o texto e a trajetória" },
+        { chave: "fundadora", rotulo: "Fundadora", nota: "Usada se a foto recortada for trocada" }
       ]
     },
     {
@@ -81,19 +83,31 @@
     }
   ];
 
-  /* Espaços que já vêm com uma imagem reservada no site */
+  /* Os espaços reservados são regerados por script e o cache de um
+     ano do _headers deixaria o desenho antigo na miniatura. O build
+     carimba a versão no endereço deste arquivo, então aproveitamos
+     o mesmo carimbo aqui. */
+  var VERSAO = (function () {
+    var script = document.currentScript;
+    var marca = script && script.src && script.src.split("?v=")[1];
+    return marca ? "?v=" + marca : "";
+  })();
+
+  /* Espaços que já têm uma imagem reservada gerada no site */
   var PADRAO = {};
-  ["hero-1", "hero-2", "hero-3", "hero-4", "hero-5", "historia", "fundadora",
-   "projeto-mae-acolhida", "projeto-hora-do-mamaco", "projeto-formacao",
-   "projeto-educacao", "projeto-primeira-infancia",
-   "galeria-1", "galeria-2", "galeria-3", "galeria-4", "galeria-5", "galeria-6", "galeria-7", "galeria-8", "galeria-homenagens", "galeria-camara", "galeria-capep", "galeria-mamaco", "galeria-entrevistas", "galeria-podcasts", "galeria-congressos", "galeria-atendimentos"].forEach(function (c) {
-    PADRAO[c] = "/assets/img/" + c + ".svg";
+  GRUPOS.forEach(function (grupo) {
+    grupo.espacos.forEach(function (espaco) {
+      if (espaco.chave.indexOf("parceiro-") === 0) return;   // parceiro não tem arte reservada
+      PADRAO[espaco.chave] = "/assets/img/" + espaco.chave + ".svg" + VERSAO;
+    });
   });
+
+  var TOTAL_ESPACOS = GRUPOS.reduce(function (soma, g) { return soma + g.espacos.length; }, 0);
 
   var CAMPOS = [
     { campo: "cnpj", rotulo: "CNPJ", dica: "Aparece no rodapé e na área de transparência.", tipo: "text" },
     { campo: "whatsapp", rotulo: "WhatsApp", dica: "Formato (13) 99999-9999. Atualiza o botão flutuante e o rodapé.", tipo: "text" },
-    { campo: "email", rotulo: "E-mail institucional", dica: "Usado na página de contato.", tipo: "text" },
+    { campo: "email", rotulo: "E-mail institucional", dica: "Usado nos canais de contato.", tipo: "text" },
     { campo: "endereco", rotulo: "Endereço da sede", dica: "Deixe em branco enquanto não houver sede fixa.", tipo: "text" },
     { campo: "hero-texto", rotulo: "Texto do banner", dica: "O parágrafo abaixo do título na página inicial.", tipo: "textarea" },
     { campo: "fundadora-cargo", rotulo: "Fundadora: cargo", dica: "Aparece acima do nome, na página da fundadora.", tipo: "text" },
@@ -103,10 +117,20 @@
     { campo: "fundadora-citacao", rotulo: "Fundadora: frase de fechamento", dica: "A citação em destaque no fim da página.", tipo: "textarea" }
   ];
 
+  var TITULOS = {
+    resumo: "Resumo",
+    fotos: "Fotos do site",
+    projetos: "Projetos e ações",
+    informacoes: "Informações"
+  };
+
   /* ---------- Atalhos ---------- */
 
   var $ = function (id) { return document.getElementById(id); };
   var token = sessionStorage.getItem(TOKEN) || "";
+
+  /* estado, para o resumo não precisar buscar tudo de novo */
+  var estado = { imagens: {}, projetos: [], campos: {} };
 
   function recado(texto, ehErro) {
     var caixa = $("recado");
@@ -128,7 +152,18 @@
     });
   }
 
-  /* ---------- Login ---------- */
+  function icone(nome) {
+    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    var uso = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    uso.setAttribute("href", "#p-" + nome);
+    svg.setAttribute("aria-hidden", "true");
+    svg.appendChild(uso);
+    return svg;
+  }
+
+  /* ============================================================
+     LOGIN
+     ============================================================ */
 
   $("formLogin").addEventListener("submit", function (e) {
     e.preventDefault();
@@ -161,19 +196,258 @@
     location.reload();
   });
 
-  /* ---------- Abas ---------- */
+  /* ============================================================
+     NAVEGAÇÃO
+     ============================================================ */
 
-  $("abas").addEventListener("click", function (e) {
-    var aba = e.target.closest(".aba");
-    if (!aba) return;
-    document.querySelectorAll(".aba").forEach(function (b) { b.classList.remove("ativa"); });
-    aba.classList.add("ativa");
-    $("painelFotos").hidden = aba.dataset.aba !== "fotos";
-    $("painelProjetos").hidden = aba.dataset.aba !== "projetos";
-    $("painelInformacoes").hidden = aba.dataset.aba !== "informacoes";
+  function trocarAba(nome) {
+    ["resumo", "fotos", "projetos", "informacoes"].forEach(function (chave) {
+      var secao = $("painel" + chave.charAt(0).toUpperCase() + chave.slice(1));
+      if (secao) secao.hidden = chave !== nome;
+    });
+
+    document.querySelectorAll("[data-aba]").forEach(function (botao) {
+      botao.classList.toggle("ativo", botao.dataset.aba === nome);
+    });
+
+    $("tituloSecao").textContent = TITULOS[nome] || "";
+    document.querySelector(".area").scrollTo({ top: 0 });
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }
+
+  document.querySelectorAll("[data-aba]").forEach(function (botao) {
+    botao.addEventListener("click", function () { trocarAba(botao.dataset.aba); });
   });
 
-  /* ---------- Projetos ---------- */
+  document.querySelectorAll("[data-ir]").forEach(function (botao) {
+    botao.addEventListener("click", function () { trocarAba(botao.dataset.ir); });
+  });
+
+  /* recolher a barra lateral, com a escolha guardada no navegador */
+  var recolher = $("recolher");
+  if (localStorage.getItem(LATERAL) === "1") $("telaPainel").classList.add("recolhida");
+
+  recolher.addEventListener("click", function () {
+    var app = $("telaPainel");
+    var fechada = app.classList.toggle("recolhida");
+    localStorage.setItem(LATERAL, fechada ? "1" : "0");
+    recolher.querySelector("use").setAttribute("href", fechada ? "#p-panel-left-open" : "#p-panel-left-close");
+    recolher.setAttribute("aria-label", fechada ? "Expandir menu" : "Recolher menu");
+  });
+
+  /* ============================================================
+     RESUMO
+     ============================================================ */
+
+  function atualizarResumo() {
+    var publicadas = Object.keys(estado.imagens).length;
+    var projetosPublicados = estado.projetos.filter(function (p) { return p.publicado !== false; }).length;
+    var acoes = estado.projetos.reduce(function (soma, p) {
+      return soma + ((p.acoes && p.acoes.length) || 0);
+    }, 0);
+
+    document.querySelector("[data-kpi-fotos]").textContent = publicadas;
+    document.querySelector("[data-kpi-espacos]").textContent = Math.max(0, TOTAL_ESPACOS - publicadas);
+    document.querySelector("[data-kpi-projetos]").textContent = projetosPublicados;
+    document.querySelector("[data-kpi-acoes]").textContent = acoes;
+
+    /* contadores da barra lateral */
+    var contaFotos = document.querySelector("[data-conta-fotos]");
+    var faltando = Math.max(0, TOTAL_ESPACOS - publicadas);
+    contaFotos.textContent = faltando;
+    contaFotos.hidden = faltando === 0;
+
+    var contaProjetos = document.querySelector("[data-conta-projetos]");
+    contaProjetos.textContent = projetosPublicados;
+    contaProjetos.hidden = projetosPublicados === 0;
+
+    /* pendências: o que realmente falta para o site sair do provisório */
+    var lista = document.querySelector("[data-pendencias]");
+    lista.textContent = "";
+
+    var pendencias = [];
+    var cnpj = (estado.campos.cnpj || "").trim();
+
+    if (!cnpj || cnpj.indexOf("00.000.000") === 0) {
+      pendencias.push("Preencher o CNPJ do Instituto, em Informações.");
+    }
+
+    var semBanner = ["hero-1", "hero-2", "hero-3", "hero-4", "hero-5"].filter(function (c) {
+      return !estado.imagens[c];
+    }).length;
+    if (semBanner) {
+      pendencias.push("Enviar " + semBanner + " foto(s) do banner da página inicial.");
+    }
+
+    var semGaleria = [1, 2, 3, 4, 5, 6, 7, 8].filter(function (n) {
+      return !estado.imagens["galeria-" + n];
+    }).length;
+    if (semGaleria) {
+      pendencias.push("Enviar " + semGaleria + " foto(s) da galeria.");
+    }
+
+    var semParceiro = [1, 2, 3, 4, 5, 6].every(function (n) { return !estado.imagens["parceiro-" + n]; });
+    if (semParceiro) {
+      pendencias.push("Enviar as logos dos parceiros e apoiadores.");
+    }
+
+    if (!(estado.campos.whatsapp || "").trim()) {
+      pendencias.push("Confirmar o WhatsApp do Instituto, em Informações.");
+    }
+
+    if (!pendencias.length) {
+      var pronto = document.createElement("li");
+      pronto.className = "ok";
+      pronto.textContent = "Tudo preenchido. O site está com o conteúdo completo.";
+      lista.appendChild(pronto);
+      return;
+    }
+
+    pendencias.forEach(function (texto) {
+      var li = document.createElement("li");
+      li.textContent = texto;
+      lista.appendChild(li);
+    });
+  }
+
+  /* ============================================================
+     FOTOS
+     ============================================================ */
+
+  function montarFotos(mapa) {
+    var destino = $("grupos");
+    destino.textContent = "";
+
+    GRUPOS.forEach(function (grupo) {
+      var bloco = document.createElement("section");
+      bloco.className = "grupo";
+
+      var titulo = document.createElement("h3");
+      titulo.textContent = grupo.titulo;
+      bloco.appendChild(titulo);
+
+      var grade = document.createElement("div");
+      grade.className = "espacos";
+
+      grupo.espacos.forEach(function (espaco) {
+        grade.appendChild(cartaoDeFoto(espaco, mapa[espaco.chave]));
+      });
+
+      bloco.appendChild(grade);
+      destino.appendChild(bloco);
+    });
+  }
+
+  function cartaoDeFoto(espaco, registro) {
+    var cartao = document.createElement("article");
+    cartao.className = "espaco";
+
+    var trocada = !!(registro && registro.url);
+    var url = trocada ? registro.url : PADRAO[espaco.chave] || "";
+
+    var moldura = document.createElement("div");
+    moldura.className = "espaco__foto";
+    if (url) {
+      var img = document.createElement("img");
+      img.src = url;
+      img.alt = espaco.rotulo;
+      img.loading = "lazy";
+      moldura.appendChild(img);
+    }
+    var marca = document.createElement("span");
+    marca.className = "espaco__marca" + (trocada ? " trocada" : "");
+    marca.textContent = trocada ? "no ar" : "sem foto";
+    moldura.appendChild(marca);
+
+    var corpo = document.createElement("div");
+    corpo.className = "espaco__corpo";
+
+    var nome = document.createElement("strong");
+    nome.textContent = espaco.rotulo;
+    corpo.appendChild(nome);
+
+    if (espaco.nota) {
+      var nota = document.createElement("span");
+      nota.textContent = espaco.nota;
+      corpo.appendChild(nota);
+    }
+
+    var acoes = document.createElement("div");
+    acoes.className = "espaco__acoes";
+
+    var entrada = document.createElement("input");
+    entrada.type = "file";
+    entrada.accept = "image/jpeg,image/png,image/webp";
+
+    var enviar = document.createElement("button");
+    enviar.type = "button";
+    enviar.className = "botao botao--ambar";
+    enviar.appendChild(icone("image-plus"));
+    enviar.appendChild(document.createTextNode(trocada ? "Trocar" : "Enviar foto"));
+    enviar.addEventListener("click", function () { entrada.click(); });
+
+    entrada.addEventListener("change", function () {
+      var arquivo = entrada.files && entrada.files[0];
+      if (!arquivo) return;
+
+      var formulario = new FormData();
+      formulario.append("chave", espaco.chave);
+      formulario.append("arquivo", arquivo);
+
+      enviar.disabled = true;
+      enviar.textContent = "Enviando...";
+
+      pedir("/api/imagens", { method: "POST", body: formulario })
+        .then(function () {
+          recado("Foto publicada: " + espaco.rotulo);
+          carregarFotos();
+        })
+        .catch(function (erro) {
+          recado(erro.message, true);
+          enviar.disabled = false;
+          enviar.textContent = trocada ? "Trocar" : "Enviar foto";
+        });
+    });
+
+    acoes.appendChild(enviar);
+    acoes.appendChild(entrada);
+
+    if (trocada) {
+      var remover = document.createElement("button");
+      remover.type = "button";
+      remover.className = "botao botao--texto";
+      remover.textContent = "Remover";
+      remover.addEventListener("click", function () {
+        if (!confirm('Remover a foto de "' + espaco.rotulo + '"?')) return;
+        pedir("/api/imagens?chave=" + encodeURIComponent(espaco.chave), { method: "DELETE" })
+          .then(function () {
+            recado("Foto removida: " + espaco.rotulo);
+            carregarFotos();
+          })
+          .catch(function (erro) { recado(erro.message, true); });
+      });
+      acoes.appendChild(remover);
+    }
+
+    corpo.appendChild(acoes);
+    cartao.appendChild(moldura);
+    cartao.appendChild(corpo);
+    return cartao;
+  }
+
+  function carregarFotos() {
+    return pedir("/api/imagens")
+      .then(function (dados) {
+        estado.imagens = dados.imagens || {};
+        montarFotos(estado.imagens);
+        atualizarResumo();
+      })
+      .catch(function (erro) { recado(erro.message, true); });
+  }
+
+  /* ============================================================
+     PROJETOS
+     ============================================================ */
 
   var editando = null;   // slug do projeto aberto no editor
 
@@ -184,8 +458,7 @@
     if (!projetos.length) {
       var vazio = document.createElement("p");
       vazio.className = "vazio";
-      vazio.textContent =
-        "Nenhum projeto salvo ainda. Enquanto isso, o site mostra os cinco projetos escritos na criação do site.";
+      vazio.textContent = "Nenhum projeto ainda. Clique em Criar projeto para começar.";
       destino.appendChild(vazio);
       return;
     }
@@ -199,12 +472,18 @@
 
       var nome = document.createElement("strong");
       nome.textContent = projeto.nome;
+      if (projeto.publicado === false) {
+        var selo = document.createElement("span");
+        selo.className = "selo selo--rascunho";
+        selo.textContent = "rascunho";
+        nome.appendChild(document.createTextNode(" "));
+        nome.appendChild(selo);
+      }
       texto.appendChild(nome);
 
       var detalhe = document.createElement("span");
       detalhe.textContent =
         "/projetos/" + projeto.slug + ".html" +
-        (projeto.publicado === false ? "  ·  não publicado" : "") +
         (projeto.acoes && projeto.acoes.length ? "  ·  " + projeto.acoes.length + " ação(ões)" : "");
       texto.appendChild(detalhe);
 
@@ -214,7 +493,8 @@
       var editar = document.createElement("button");
       editar.type = "button";
       editar.className = "botao botao--claro";
-      editar.textContent = "Editar";
+      editar.appendChild(icone("pencil"));
+      editar.appendChild(document.createTextNode("Editar"));
       editar.addEventListener("click", function () { abrirEditor(projeto); });
 
       var remover = document.createElement("button");
@@ -267,7 +547,6 @@
     e.preventDefault();
     var botao = $("salvarProjeto");
     botao.disabled = true;
-    botao.textContent = "Salvando...";
 
     var corpo = {
       slug: editando || "",
@@ -291,147 +570,22 @@
         carregarProjetos();
       })
       .catch(function (erro) { recado(erro.message, true); })
-      .finally(function () {
-        botao.disabled = false;
-        botao.textContent = "Salvar projeto";
-      });
+      .finally(function () { botao.disabled = false; });
   });
 
   function carregarProjetos() {
     return pedir("/api/projetos")
-      .then(function (dados) { montarProjetos(dados.projetos || []); })
+      .then(function (dados) {
+        estado.projetos = dados.projetos || [];
+        montarProjetos(estado.projetos);
+        atualizarResumo();
+      })
       .catch(function (erro) { recado(erro.message, true); });
   }
 
-  /* ---------- Fotos ---------- */
-
-  function montarFotos(mapa) {
-    var destino = $("grupos");
-    destino.textContent = "";
-
-    GRUPOS.forEach(function (grupo) {
-      var bloco = document.createElement("section");
-      bloco.className = "grupo";
-
-      var titulo = document.createElement("h3");
-      titulo.textContent = grupo.titulo;
-      bloco.appendChild(titulo);
-
-      var grade = document.createElement("div");
-      grade.className = "espacos";
-
-      grupo.espacos.forEach(function (espaco) {
-        grade.appendChild(cartaoDeFoto(espaco, mapa[espaco.chave]));
-      });
-
-      bloco.appendChild(grade);
-      destino.appendChild(bloco);
-    });
-  }
-
-  function cartaoDeFoto(espaco, registro) {
-    var cartao = document.createElement("article");
-    cartao.className = "espaco";
-
-    var trocada = !!(registro && registro.url);
-    var url = trocada ? registro.url : PADRAO[espaco.chave] || "";
-
-    var moldura = document.createElement("div");
-    moldura.className = "espaco__foto";
-    if (url) {
-      var img = document.createElement("img");
-      img.src = url;
-      img.alt = espaco.rotulo;
-      img.loading = "lazy";
-      moldura.appendChild(img);
-    }
-    var marca = document.createElement("span");
-    marca.className = "espaco__marca" + (trocada ? " trocada" : "");
-    marca.textContent = trocada ? "foto publicada" : "espaço reservado";
-    moldura.appendChild(marca);
-
-    var corpo = document.createElement("div");
-    corpo.className = "espaco__corpo";
-
-    var nome = document.createElement("strong");
-    nome.textContent = espaco.rotulo;
-    corpo.appendChild(nome);
-
-    if (espaco.nota) {
-      var nota = document.createElement("span");
-      nota.textContent = espaco.nota;
-      corpo.appendChild(nota);
-    }
-
-    var acoes = document.createElement("div");
-    acoes.className = "espaco__acoes";
-
-    var entrada = document.createElement("input");
-    entrada.type = "file";
-    entrada.accept = "image/jpeg,image/png,image/webp";
-
-    var enviar = document.createElement("button");
-    enviar.type = "button";
-    enviar.className = "botao botao--ambar";
-    enviar.textContent = trocada ? "Trocar foto" : "Enviar foto";
-    enviar.addEventListener("click", function () { entrada.click(); });
-
-    entrada.addEventListener("change", function () {
-      var arquivo = entrada.files && entrada.files[0];
-      if (!arquivo) return;
-
-      var formulario = new FormData();
-      formulario.append("chave", espaco.chave);
-      formulario.append("arquivo", arquivo);
-
-      enviar.disabled = true;
-      enviar.textContent = "Enviando...";
-
-      pedir("/api/imagens", { method: "POST", body: formulario })
-        .then(function () {
-          recado("Foto publicada: " + espaco.rotulo);
-          carregarFotos();
-        })
-        .catch(function (erro) {
-          recado(erro.message, true);
-          enviar.disabled = false;
-          enviar.textContent = trocada ? "Trocar foto" : "Enviar foto";
-        });
-    });
-
-    acoes.appendChild(enviar);
-    acoes.appendChild(entrada);
-
-    if (trocada) {
-      var remover = document.createElement("button");
-      remover.type = "button";
-      remover.className = "botao botao--texto";
-      remover.textContent = "Voltar ao padrão";
-      remover.addEventListener("click", function () {
-        if (!confirm("Remover a foto de \"" + espaco.rotulo + "\" e voltar ao espaço reservado?")) return;
-        pedir("/api/imagens?chave=" + encodeURIComponent(espaco.chave), { method: "DELETE" })
-          .then(function () {
-            recado("Foto removida: " + espaco.rotulo);
-            carregarFotos();
-          })
-          .catch(function (erro) { recado(erro.message, true); });
-      });
-      acoes.appendChild(remover);
-    }
-
-    corpo.appendChild(acoes);
-    cartao.appendChild(moldura);
-    cartao.appendChild(corpo);
-    return cartao;
-  }
-
-  function carregarFotos() {
-    return pedir("/api/imagens")
-      .then(function (dados) { montarFotos(dados.imagens || {}); })
-      .catch(function (erro) { recado(erro.message, true); });
-  }
-
-  /* ---------- Informações ---------- */
+  /* ============================================================
+     INFORMAÇÕES
+     ============================================================ */
 
   function montarCampos(valores) {
     var destino = $("campos");
@@ -455,26 +609,28 @@
       var entrada = document.createElement(item.tipo === "textarea" ? "textarea" : "input");
       entrada.id = "campo-" + item.campo;
       if (item.tipo !== "textarea") entrada.type = "text";
+      if (item.campo === "fundadora-bio") entrada.rows = 10;
       entrada.value = valores[item.campo] || "";
 
       var salvar = document.createElement("button");
       salvar.type = "button";
       salvar.className = "botao botao--principal";
-      salvar.textContent = "Salvar";
+      salvar.appendChild(icone("save"));
+      salvar.appendChild(document.createTextNode("Salvar"));
       salvar.addEventListener("click", function () {
         salvar.disabled = true;
-        salvar.textContent = "Salvando...";
         pedir("/api/conteudo", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ campo: item.campo, valor: entrada.value })
         })
-          .then(function () { recado(item.rotulo + " salvo."); })
+          .then(function () {
+            estado.campos[item.campo] = entrada.value;
+            atualizarResumo();
+            recado(item.rotulo + " salvo.");
+          })
           .catch(function (erro) { recado(erro.message, true); })
-          .finally(function () {
-            salvar.disabled = false;
-            salvar.textContent = "Salvar";
-          });
+          .finally(function () { salvar.disabled = false; });
       });
 
       linha.appendChild(entrada);
@@ -489,15 +645,22 @@
 
   function carregarCampos() {
     return pedir("/api/conteudo")
-      .then(function (dados) { montarCampos(dados.campos || {}); })
+      .then(function (dados) {
+        estado.campos = dados.campos || {};
+        montarCampos(estado.campos);
+        atualizarResumo();
+      })
       .catch(function () { montarCampos({}); });
   }
 
-  /* ---------- Início ---------- */
+  /* ============================================================
+     INÍCIO
+     ============================================================ */
 
   function abrirPainel() {
     $("telaLogin").hidden = true;
     $("telaPainel").hidden = false;
+    trocarAba("resumo");
     carregarFotos();
     carregarProjetos();
     carregarCampos();

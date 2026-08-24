@@ -1,10 +1,15 @@
 /* ============================================================
    Painel do Instituto Anjos do Leite
 
-   Quatro seções: resumo, fotos, projetos e informações. Tudo é
-   salvo item a item, no próprio botão. Não existe "salvar tudo":
-   um formulário único apagaria o que não estivesse na tela e
-   travaria inteiro por causa de um campo inválido.
+   Quatro seções: resumo, fotos, projetos e informações. Fotos do
+   site e informações são salvas item a item, no próprio botão: um
+   formulário único apagaria o que não estivesse na tela e travaria
+   inteiro por causa de um campo inválido.
+
+   Projetos são a exceção, e por um motivo: texto e fotos de um
+   projeto formam uma coisa só, e as fotos dependem do endereço que
+   nasce junto com ele. Por isso vivem numa janela própria, salva de
+   uma vez, um projeto por vez.
    ============================================================ */
 
 (function () {
@@ -440,10 +445,7 @@
     else montarEspacos(mapa);
   }
 
-  /* aoMudar: o que refazer depois de enviar ou remover. A lista de
-     fotos remonta sozinha; a galeria de um projeto precisa remontar
-     ela mesma, porque vive em outra tela. */
-  function cartaoDeFoto(espaco, registro, aoMudar) {
+  function cartaoDeFoto(espaco, registro) {
     var cartao = document.createElement("article");
     cartao.className = "espaco";
 
@@ -505,7 +507,7 @@
       pedir("/api/imagens", { method: "POST", body: formulario })
         .then(function () {
           recado("Foto publicada: " + espaco.rotulo);
-          return carregarFotos().then(function () { if (aoMudar) aoMudar(); });
+          return carregarFotos();
         })
         .catch(function (erro) {
           recado(erro.message, true);
@@ -527,7 +529,7 @@
         pedir("/api/imagens?chave=" + encodeURIComponent(espaco.chave), { method: "DELETE" })
           .then(function () {
             recado("Foto removida: " + espaco.rotulo);
-            return carregarFotos().then(function () { if (aoMudar) aoMudar(); });
+            return carregarFotos();
           })
           .catch(function (erro) { recado(erro.message, true); });
       });
@@ -552,9 +554,37 @@
 
   /* ============================================================
      PROJETOS
+
+     Tudo de um projeto acontece na janela: texto, ações e as até
+     cinco fotos. As fotos ficam em espera enquanto a pessoa escolhe
+     e só sobem quando ela salva. É o que permite montar a galeria
+     já na criação, quando o endereço do projeto ainda não existe.
      ============================================================ */
 
-  var editando = null;   // slug do projeto aberto no editor
+  var LIMITE_GALERIA = 5;
+
+  var editando = null;    // slug do projeto aberto (null quando é novo)
+  var fotos = [];         // as cinco posições da galeria
+  var capa = 0;           // posição escolhida como capa (1 a 5), 0 se nenhuma
+  var capaLivre = "";     // capa que não veio da galeria (o espaço reservado do build)
+  var quemAbriu = null;   // botão que abriu a janela, para devolver o foco
+
+  function chaveGaleria(slug, numero) {
+    return "projeto-" + slug + "-" + numero;
+  }
+
+  /* mesma regra do servidor, só para mostrar o endereço enquanto digita */
+  function criarSlug(texto) {
+    return String(texto)
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, "")
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
+      .slice(0, 60);
+  }
 
   function montarProjetos(projetos) {
     var destino = $("listaProjetos");
@@ -571,6 +601,41 @@
     projetos.forEach(function (projeto) {
       var linha = document.createElement("article");
       linha.className = "registro";
+
+      var dados = document.createElement("div");
+      dados.className = "registro__dados";
+
+      /* miniatura da capa, para conferir de relance qual foto vai
+         aparecer na lista da página inicial */
+      var capaCaixa = document.createElement("div");
+      capaCaixa.className = "registro__capa";
+
+      /* mesma ordem de tentativa do site: a foto enviada no painel, o
+         espaço reservado com o nome da capa, o do endereço do projeto
+         e, se nada existir, um ícone */
+      var registro = estado.imagens[projeto.imagem || ""];
+      var tentativas = [];
+      if (registro && registro.url) tentativas.push(registro.url);
+      if (projeto.imagem) tentativas.push("/assets/img/" + projeto.imagem + ".svg" + VERSAO);
+      tentativas.push("/assets/img/projeto-" + projeto.slug + ".svg" + VERSAO);
+
+      var passo = 0;
+      var mini = document.createElement("img");
+      mini.alt = "";
+      mini.loading = "lazy";
+      mini.addEventListener("error", function () {
+        passo += 1;
+        if (passo < tentativas.length) {
+          mini.src = tentativas[passo];
+          return;
+        }
+        mini.remove();
+        capaCaixa.appendChild(icone("image"));
+      });
+      mini.src = tentativas[0];
+
+      capaCaixa.appendChild(mini);
+      dados.appendChild(capaCaixa);
 
       var texto = document.createElement("div");
       texto.className = "registro__texto";
@@ -592,6 +657,8 @@
         (projeto.acoes && projeto.acoes.length ? "  ·  " + projeto.acoes.length + " ação(ões)" : "");
       texto.appendChild(detalhe);
 
+      dados.appendChild(texto);
+
       var acoes = document.createElement("div");
       acoes.className = "registro__acoes";
 
@@ -600,7 +667,7 @@
       editar.className = "botao botao--claro";
       editar.appendChild(icone("pencil"));
       editar.appendChild(document.createTextNode("Editar"));
-      editar.addEventListener("click", function () { abrirEditor(projeto); });
+      editar.addEventListener("click", function () { abrirJanela(projeto); });
 
       var remover = document.createElement("button");
       remover.type = "button";
@@ -619,67 +686,87 @@
       acoes.appendChild(editar);
       acoes.appendChild(remover);
 
-      linha.appendChild(texto);
+      linha.appendChild(dados);
       linha.appendChild(acoes);
       destino.appendChild(linha);
     });
   }
 
-  /* ---------- Galeria de um projeto (até 5 fotos) ----------
-     As chaves seguem o slug: projeto-<slug>-1 até -5. Por isso a
-     galeria só abre depois que o projeto foi salvo: antes disso o
-     slug ainda não existe e a foto ficaria órfã. */
-  var LIMITE_GALERIA = 5;
+  /* ---------- Galeria dentro da janela ---------- */
 
-  function chaveGaleria(slug, numero) {
-    return "projeto-" + slug + "-" + numero;
-  }
-
-  /* As fotos do projeto ficam aqui, e não na aba Fotos: quem cria um
-     projeto quer resolver tudo em uma tela só. A capa é escolhida
-     entre as fotos enviadas, e não digitada. */
-  function montarGaleriaProjeto(slug) {
-    var caixa = $("galeriaProjeto");
-    var grade = $("galeriaProjetoEspacos");
-
-    if (!slug) {
-      caixa.hidden = true;
-      return;
-    }
-
-    caixa.hidden = false;
-    grade.textContent = "";
-
-    var capaAtual = $("projetoImagem").value;
-
+  function prepararFotos(slug) {
+    liberarPrevias();
+    fotos = [];
     for (var i = 1; i <= LIMITE_GALERIA; i++) {
-      grade.appendChild(cartaoFotoProjeto(slug, i, capaAtual));
+      var registro = slug ? estado.imagens[chaveGaleria(slug, i)] : null;
+      fotos.push({
+        numero: i,
+        url: (registro && registro.url) || "",   // o que já está no ar
+        arquivo: null,                           // escolhido agora, ainda não enviado
+        previa: "",
+        remover: false
+      });
     }
   }
 
-  function cartaoFotoProjeto(slug, numero, capaAtual) {
-    var chave = chaveGaleria(slug, numero);
-    var registro = estado.imagens[chave];
-    var temFoto = !!(registro && registro.url);
-    var ehCapa = capaAtual === chave;
+  function liberarPrevias() {
+    fotos.forEach(function (foto) {
+      if (foto.previa) URL.revokeObjectURL(foto.previa);
+    });
+  }
 
-    var cartao = document.createElement("article");
-    cartao.className = "foto-projeto" + (ehCapa ? " foto-projeto--capa" : "");
+  function temPendencia() {
+    return fotos.some(function (foto) { return foto.arquivo || foto.remover; });
+  }
 
-    var moldura = document.createElement("div");
-    moldura.className = "foto-projeto__quadro";
+  function montarGaleria() {
+    var destino = $("galeriaProjetoEspacos");
+    destino.textContent = "";
+    fotos.forEach(function (foto) { destino.appendChild(cartaoFoto(foto)); });
+  }
 
-    if (temFoto) {
+  function cartaoFoto(foto) {
+    var mostra = foto.remover ? "" : (foto.previa || foto.url);
+    var ehCapa = !!mostra && capa === foto.numero;
+
+    var cartao = document.createElement("div");
+    cartao.className =
+      "foto-projeto" + (mostra ? " foto-projeto--cheia" : "") + (ehCapa ? " foto-projeto--capa" : "");
+
+    var entrada = document.createElement("input");
+    entrada.type = "file";
+    entrada.accept = "image/jpeg,image/png,image/webp";
+    entrada.hidden = true;
+    entrada.addEventListener("change", function () {
+      var arquivo = entrada.files && entrada.files[0];
+      if (!arquivo) return;
+      if (foto.previa) URL.revokeObjectURL(foto.previa);
+      foto.arquivo = arquivo;
+      foto.previa = URL.createObjectURL(arquivo);
+      foto.remover = false;
+      if (!capa) capa = foto.numero;   // a primeira foto vira capa sozinha
+      montarGaleria();
+    });
+
+    var quadro = document.createElement("button");
+    quadro.type = "button";
+    quadro.className = "foto-projeto__quadro";
+    quadro.setAttribute("aria-label", (mostra ? "Trocar" : "Escolher") + " a foto " + foto.numero);
+    quadro.addEventListener("click", function () { entrada.click(); });
+
+    if (mostra) {
       var img = document.createElement("img");
-      img.src = registro.url;
-      img.alt = "Foto " + numero + " do projeto";
-      img.loading = "lazy";
-      moldura.appendChild(img);
+      img.src = mostra;
+      img.alt = "";
+      quadro.appendChild(img);
     } else {
       var vazio = document.createElement("span");
       vazio.className = "foto-projeto__vazio";
       vazio.appendChild(icone("image-plus"));
-      moldura.appendChild(vazio);
+      var rotulo = document.createElement("span");
+      rotulo.textContent = "Foto " + foto.numero;
+      vazio.appendChild(rotulo);
+      quadro.appendChild(vazio);
     }
 
     if (ehCapa) {
@@ -687,149 +774,197 @@
       selo.className = "foto-projeto__selo";
       selo.appendChild(icone("star"));
       selo.appendChild(document.createTextNode("Capa"));
-      moldura.appendChild(selo);
+      quadro.appendChild(selo);
+    } else if (mostra && foto.arquivo) {
+      var espera = document.createElement("span");
+      espera.className = "foto-projeto__selo foto-projeto__selo--espera";
+      espera.textContent = "nova";
+      quadro.appendChild(espera);
     }
 
-    cartao.appendChild(moldura);
+    cartao.appendChild(quadro);
+    cartao.appendChild(entrada);
 
-    var acoes = document.createElement("div");
-    acoes.className = "foto-projeto__acoes";
+    if (mostra) {
+      var acoes = document.createElement("div");
+      acoes.className = "foto-projeto__acoes";
 
-    var entrada = document.createElement("input");
-    entrada.type = "file";
-    entrada.accept = "image/jpeg,image/png,image/webp";
-    entrada.hidden = true;
-
-    var enviar = document.createElement("button");
-    enviar.type = "button";
-    enviar.className = "botao " + (temFoto ? "botao--claro" : "botao--ambar");
-    enviar.textContent = temFoto ? "Trocar" : "Enviar";
-    enviar.addEventListener("click", function () { entrada.click(); });
-
-    entrada.addEventListener("change", function () {
-      var arquivo = entrada.files && entrada.files[0];
-      if (!arquivo) return;
-
-      var formulario = new FormData();
-      formulario.append("chave", chave);
-      formulario.append("arquivo", arquivo);
-
-      enviar.disabled = true;
-      enviar.textContent = "Enviando...";
-
-      pedir("/api/imagens", { method: "POST", body: formulario })
-        .then(function () {
-          /* primeira foto do projeto vira a capa sozinha: é o que a
-             pessoa espera, e evita projeto publicado sem capa */
-          if (!$("projetoImagem").value) {
-            $("projetoImagem").value = chave;
-            salvarCapa(chave);
-          }
-          recado("Foto enviada.");
-          return carregarFotos().then(function () { montarGaleriaProjeto(slug); });
-        })
-        .catch(function (erro) {
-          recado(erro.message, true);
-          enviar.disabled = false;
-          enviar.textContent = temFoto ? "Trocar" : "Enviar";
-        });
-    });
-
-    acoes.appendChild(enviar);
-    acoes.appendChild(entrada);
-
-    if (temFoto && !ehCapa) {
-      var usarCapa = document.createElement("button");
-      usarCapa.type = "button";
-      usarCapa.className = "botao botao--claro";
-      usarCapa.appendChild(icone("star"));
-      usarCapa.appendChild(document.createTextNode("Capa"));
-      usarCapa.addEventListener("click", function () {
-        $("projetoImagem").value = chave;
-        salvarCapa(chave);
-        montarGaleriaProjeto(slug);
+      var marcar = document.createElement("button");
+      marcar.type = "button";
+      marcar.className = "foto-projeto__botao foto-projeto__botao--capa" + (ehCapa ? " ativo" : "");
+      marcar.setAttribute("aria-label", "Usar a foto " + foto.numero + " como capa");
+      marcar.setAttribute("title", "Usar como capa");
+      marcar.appendChild(icone("star"));
+      marcar.addEventListener("click", function () {
+        capa = foto.numero;
+        capaLivre = "";
+        montarGaleria();
       });
-      acoes.appendChild(usarCapa);
-    }
 
-    if (temFoto) {
-      var remover = document.createElement("button");
-      remover.type = "button";
-      remover.className = "botao botao--texto";
-      remover.textContent = "Remover";
-      remover.addEventListener("click", function () {
-        if (!confirm("Remover a foto " + numero + " deste projeto?")) return;
-        pedir("/api/imagens?chave=" + encodeURIComponent(chave), { method: "DELETE" })
-          .then(function () {
-            if ($("projetoImagem").value === chave) {
-              $("projetoImagem").value = "";
-              salvarCapa("");
-            }
-            recado("Foto removida.");
-            return carregarFotos().then(function () { montarGaleriaProjeto(slug); });
-          })
-          .catch(function (erro) { recado(erro.message, true); });
+      var tirar = document.createElement("button");
+      tirar.type = "button";
+      tirar.className = "foto-projeto__botao foto-projeto__botao--remover";
+      tirar.setAttribute("aria-label", "Tirar a foto " + foto.numero);
+      tirar.setAttribute("title", "Tirar esta foto");
+      tirar.appendChild(icone("trash-2"));
+      tirar.addEventListener("click", function () {
+        if (foto.previa) {
+          URL.revokeObjectURL(foto.previa);
+          foto.previa = "";
+        }
+        foto.arquivo = null;
+        if (foto.url) foto.remover = true;   // já está no ar: sai quando salvar
+        if (capa === foto.numero) capa = 0;
+        montarGaleria();
       });
-      acoes.appendChild(remover);
+
+      acoes.appendChild(marcar);
+      acoes.appendChild(tirar);
+      cartao.appendChild(acoes);
     }
 
-    cartao.appendChild(acoes);
     return cartao;
   }
 
-  /* a capa é salva na hora, junto com o resto do projeto que já existe */
-  function salvarCapa(chave) {
-    if (!editando) return;
-    var projeto = estado.projetos.find(function (p) { return p.slug === editando; });
-    if (!projeto) return;
+  /* ---------- Abrir e fechar a janela ---------- */
 
-    pedir("/api/projetos", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        slug: projeto.slug,
-        nome: projeto.nome,
-        etiqueta: projeto.etiqueta,
-        resumo: projeto.resumo,
-        texto: projeto.texto,
-        acoes: projeto.acoes,
-        publicado: projeto.publicado,
-        imagem: chave
-      })
-    })
-      .then(function () { return carregarProjetos(); })
-      .catch(function (erro) { recado(erro.message, true); });
+  function mostrarEndereco() {
+    var slug = editando || criarSlug($("projetoNome").value);
+    $("editorEndereco").textContent = slug ? "/projetos/" + slug + ".html" : "";
   }
 
-  function abrirEditor(projeto) {
+  function abrirJanela(projeto) {
+    quemAbriu = document.activeElement;
     editando = projeto ? projeto.slug : null;
-    montarGaleriaProjeto(editando);
-    $("editorTitulo").textContent = projeto ? "Editando: " + projeto.nome : "Novo projeto";
+    capa = 0;
+    capaLivre = "";
+
+    $("editorTitulo").textContent = projeto ? projeto.nome : "Novo projeto";
     $("projetoNome").value = projeto ? projeto.nome || "" : "";
     $("projetoEtiqueta").value = projeto ? projeto.etiqueta || "" : "";
     $("projetoResumo").value = projeto ? projeto.resumo || "" : "";
     $("projetoTexto").value = projeto ? projeto.texto || "" : "";
     $("projetoAcoes").value = projeto && projeto.acoes ? projeto.acoes.join("\n") : "";
-    $("projetoImagem").value = projeto ? projeto.imagem || "" : "";
     $("projetoPublicado").checked = projeto ? projeto.publicado !== false : true;
-    $("editorProjeto").hidden = false;
-    $("editorProjeto").scrollIntoView({ behavior: "smooth", block: "start" });
-    $("projetoNome").focus();
+
+    prepararFotos(editando);
+
+    /* de onde vem a capa: de uma das cinco posições da galeria ou do
+       espaço reservado que os projetos de origem já traziam */
+    if (projeto && projeto.imagem) {
+      capaLivre = projeto.imagem;
+      for (var i = 1; i <= LIMITE_GALERIA; i++) {
+        if (editando && projeto.imagem === chaveGaleria(editando, i)) {
+          capa = i;
+          capaLivre = "";
+          break;
+        }
+      }
+    }
+
+    montarGaleria();
+    mostrarEndereco();
+
+    $("janelaProjeto").hidden = false;
+    document.body.classList.add("travado");
+    $("janelaProjeto").querySelector(".janela__corpo").scrollTop = 0;
+    setTimeout(function () { $("projetoNome").focus(); }, 60);
   }
 
-  function fecharEditor() {
+  function fecharJanela(perguntar) {
+    if (perguntar && temPendencia() &&
+        !confirm("Sair sem salvar? As fotos escolhidas agora não serão enviadas.")) return;
+
+    liberarPrevias();
+    fotos = [];
     editando = null;
-    $("editorProjeto").hidden = true;
-    $("galeriaProjeto").hidden = true;
+    capa = 0;
+    capaLivre = "";
+
+    $("janelaProjeto").hidden = true;
+    document.body.classList.remove("travado");
+
+    if (quemAbriu && quemAbriu.focus) quemAbriu.focus();
+    quemAbriu = null;
   }
 
-  $("novoProjeto").addEventListener("click", function () { abrirEditor(null); });
-  $("cancelarProjeto").addEventListener("click", fecharEditor);
+  $("novoProjeto").addEventListener("click", function () { abrirJanela(null); });
+  $("cancelarProjeto").addEventListener("click", function () { fecharJanela(true); });
+  $("fecharJanela").addEventListener("click", function () { fecharJanela(true); });
+  $("projetoNome").addEventListener("input", mostrarEndereco);
+
+  document.querySelector("[data-fechar-janela]").addEventListener("click", function () {
+    fecharJanela(true);
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !$("janelaProjeto").hidden) fecharJanela(true);
+  });
+
+  /* ---------- Salvar ---------- */
+
+  /* a chave da capa depende do slug, que só existe depois de o
+     projeto nascer: por isso ela é montada na hora de salvar */
+  function chaveDaCapa(slug) {
+    if (capa) {
+      var foto = fotos[capa - 1];
+      if (foto && !foto.remover && (foto.arquivo || foto.url)) return chaveGaleria(slug, capa);
+    }
+    return capaLivre;
+  }
+
+  /* uma foto por vez, em fila: cinco envios ao mesmo tempo derrubam
+     o limite de tamanho da requisição em conexões lentas */
+  function enviarFotos(slug) {
+    var fila = Promise.resolve();
+
+    fotos.forEach(function (foto) {
+      var chave = chaveGaleria(slug, foto.numero);
+
+      if (foto.arquivo) {
+        fila = fila.then(function () {
+          var formulario = new FormData();
+          formulario.append("chave", chave);
+          formulario.append("arquivo", foto.arquivo);
+          return pedir("/api/imagens", { method: "POST", body: formulario });
+        });
+      } else if (foto.remover && foto.url) {
+        fila = fila.then(function () {
+          return pedir("/api/imagens?chave=" + encodeURIComponent(chave), { method: "DELETE" });
+        });
+      }
+    });
+
+    return fila;
+  }
+
+  function ajustarCapa(slug, salvo) {
+    var chave = chaveDaCapa(slug);
+    if (!salvo || salvo.imagem === chave) return Promise.resolve();
+
+    return pedir("/api/projetos", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        slug: slug,
+        nome: salvo.nome,
+        etiqueta: salvo.etiqueta,
+        resumo: salvo.resumo,
+        texto: salvo.texto,
+        acoes: salvo.acoes,
+        publicado: salvo.publicado,
+        imagem: chave
+      })
+    });
+  }
 
   $("editorProjeto").addEventListener("submit", function (e) {
     e.preventDefault();
+
     var botao = $("salvarProjeto");
+    var rotulo = $("salvarTexto");
     botao.disabled = true;
+    rotulo.textContent = "Salvando...";
 
     var corpo = {
       slug: editando || "",
@@ -837,10 +972,14 @@
       etiqueta: $("projetoEtiqueta").value,
       resumo: $("projetoResumo").value,
       texto: $("projetoTexto").value,
-      imagem: $("projetoImagem").value,
       publicado: $("projetoPublicado").checked,
-      acoes: $("projetoAcoes").value.split("\n").map(function (l) { return l.trim(); }).filter(Boolean)
+      acoes: $("projetoAcoes").value.split("\n").map(function (l) { return l.trim(); }).filter(Boolean),
+      /* projeto novo ainda não tem endereço: a capa entra no segundo
+         passo, quando o slug já existe */
+      imagem: editando ? chaveDaCapa(editando) : capaLivre
     };
+
+    var slugFinal = "";
 
     pedir("/api/projetos", {
       method: "POST",
@@ -848,22 +987,34 @@
       body: JSON.stringify(corpo)
     })
       .then(function (dados) {
+        var salvo = dados && dados.projeto;
+        slugFinal = (salvo && salvo.slug) || editando;
+        if (fotos.some(function (f) { return f.arquivo || f.remover; })) {
+          rotulo.textContent = "Enviando fotos...";
+        }
+        return enviarFotos(slugFinal).then(function () { return ajustarCapa(slugFinal, salvo); });
+      })
+      .then(function () {
         recado("Projeto salvo.");
-        carregarProjetos();
-
-        /* projeto novo: em vez de fechar, abre a galeria com o slug
-           que acabou de ser criado, que é o passo seguinte natural */
-        if (!editando && dados && dados.projeto) {
-          editando = dados.projeto.slug;
-          $("editorTitulo").textContent = "Editando: " + dados.projeto.nome;
-          montarGaleriaProjeto(editando);
-          $("galeriaProjeto").scrollIntoView({ behavior: "smooth", block: "start" });
-        } else {
-          fecharEditor();
+        fecharJanela(false);
+        return carregarFotos().then(carregarProjetos);
+      })
+      .catch(function (erro) {
+        recado(erro.message, true);
+        /* o projeto pode ter sido salvo e a foto não: a galeria volta
+           a mostrar o que realmente está no ar, sem fechar a janela */
+        if (slugFinal) {
+          carregarFotos().then(function () {
+            editando = slugFinal;
+            prepararFotos(slugFinal);
+            montarGaleria();
+          });
         }
       })
-      .catch(function (erro) { recado(erro.message, true); })
-      .finally(function () { botao.disabled = false; });
+      .finally(function () {
+        botao.disabled = false;
+        rotulo.textContent = "Salvar projeto";
+      });
   });
 
   function carregarProjetos() {
@@ -954,8 +1105,9 @@
     $("telaLogin").hidden = true;
     $("telaPainel").hidden = false;
     trocarAba("resumo");
-    carregarFotos();
-    carregarProjetos();
+    /* as fotos entram antes dos projetos: a lista usa o mapa de
+       imagens para montar a miniatura da capa */
+    carregarFotos().then(carregarProjetos);
     carregarCampos();
   }
 

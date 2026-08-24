@@ -2173,15 +2173,17 @@ ul, ol { list-style: none; padding: 0; }
   display: flex;
   gap: clamp(0.75rem, 0.6rem + 0.8vw, 1.25rem);
   overflow-x: auto;
-  scroll-snap-type: x mandatory;
+  /* proximity, e não mandatory: o laço reposiciona a rolagem por
+     código, e o encaixe obrigatório brigava com esse ajuste */
+  scroll-snap-type: x proximity;
   scroll-padding-left: max(1rem, calc((100vw - var(--container)) / 2));
   padding-inline: max(1rem, calc((100vw - var(--container)) / 2));
-  padding-bottom: 1rem;
-  scrollbar-width: thin;
-  scrollbar-color: var(--roxo-linha) transparent;
+  padding-bottom: 0.5rem;
+  /* a galeria não tem fim: barra de rolagem só atrapalharia */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-.mural__palco::-webkit-scrollbar { height: 6px; }
-.mural__palco::-webkit-scrollbar-thumb { background: var(--roxo-linha); border-radius: 999px; }
+.mural__palco::-webkit-scrollbar { display: none; }
 
 .mural__item {
   position: relative;

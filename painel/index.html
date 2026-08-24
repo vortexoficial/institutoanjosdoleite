@@ -285,58 +285,11 @@
         </div>
 
         <div class="alerta">
-          O endereço da página vem do nome do projeto. Mudar o nome muda o endereço, e links
-          antigos param de funcionar. Prefira ajustar o texto a renomear.
+          O endereço da página nasce do nome do projeto e não muda mais depois de criado.
+          Escolha o nome com calma na hora de criar.
         </div>
 
         <div id="listaProjetos"></div>
-
-        <form class="editor" id="editorProjeto" hidden>
-          <h3 id="editorTitulo">Novo projeto</h3>
-
-          <label for="projetoNome">Nome do projeto</label>
-          <input type="text" id="projetoNome" maxlength="90" required>
-
-          <label for="projetoEtiqueta">Etiqueta</label>
-          <input type="text" id="projetoEtiqueta" maxlength="30" placeholder="Acolhimento, Formação, Mobilização...">
-
-          <label for="projetoResumo">Resumo (aparece na lista da página inicial)</label>
-          <textarea id="projetoResumo" rows="3" maxlength="400"></textarea>
-
-          <label for="projetoTexto">Texto da página</label>
-          <textarea id="projetoTexto" rows="10" maxlength="6000"></textarea>
-          <span class="dica">Deixe uma linha em branco entre um parágrafo e outro.</span>
-
-          <label for="projetoAcoes">Ações em andamento</label>
-          <textarea id="projetoAcoes" rows="5" maxlength="2000"></textarea>
-          <span class="dica">Uma ação por linha.</span>
-
-          <input type="hidden" id="projetoImagem">
-
-          <label class="linha-caixa">
-            <input type="checkbox" id="projetoPublicado" checked>
-            <span>Publicado no site</span>
-          </label>
-
-          <div class="editor__botoes">
-            <button class="botao botao--principal" type="submit" id="salvarProjeto">
-              <svg aria-hidden="true"><use href="#p-save"/></svg>
-              Salvar projeto
-            </button>
-            <button class="botao botao--claro" type="button" id="cancelarProjeto">Cancelar</button>
-          </div>
-        </form>
-
-        <!-- Galeria do projeto: fica fora do formulário porque cada foto
-             é enviada sozinha, na hora, e não junto com o texto -->
-        <section class="editor" id="galeriaProjeto" hidden>
-          <h3>Galeria do projeto</h3>
-          <p class="dica">
-            Até cinco fotos, que aparecem na página do projeto. Cada uma é enviada na hora,
-            sem precisar salvar de novo.
-          </p>
-          <div class="galeria-projeto" id="galeriaProjetoEspacos"></div>
-        </section>
       </section>
 
       <!-- ---------- INFORMAÇÕES ---------- -->
@@ -370,6 +323,79 @@
       <span>Dados</span>
     </button>
   </nav>
+</div>
+
+<!-- ============================================================
+     JANELA DO PROJETO
+
+     Criar e editar acontecem aqui, por cima da lista. Antes o
+     formulário abria no fim da página e a pessoa era jogada para
+     baixo, longe do projeto em que tinha acabado de clicar.
+
+     As fotos moram dentro da janela, ao lado do texto: ficam em
+     espera enquanto a pessoa escolhe e sobem quando ela salva. É o
+     que permite montar a galeria já na criação, quando o endereço
+     do projeto ainda nem existe.
+     ============================================================ -->
+<div class="janela" id="janelaProjeto" hidden>
+  <div class="janela__fundo" data-fechar-janela></div>
+
+  <div class="janela__caixa" role="dialog" aria-modal="true" aria-labelledby="editorTitulo">
+    <header class="janela__topo">
+      <div class="janela__identidade">
+        <h3 id="editorTitulo">Novo projeto</h3>
+        <p class="janela__endereco" id="editorEndereco"></p>
+      </div>
+      <button class="janela__fechar" type="button" id="fecharJanela" aria-label="Fechar">
+        <svg aria-hidden="true"><use href="#p-x"/></svg>
+      </button>
+    </header>
+
+    <form class="janela__corpo" id="editorProjeto">
+      <div class="janela__coluna">
+        <label for="projetoNome">Nome do projeto</label>
+        <input type="text" id="projetoNome" maxlength="90" required autocomplete="off">
+
+        <label for="projetoEtiqueta">Etiqueta</label>
+        <input type="text" id="projetoEtiqueta" maxlength="30" placeholder="Acolhimento, Formação, Mobilização..." autocomplete="off">
+
+        <label for="projetoResumo">Resumo (aparece na lista da página inicial)</label>
+        <textarea id="projetoResumo" rows="3" maxlength="400"></textarea>
+
+        <label for="projetoTexto">Texto da página</label>
+        <textarea id="projetoTexto" rows="10" maxlength="6000"></textarea>
+        <span class="dica">Deixe uma linha em branco entre um parágrafo e outro.</span>
+      </div>
+
+      <div class="janela__coluna">
+        <span class="janela__rotulo">Fotos do projeto</span>
+        <p class="dica">
+          Até cinco fotos na página do projeto. Clique na estrela para escolher qual
+          delas é a capa, a que aparece na lista da página inicial.
+        </p>
+        <div class="galeria-projeto" id="galeriaProjetoEspacos"></div>
+
+        <label for="projetoAcoes">Ações em andamento</label>
+        <textarea id="projetoAcoes" rows="6" maxlength="2000"></textarea>
+        <span class="dica">Uma ação por linha.</span>
+      </div>
+    </form>
+
+    <footer class="janela__rodape">
+      <label class="linha-caixa">
+        <input type="checkbox" id="projetoPublicado" checked>
+        <span>Publicado no site</span>
+      </label>
+
+      <div class="janela__botoes">
+        <button class="botao botao--claro" type="button" id="cancelarProjeto">Cancelar</button>
+        <button class="botao botao--principal" type="submit" form="editorProjeto" id="salvarProjeto">
+          <svg aria-hidden="true"><use href="#p-save"/></svg>
+          <span id="salvarTexto">Salvar projeto</span>
+        </button>
+      </div>
+    </footer>
+  </div>
 </div>
 
 <div class="recado" id="recado" role="status" aria-live="polite"></div>

@@ -60,6 +60,9 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* com a janela aberta, só o miolo dela rola */
+body.travado { overflow: hidden; }
+
 img { display: block; max-width: 100%; height: auto; }
 button, input, textarea, select { font: inherit; color: inherit; }
 button { cursor: pointer; }
@@ -546,6 +549,23 @@ textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
 .registro:hover { border-color: var(--roxo-linha); }
 .registro + .registro { margin-top: 0.75rem; }
 
+/* a capa do projeto na própria linha da lista: confere de relance
+   qual foto vai aparecer na página inicial */
+.registro__capa {
+  width: 54px;
+  height: 54px;
+  flex: none;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--roxo-suave);
+  display: grid;
+  place-items: center;
+  color: var(--roxo-linha);
+}
+.registro__capa img { width: 100%; height: 100%; object-fit: cover; }
+.registro__capa svg { width: 20px; height: 20px; }
+
+.registro__dados { display: flex; align-items: center; gap: 0.9rem; min-width: 0; flex: 1 1 260px; }
 .registro__texto { display: grid; gap: 0.15rem; min-width: 0; }
 .registro__texto strong { font-family: var(--fonte-titulo); font-size: 1rem; }
 .registro__texto span { font-size: 0.83rem; color: var(--texto-claro); overflow-wrap: anywhere; }
@@ -574,33 +594,147 @@ textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
   color: var(--texto-medio);
 }
 
-.editor {
-  margin-top: 1.5rem;
-  background: var(--superficie);
-  border: 1px solid var(--linha);
-  border-radius: var(--raio-g);
-  box-shadow: var(--sombra);
-  padding: clamp(1.15rem, 2vw, 1.75rem);
-  display: grid;
-  gap: 0.3rem;
+.linha-caixa {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
 }
-.editor h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
-.editor label {
+.linha-caixa input { width: 18px; height: 18px; min-height: 0; accent-color: var(--roxo); }
+.linha-caixa span { font-size: 0.92rem; color: var(--texto-medio); }
+
+/* ============================================================
+   JANELA DO PROJETO
+   ------------------------------------------------------------
+   Criar e editar abrem por cima da lista. No computador é um
+   cartão centrado; no celular, uma folha que sobe e ocupa quase
+   toda a tela. O topo e o rodapé ficam parados: só o miolo rola,
+   então o botão de salvar nunca some da vista.
+   ============================================================ */
+
+.janela {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: end center;
+}
+@media (min-width: 720px) {
+  .janela { place-items: center; padding: 1.5rem; }
+}
+
+.janela__fundo {
+  position: absolute;
+  inset: 0;
+  background: rgba(46, 12, 70, 0.5);
+  animation: janela-fundo 0.2s ease both;
+}
+
+.janela__caixa {
+  position: relative;
+  width: min(1020px, 100%);
+  max-height: 94dvh;
+  background: var(--fundo);
+  border-radius: var(--raio-g) var(--raio-g) 0 0;
+  box-shadow: 0 24px 64px rgba(46, 12, 70, 0.3);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  overflow: hidden;
+  animation: janela-sobe 0.26s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+@media (min-width: 720px) {
+  .janela__caixa { border-radius: var(--raio-g); max-height: min(90dvh, 940px); }
+}
+
+@keyframes janela-fundo { from { opacity: 0; } to { opacity: 1; } }
+@keyframes janela-sobe {
+  from { opacity: 0; transform: translateY(24px) scale(0.99); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .janela__fundo, .janela__caixa { animation: none; }
+}
+
+.janela__topo {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.1rem clamp(1rem, 2.5vw, 1.75rem);
+  background: var(--superficie);
+  border-bottom: 1px solid var(--linha);
+}
+.janela__identidade { min-width: 0; }
+.janela__topo h3 { font-size: clamp(1.05rem, 1rem + 0.4vw, 1.3rem); }
+.janela__endereco {
+  font-size: 0.82rem;
+  color: var(--texto-claro);
+  overflow-wrap: anywhere;
+}
+.janela__endereco:empty { display: none; }
+
+.janela__fechar {
+  margin-left: auto;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  background: var(--superficie);
+  color: var(--texto-medio);
+  transition: color var(--transicao), border-color var(--transicao), background-color var(--transicao);
+}
+.janela__fechar:hover { color: var(--roxo); border-color: var(--roxo-linha); background: var(--roxo-suave); }
+.janela__fechar svg { width: 18px; height: 18px; }
+
+.janela__corpo {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: clamp(1rem, 2.5vw, 1.75rem);
+  display: grid;
+  gap: 1.5rem;
+  align-content: start;
+}
+@media (min-width: 920px) {
+  .janela__corpo {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    column-gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+}
+
+.janela__coluna { display: grid; gap: 0.3rem; align-content: start; min-width: 0; }
+
+/* no celular os campos altos empurravam as fotos para longe: as
+   caixas encolhem e continuam esticáveis pela alça */
+@media (max-width: 919px) {
+  .janela__corpo textarea { height: auto; min-height: 92px; }
+  .janela__corpo #projetoTexto { min-height: 150px; }
+}
+.janela__coluna label,
+.janela__rotulo {
   font-family: var(--fonte-titulo);
   font-weight: 700;
   font-size: 0.88rem;
   margin-top: 0.85rem;
 }
-.editor .dica { font-size: 0.82rem; color: var(--texto-claro); }
-.editor__botoes { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.5rem; }
+.janela__coluna > *:first-child { margin-top: 0; }
+.janela__coluna .dica { font-size: 0.82rem; color: var(--texto-claro); }
 
-.linha-caixa {
-  display: flex !important;
+.janela__rodape {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.6rem;
-  margin-top: 1.15rem !important;
+  gap: 0.75rem;
+  padding: 0.9rem clamp(1rem, 2.5vw, 1.75rem);
+  padding-bottom: max(0.9rem, env(safe-area-inset-bottom));
+  background: var(--superficie);
+  border-top: 1px solid var(--linha);
 }
-.linha-caixa input { width: 18px; height: 18px; min-height: 0; }
+.janela__botoes { margin-left: auto; display: flex; gap: 0.6rem; }
+@media (max-width: 520px) {
+  .janela__botoes { width: 100%; margin-left: 0; }
+  .janela__botoes .botao { flex: 1 1 0; justify-content: center; }
+}
 
 /* ============================================================
    INFORMAÇÕES
@@ -691,61 +825,6 @@ textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
   *, *::before, *::after { transition-duration: 0.001ms !important; }
 }
 
-/* ============================================================
-   SUB-ABAS DAS FOTOS
-   ------------------------------------------------------------
-   Uma por parte do site. Sem isso a tela virava uma lista de 34
-   cartões e ninguém achava a foto que queria trocar.
-   ============================================================ */
-
-.subabas {
-  display: flex;
-  gap: 0.4rem;
-  margin-bottom: 1.25rem;
-  padding-bottom: 0.35rem;
-  overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--roxo-linha) transparent;
-}
-.subabas::-webkit-scrollbar { height: 5px; }
-.subabas::-webkit-scrollbar-thumb { background: var(--roxo-linha); border-radius: 999px; }
-
-.subaba {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex: none;
-  min-height: 40px;
-  padding: 0.45rem 0.9rem;
-  border: 1px solid var(--linha);
-  border-radius: 999px;
-  background: var(--superficie);
-  color: var(--texto-medio);
-  font-family: var(--fonte-titulo);
-  font-weight: 700;
-  font-size: 0.86rem;
-  white-space: nowrap;
-  transition: background-color var(--transicao), border-color var(--transicao), color var(--transicao);
-}
-.subaba:hover { border-color: var(--roxo-linha); color: var(--roxo); }
-.subaba.ativa {
-  background: var(--roxo);
-  border-color: var(--roxo);
-  color: #fff;
-}
-
-.subaba__conta {
-  font-size: 0.72rem;
-  font-weight: 800;
-  padding: 0.05rem 0.4rem;
-  border-radius: 999px;
-  background: var(--fundo);
-  color: var(--texto-claro);
-}
-.subaba.ativa .subaba__conta { background: rgba(255, 255, 255, 0.2); color: #fff; }
-.subaba__conta.completa { background: #e6f6ec; color: var(--verde); }
-.subaba.ativa .subaba__conta.completa { background: rgba(255, 255, 255, 0.25); color: #fff; }
-
 /* ---------- Progresso da parte aberta ---------- */
 
 .progresso { margin-bottom: 1.5rem; max-width: 520px; }
@@ -776,20 +855,6 @@ textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
   font-size: 0.92rem;
   color: var(--texto-medio);
 }
-
-/* ============================================================
-   GALERIA DE UM PROJETO
-   ============================================================ */
-
-.galeria-projeto {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr));
-  gap: 0.85rem;
-  margin-top: 1rem;
-}
-.galeria-projeto .espaco__foto { aspect-ratio: 1; }
-.galeria-projeto .espaco__corpo { padding: 0.7rem 0.8rem 0.8rem; }
-.galeria-projeto .botao { font-size: 0.82rem; padding-inline: 0.75rem; }
 
 /* ============================================================
    ÍNDICE DE ÁLBUNS (fotos por parte do site)
@@ -885,65 +950,95 @@ textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
 
 /* ============================================================
    FOTOS DE UM PROJETO
+   ------------------------------------------------------------
+   Cinco quadrados. Clicar no quadro escolhe ou troca o arquivo;
+   os dois botões redondos no canto marcam a capa e removem. Os
+   botões de texto de antes não cabiam na coluna da janela.
    ============================================================ */
 
 .galeria-projeto {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr));
-  gap: 0.85rem;
-  margin-top: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 108px), 1fr));
+  gap: 0.7rem;
+  margin-top: 0.75rem;
 }
 
-.foto-projeto {
-  border: 1px solid var(--linha);
-  border-radius: var(--raio);
-  overflow: hidden;
-  background: var(--superficie);
-  transition: border-color var(--transicao);
-}
-.foto-projeto--capa { border-color: var(--ambar); box-shadow: 0 0 0 2px rgba(251, 185, 33, 0.25); }
+.foto-projeto { position: relative; min-width: 0; }
 
 .foto-projeto__quadro {
   position: relative;
+  width: 100%;
   aspect-ratio: 1;
-  background: var(--roxo-suave);
   display: grid;
   place-items: center;
+  gap: 0.3rem;
+  padding: 0;
+  overflow: hidden;
+  border: 1px dashed var(--roxo-linha);
+  border-radius: var(--raio);
+  background: var(--superficie);
+  color: var(--texto-claro);
+  transition: border-color var(--transicao), background-color var(--transicao), color var(--transicao);
 }
-.foto-projeto__quadro img { width: 100%; height: 100%; object-fit: cover; }
+.foto-projeto__quadro:hover { border-color: var(--roxo); color: var(--roxo); background: var(--roxo-suave); }
+.foto-projeto__quadro img { width: 100%; height: 100%; object-fit: cover; grid-area: 1 / 1; }
 
-.foto-projeto__vazio { color: var(--roxo-linha); }
-.foto-projeto__vazio svg { width: 28px; height: 28px; }
+.foto-projeto--cheia .foto-projeto__quadro { border-style: solid; border-color: var(--linha); }
+.foto-projeto--capa .foto-projeto__quadro {
+  border-color: var(--ambar);
+  box-shadow: 0 0 0 2px rgba(251, 185, 33, 0.3);
+}
 
+.foto-projeto__vazio { display: grid; justify-items: center; gap: 0.25rem; }
+.foto-projeto__vazio svg { width: 22px; height: 22px; }
+.foto-projeto__vazio span {
+  font-family: var(--fonte-titulo);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+/* selo da capa e da foto ainda não enviada */
 .foto-projeto__selo {
   position: absolute;
-  top: 0.4rem;
-  left: 0.4rem;
+  left: 0.35rem;
+  bottom: 0.35rem;
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.15rem 0.5rem;
+  gap: 0.2rem;
+  padding: 0.1rem 0.45rem;
   border-radius: 999px;
   background: var(--ambar);
   color: var(--roxo-escuro);
   font-family: var(--fonte-titulo);
-  font-size: 0.68rem;
+  font-size: 0.64rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
+  pointer-events: none;
 }
-.foto-projeto__selo svg { width: 12px; height: 12px; }
+.foto-projeto__selo svg { width: 11px; height: 11px; }
+.foto-projeto__selo--espera { background: var(--roxo); color: #fff; }
 
 .foto-projeto__acoes {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.35rem;
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-  padding: 0.6rem;
+  gap: 0.25rem;
 }
-.foto-projeto__acoes .botao {
-  min-height: 36px;
-  padding: 0.3rem 0.6rem;
-  font-size: 0.8rem;
-  flex: 1 1 auto;
+.foto-projeto__botao {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--texto-medio);
+  box-shadow: 0 2px 6px rgba(46, 12, 70, 0.2);
+  transition: background-color var(--transicao), color var(--transicao);
 }
-.foto-projeto__acoes .botao svg { width: 14px; height: 14px; }
+.foto-projeto__botao svg { width: 15px; height: 15px; }
+.foto-projeto__botao:hover { background: #fff; color: var(--roxo); }
+.foto-projeto__botao--capa.ativo { background: var(--ambar); color: var(--roxo-escuro); }
+.foto-projeto__botao--remover:hover { color: var(--vermelho); }

@@ -223,15 +223,40 @@
     if (!raiz) return;
 
     var palco = raiz.querySelector("[data-mural-palco]");
-    var itens = Array.prototype.slice.call(raiz.querySelectorAll("[data-mural-item]"));
+    var originais = Array.prototype.slice.call(raiz.querySelectorAll("[data-mural-item]"));
     var contador = raiz.querySelector("[data-mural-atual]");
     var anterior = raiz.querySelector("[data-mural-anterior]");
     var proximo = raiz.querySelector("[data-mural-proximo]");
-    if (!palco || !itens.length) return;
+    if (!palco || !originais.length) return;
 
+    var quantidade = originais.length;
+
+    /* ---------- Laço sem fim ----------
+       Três cópias da lista e a rolagem começa na do meio. Quando o
+       visitante passa de um lado, a posição volta para o conjunto do
+       meio sem animação: ele nunca chega ao fim, e nunca vê o pulo.
+       As cópias não são lidas por leitor de tela. */
+    for (var volta = 0; volta < 2; volta++) {
+      originais.forEach(function (item) {
+        var clone = item.cloneNode(true);
+        clone.setAttribute("aria-hidden", "true");
+        clone.setAttribute("tabindex", "-1");
+        palco.appendChild(clone);
+      });
+    }
+
+    var itens = Array.prototype.slice.call(raiz.querySelectorAll("[data-mural-item]"));
+    var larguraConjunto = 0;
     var atual = 0;
 
     function doisDigitos(n) { return (n < 10 ? "0" : "") + n; }
+
+    function medir() {
+      larguraConjunto = itens[quantidade].offsetLeft - itens[0].offsetLeft;
+      if (larguraConjunto > 0 && palco.scrollLeft < larguraConjunto / 2) {
+        palco.scrollLeft = larguraConjunto;   // começa no conjunto do meio
+      }
+    }
 
     /* qual item está mais perto do início visível do palco */
     function marcarAtual() {
@@ -242,9 +267,17 @@
         var d = Math.abs(item.getBoundingClientRect().left - base);
         if (d < menorDistancia) { menorDistancia = d; melhor = i; }
       });
-      if (melhor === atual) return;
-      atual = melhor;
+      var normalizado = melhor % quantidade;
+      if (normalizado === atual) return;
+      atual = normalizado;
       if (contador) contador.textContent = doisDigitos(atual + 1);
+    }
+
+    /* devolve a rolagem ao conjunto do meio, sem animação */
+    function reposicionar() {
+      if (!larguraConjunto) return;
+      if (palco.scrollLeft >= larguraConjunto * 2) palco.scrollLeft -= larguraConjunto;
+      else if (palco.scrollLeft <= 1) palco.scrollLeft += larguraConjunto;
     }
 
     var esperando = false;
@@ -252,26 +285,34 @@
       if (esperando) return;
       esperando = true;
       requestAnimationFrame(function () {
+        reposicionar();
         marcarAtual();
         esperando = false;
       });
     }, { passive: true });
 
-    function irPara(indice) {
-      var i = Math.max(0, Math.min(itens.length - 1, indice));
-      var alvo = itens[i];
-      palco.scrollTo({
-        left: alvo.offsetLeft - itens[0].offsetLeft,
+    function andar(passos) {
+      var largura = itens[1].offsetLeft - itens[0].offsetLeft;
+      palco.scrollBy({
+        left: largura * passos,
         behavior: menosMovimento ? "auto" : "smooth"
       });
     }
 
-    if (proximo) proximo.addEventListener("click", function () { irPara(atual + 1); });
-    if (anterior) anterior.addEventListener("click", function () { irPara(atual - 1); });
+    if (proximo) proximo.addEventListener("click", function () { andar(1); });
+    if (anterior) anterior.addEventListener("click", function () { andar(-1); });
 
     palco.addEventListener("keydown", function (e) {
-      if (e.key === "ArrowRight") { e.preventDefault(); irPara(atual + 1); }
-      if (e.key === "ArrowLeft") { e.preventDefault(); irPara(atual - 1); }
+      if (e.key === "ArrowRight") { e.preventDefault(); andar(1); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); andar(-1); }
+    });
+
+    medir();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(medir);
+    var esperaMedida;
+    window.addEventListener("resize", function () {
+      clearTimeout(esperaMedida);
+      esperaMedida = setTimeout(medir, 200);
     });
 
     /* ---------- Ampliação ---------- */

@@ -1,0 +1,64 @@
+<!--dados
+{
+  "titulo": "__TITULO__",
+  "descricao": "__DESCRICAO__",
+  "caminho": "/projetos/__SLUG__.html"
+}
+-->
+
+<!-- Molde das páginas de projeto criadas no painel.
+
+     Os cinco projetos de origem têm cada um a sua página escrita à
+     mão. Um projeto criado pelo Instituto não tem, e sem este molde
+     o link dele caía na página inicial.
+
+     Quem monta a página é functions/projetos/[slug].js: ele troca as
+     marcas __SLUG__, __NOME__ e afins pelos dados salvos, e o resto
+     (texto, ações e galeria) o site preenche pela API, como faz nas
+     páginas escritas à mão. -->
+
+<section class="pagina-topo">
+  <div class="container">
+    <p class="etiqueta" data-anima="cima"><span data-projeto-etiqueta>__ETIQUETA__</span></p>
+    <h1 data-anima="cima" data-projeto-nome>__NOME__</h1>
+    <p class="pagina-topo__apoio" data-anima="cima" data-projeto-resumo>__RESUMO__</p>
+  </div>
+</section>
+
+<section class="secao">
+  <div class="container projeto-pagina" data-projeto-slug="__SLUG__">
+
+    <div class="prosa" data-anima="cima" data-projeto-texto></div>
+
+    <aside class="projeto-lado" data-anima="cima">
+      <figure class="projeto-lado__foto">
+        <img src="/assets/img/projeto-generico.svg" data-img="__CAPA__" width="1000" height="750"
+             alt="__NOME__" loading="lazy">
+      </figure>
+
+      <!-- Galeria do projeto: montada pelo site a partir do que o
+           Instituto enviar no painel. Sem foto, nem aparece. -->
+      <div class="projeto-lado__caixa" data-projeto-galeria-caixa hidden>
+        <h2>Galeria</h2>
+        <div class="projeto-galeria" data-projeto-galeria></div>
+      </div>
+
+      <div class="projeto-lado__caixa" data-projeto-acoes-caixa hidden>
+        <h2>Ações em andamento</h2>
+        <ul class="projeto-lado__acoes" data-projeto-acoes></ul>
+      </div>
+
+      <div class="projeto-lado__botoes">
+        <a class="btn btn--principal" href="/#apoie">
+          Apoiar este projeto
+          <svg aria-hidden="true"><use href="#i-hand-heart"/></svg>
+        </a>
+        <a class="btn btn--contorno" href="/#projetos">
+          Ver todos os projetos
+          <svg aria-hidden="true"><use href="#i-arrow-right"/></svg>
+        </a>
+      </div>
+    </aside>
+
+  </div>
+</section>

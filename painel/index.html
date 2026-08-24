@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Painel · Instituto Anjos do Leite</title>
+<link rel="icon" type="image/png" href="/assets/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/painel/css/painel.css">
+</head>
+<body>
+
+<!-- ---------- LOGIN ---------- -->
+<section class="entrada" id="telaLogin">
+  <form class="cartao-login" id="formLogin" autocomplete="on">
+    <img src="/assets/logo.webp" alt="Instituto Anjos do Leite" width="560" height="158">
+    <h1>Painel do Instituto</h1>
+    <p>Entre para trocar as fotos e as informações do site.</p>
+
+    <label for="senha">Senha</label>
+    <input type="password" id="senha" name="password" autocomplete="current-password" required>
+
+    <button class="botao botao--principal" type="submit" id="botaoEntrar">Entrar</button>
+    <p class="aviso" id="avisoLogin" role="alert"></p>
+  </form>
+</section>
+
+<!-- ---------- PAINEL ---------- -->
+<div class="painel" id="telaPainel" hidden>
+  <header class="cabecalho">
+    <div class="cabecalho__interno">
+      <img src="/assets/logo.webp" alt="Instituto Anjos do Leite" width="560" height="158">
+      <nav class="abas" id="abas">
+        <button class="aba ativa" type="button" data-aba="fotos">Fotos do site</button>
+        <button class="aba" type="button" data-aba="informacoes">Informações</button>
+      </nav>
+      <div class="cabecalho__acoes">
+        <a class="botao botao--claro" href="/" target="_blank" rel="noopener">Ver o site</a>
+        <button class="botao botao--claro" type="button" id="botaoSair">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="conteudo">
+
+    <!-- FOTOS -->
+    <section class="secao-painel" id="painelFotos">
+      <div class="intro">
+        <h2>Fotos do site</h2>
+        <p>
+          Clique em <strong>Trocar foto</strong>, escolha a imagem do computador ou do celular e pronto:
+          o site muda na hora. Prefira fotos deitadas (paisagem) com pelo menos 1600 pixels de largura,
+          em JPG ou WebP, até 8 MB.
+        </p>
+        <p class="alerta">
+          Só publique fotos de pessoas que autorizaram o uso da imagem por escrito, principalmente
+          quando aparecerem crianças.
+        </p>
+      </div>
+      <div id="grupos"></div>
+    </section>
+
+    <!-- INFORMAÇÕES -->
+    <section class="secao-painel" id="painelInformacoes" hidden>
+      <div class="intro">
+        <h2>Informações do Instituto</h2>
+        <p>
+          Cada campo é salvo sozinho, no seu próprio botão. Deixe em branco para voltar ao texto
+          que está escrito no site.
+        </p>
+      </div>
+      <div class="campos" id="campos"></div>
+    </section>
+
+  </main>
+</div>
+
+<div class="recado" id="recado" role="status" aria-live="polite"></div>
+
+<script src="/painel/js/painel.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<header class="topo" id="topo">
+  <div class="container topo__interno">
+    <a class="topo__marca" href="/" aria-label="Instituto Anjos do Leite, página inicial">
+      <img src="/assets/logo.webp" srcset="/assets/logo.webp 560w, /assets/logo@2x.webp 1120w"
+           sizes="(min-width: 1024px) 230px, 34vw"
+           width="560" height="158"
+           alt="Instituto Anjos do Leite de Apoio à Amamentação e à Primeira Infância">
+    </a>
+
+    <nav class="menu" aria-label="Menu principal">
+      <a href="/instituto.html">O Instituto</a>
+      <a href="/projetos.html">Projetos</a>
+      <a href="/transparencia.html">Transparência</a>
+      <a href="/imprensa.html">Imprensa</a>
+      <a href="/parceiros.html">Parceiros</a>
+      <a href="/contato.html">Contato</a>
+    </nav>
+
+    <a class="btn btn--principal topo__acao" href="/apoie.html">
+      Apoie
+      <svg aria-hidden="true"><use href="#i-heart"/></svg>
+    </a>
+
+    <button class="abrir-menu" type="button" id="abrirMenu"
+            aria-label="Abrir menu" aria-expanded="false" aria-controls="gaveta">
+      <svg aria-hidden="true"><use href="#i-menu"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="gaveta" id="gaveta" aria-hidden="true">
+  <button class="gaveta__fundo" type="button" id="fecharMenuFundo" tabindex="-1" aria-label="Fechar menu"></button>
+
+  <div class="gaveta__painel" role="dialog" aria-modal="true" aria-label="Menu">
+    <div class="gaveta__cabeca">
+      <img src="/assets/logo.webp" width="560" height="158" alt="Instituto Anjos do Leite">
+      <button class="fechar-menu" type="button" id="fecharMenu" aria-label="Fechar menu">
+        <svg aria-hidden="true"><use href="#i-x"/></svg>
+      </button>
+    </div>
+
+    <nav class="gaveta__links" aria-label="Menu do celular">
+      <a href="/instituto.html">O Instituto <svg aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+      <a href="/fundadora.html">Fundadora <svg aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+      <a href="/projetos.html">Projetos <svg aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+      <a href="/transparencia.html">Transparência <svg aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+      <a href="/imprensa.html">Imprensa <svg aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+      <a href="/parceiros.html">Parceiros <svg aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+      <a href="/contato.html">Contato <svg aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+    </nav>
+
+    <div class="gaveta__rodape">
+      <a class="btn btn--principal" href="/apoie.html">
+        Apoie nossos Projetos
+        <svg aria-hidden="true"><use href="#i-heart"/></svg>
+      </a>
+      <a class="btn btn--contorno" href="https://wa.me/5513997261037" target="_blank" rel="noopener">
+        Falar no WhatsApp
+        <svg aria-hidden="true"><use href="#i-marca-whatsapp"/></svg>
+      </a>
+    </div>
+  </div>
+</div>

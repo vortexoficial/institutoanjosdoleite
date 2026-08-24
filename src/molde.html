@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>{{titulo}}</title>
+  <meta name="description" content="{{descricao}}">
+  <link rel="canonical" href="https://institutoanjosdoleite.org.br{{caminho}}">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="Instituto Anjos do Leite">
+  <meta property="og:title" content="{{titulo}}">
+  <meta property="og:description" content="{{descricao}}">
+  <meta property="og:image" content="https://institutoanjosdoleite.org.br/assets/og.png">
+  <meta property="og:url" content="https://institutoanjosdoleite.org.br{{caminho}}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#6A239A">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="image" href="/assets/img/hero-1.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "NGO",
+    "name": "Instituto Anjos do Leite de Apoio à Amamentação e à Primeira Infância",
+    "alternateName": "Instituto Anjos do Leite",
+    "slogan": "Porque todo começo merece cuidado.",
+    "url": "https://institutoanjosdoleite.org.br",
+    "logo": "https://institutoanjosdoleite.org.br/assets/logo.webp",
+    "description": "Instituto que promove acolhimento, educação em saúde e apoio especializado à amamentação e à primeira infância.",
+    "founder": { "@type": "Person", "name": "Sandra Abreu", "jobTitle": "Fundadora e Presidente" },
+    "areaServed": { "@type": "Place", "name": "Baixada Santista, São Paulo, Brasil" },
+    "sameAs": ["https://instagram.com/anjosdoleite"]
+  }
+  </script>
+
+  <script>
+    /* Liga as animações. Se o GSAP não estiver pronto em 2,5 s
+       (sem internet, arquivo fora do ar), a classe sai e a página
+       aparece normalmente: nada fica invisível. */
+    (function () {
+      var raiz = document.documentElement;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      raiz.classList.add("anima-pronto");
+      setTimeout(function () {
+        if (!raiz.classList.contains("anima-ok")) raiz.classList.remove("anima-pronto");
+      }, 2500);
+    })();
+  </script>
+</head>
+<body>
+
+{{icones}}
+
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+{{topo}}
+
+<main id="conteudo">
+{{conteudo}}
+</main>
+
+{{rodape}}
+
+<a class="zap" href="https://wa.me/5513997261037" target="_blank" rel="noopener"
+   aria-label="Falar com o Instituto pelo WhatsApp">
+  <svg aria-hidden="true"><use href="#i-marca-whatsapp"/></svg>
+</a>
+
+<script src="/js/vendor/gsap.min.js" defer></script>
+<script src="/js/vendor/ScrollTrigger.min.js" defer></script>
+<script src="/js/vendor/SplitText.min.js" defer></script>
+<script src="/js/main.js" defer></script>
+<script src="/js/imagens.js" defer></script>
+
+</body>
+</html>

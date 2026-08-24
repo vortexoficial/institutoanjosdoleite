@@ -1,0 +1,17 @@
+{
+  "name": "instituto-anjos-do-leite",
+  "version": "1.0.0",
+  "description": "Site institucional do Instituto Anjos do Leite de Apoio à Amamentação e à Primeira Infância.",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "construir": "node construir.js",
+    "producao": "node construir.js --producao",
+    "servir": "node servir.js",
+    "icones": "node gerar-icones.js",
+    "espacos": "node gerar-placeholders.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  }
+}

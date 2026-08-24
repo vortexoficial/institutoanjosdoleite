@@ -117,10 +117,13 @@
     if (caixa) caixa.hidden = false;
   }
 
-  /* ---------- Textos editáveis pelo painel ----------
+  /* ---------- Dados do Instituto editáveis pelo painel ----------
      Mesma ideia das fotos: data-campo="cnpj" e afins. O valor do
      build fica no HTML (bom para busca e para quem está sem JS) e
-     só é substituído se existir algo salvo. */
+     só é substituído se existir algo salvo.
+
+     São só CNPJ, WhatsApp, e-mail e endereço: os textos do site
+     vieram prontos do Instituto e ficam escritos no HTML. */
   fetch("/api/conteudo")
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (dados) {
@@ -133,20 +136,6 @@
         if (el.tagName === "A" && el.getAttribute("data-campo") === "whatsapp") {
           el.setAttribute("href", "https://wa.me/55" + valor.replace(/\D/g, ""));
         }
-      });
-
-      /* Campos longos: cada linha em branco vira um parágrafo. É como
-         a biografia da fundadora é escrita no painel. */
-      document.querySelectorAll("[data-campo-longo]").forEach(function (el) {
-        var valor = dados.campos[el.getAttribute("data-campo-longo")];
-        if (typeof valor !== "string" || !valor.trim()) return;
-        el.textContent = "";
-        valor.split(/\n{2,}/).forEach(function (trecho) {
-          if (!trecho.trim()) return;
-          var p = document.createElement("p");
-          p.textContent = trecho.trim();
-          el.appendChild(p);
-        });
       });
     })
     .catch(function () {});

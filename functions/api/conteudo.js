@@ -9,19 +9,14 @@ import { json, erro, exigirLogin, lerConteudo, CHAVE_CONTEUDO } from "./_lib.js"
    trava inteiro por causa de um único valor inválido.
    ============================================================ */
 
+/* Só dados que mudam com o tempo. O texto do banner e a página da
+   fundadora saíram daqui: vieram prontos do site do Instituto e são
+   escritos no HTML, não há por que a cliente reescrever no painel. */
 const CAMPOS = {
   cnpj: { rotulo: "CNPJ", limite: 30 },
   whatsapp: { rotulo: "WhatsApp", limite: 30 },
   email: { rotulo: "E-mail institucional", limite: 120 },
-  endereco: { rotulo: "Endereço da sede", limite: 200 },
-  "hero-texto": { rotulo: "Texto do banner", limite: 600 },
-
-  /* Página da fundadora */
-  "fundadora-nome": { rotulo: "Nome da fundadora", limite: 90 },
-  "fundadora-cargo": { rotulo: "Cargo da fundadora", limite: 90 },
-  "fundadora-resumo": { rotulo: "Resumo da fundadora", limite: 400 },
-  "fundadora-bio": { rotulo: "Biografia da fundadora", limite: 8000 },
-  "fundadora-citacao": { rotulo: "Frase da fundadora", limite: 600 }
+  endereco: { rotulo: "Endereço da sede", limite: 200 }
 };
 
 export async function onRequestGet({ env }) {

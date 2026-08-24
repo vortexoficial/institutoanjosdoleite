@@ -61,3 +61,10 @@ Estado: 8 páginas no ar (home, fundadora, privacidade e as 5 de projeto). O men
 - `node --check` nos JS alterados, `node construir.js`, abrir o site e conferir o console sem erro.
 - `node verificar.js` e conferir "Aprovado nas 8 larguras".
 - Sem emoji, sem travessão, acentos corretos (UTF-8).
+
+## Janela de projetos no painel (24/08/2026)
+
+- Criar e editar projeto acontecem em `#janelaProjeto`, por cima da lista. Nunca voltar ao formulário no fim da página: a pessoa era jogada para longe do projeto em que clicou.
+- As fotos do projeto ficam em espera (`File` + `URL.createObjectURL`) e só sobem no Salvar. Sem isso não dá para escolher foto na criação: a chave é `projeto-<slug>-1..5` e o slug só existe depois de salvar.
+- Ordem do Salvar: POST do projeto, fotos em fila (uma por vez), e um segundo POST só quando a capa é uma posição nova.
+- Projeto criado no painel não tem arquivo HTML. Quem serve a página dele é `functions/projetos/[slug].js` sobre `src/paginas/projetos/_modelo.html`. Atenção: quando o arquivo não existe o Pages devolve a página inicial com status 200, então a checagem é pelo `data-projeto-slug` dentro do HTML, nunca pelo código de resposta.

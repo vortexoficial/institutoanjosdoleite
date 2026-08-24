@@ -258,51 +258,73 @@
 <!-- ============================================================
      MISSÃO, VISÃO E VALORES
      ============================================================ -->
-<section class="secao secao--alt" id="proposito">
+<section class="proposito" id="proposito">
   <div class="container">
-    <div class="cabecalho-secao cabecalho-secao--centro" data-anima="cima">
-      <p class="etiqueta">O que nos move</p>
-      <h2>Missão, visão e valores</h2>
-      <p>O compromisso que orienta cada atendimento, cada projeto e cada parceria do Instituto.</p>
+
+    <div class="proposito__topo">
+      <div data-anima="cima">
+        <p class="etiqueta">O que nos move</p>
+        <h2>O critério de<br>toda decisão</h2>
+      </div>
+      <p class="proposito__apoio" data-anima="cima">
+        Missão, visão e valores não são um quadro na parede. São o que define quem o
+        Instituto atende, como atende e o que ele nunca vai aceitar fazer.
+      </p>
     </div>
 
-    <div class="pilares">
-      <article class="pilar" data-anima="cima">
-        <span class="pilar__icone" aria-hidden="true"><svg><use href="#i-target"/></svg></span>
+    <div class="proposito__grade">
+      <!-- Missão: o bloco de maior peso da seção -->
+      <article class="quadro quadro--missao" data-anima="quadro">
+        <img class="quadro__marca" src="/assets/simbolo.webp" alt="" aria-hidden="true" loading="lazy">
+        <div class="quadro__cabeca">
+          <span class="quadro__num">01</span>
+          <span class="quadro__icone" aria-hidden="true"><svg><use href="#i-target"/></svg></span>
+        </div>
         <h3>Missão</h3>
         <p>
           Promover acolhimento, educação em saúde e apoio qualificado à amamentação e à
           primeira infância, fortalecendo mães, bebês, famílias e profissionais por meio de
-          ações baseadas em evidências científicas, humanização e impacto social.
+          ações baseadas em <strong>evidências científicas, humanização e impacto social</strong>.
         </p>
       </article>
 
-      <article class="pilar" data-anima="cima">
-        <span class="pilar__icone" aria-hidden="true"><svg><use href="#i-eye"/></svg></span>
+      <article class="quadro quadro--visao" data-anima="quadro">
+        <div class="quadro__cabeca">
+          <span class="quadro__num">02</span>
+          <span class="quadro__icone" aria-hidden="true"><svg><use href="#i-eye"/></svg></span>
+        </div>
         <h3>Visão</h3>
         <p>
-          Ser referência nacional em ações de promoção da amamentação, da primeira infância e
-          do fortalecimento das famílias, contribuindo para que toda criança tenha um começo
-          de vida mais saudável, protegido e digno.
+          Ser referência nacional em ações de promoção da amamentação, da primeira infância
+          e do fortalecimento das famílias, contribuindo para que toda criança tenha um
+          <strong>começo de vida mais saudável, protegido e digno</strong>.
         </p>
       </article>
+    </div>
+  </div>
 
-      <article class="pilar" data-anima="cima">
-        <span class="pilar__icone" aria-hidden="true"><svg><use href="#i-sparkles"/></svg></span>
+  <!-- Valores: faixa em laço, largura total -->
+  <div class="valores" data-anima="cima">
+    <div class="container valores__cabeca">
+      <span class="quadro__num">03</span>
+      <div>
         <h3>Valores</h3>
-        <p>Princípios inegociáveis em tudo o que o Instituto faz:</p>
-        <ul class="valores">
-          <li>Humanização</li>
-          <li>Ética</li>
-          <li>Ciência</li>
-          <li>Respeito</li>
-          <li>Acolhimento</li>
-          <li>Transparência</li>
-          <li>Amor ao próximo</li>
-          <li>Compromisso com a primeira infância</li>
-          <li>Excelência</li>
-        </ul>
-      </article>
+        <p>Princípios inegociáveis em tudo o que o Instituto faz</p>
+      </div>
+    </div>
+
+    <div class="valores__janela" data-laco data-laco-velocidade="34">
+      <ul class="valores__trilho" data-laco-trilho>
+        <li class="valor">Humanização</li>
+        <li class="valor">Ética</li>
+        <li class="valor">Ciência</li>
+        <li class="valor">Respeito</li>
+        <li class="valor">Acolhimento</li>
+        <li class="valor">Transparência</li>
+        <li class="valor">Amor ao próximo</li>
+        <li class="valor">Compromisso com a primeira infância</li>
+        <li class="valor">Excelência</li>
+      </ul>
     </div>
   </div>
 </section>

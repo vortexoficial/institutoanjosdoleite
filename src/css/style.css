@@ -1086,61 +1086,206 @@ ul, ol { list-style: none; padding: 0; }
 .assinatura figcaption .link-seta { margin-top: 0.4rem; }
 
 /* ============================================================
-   MISSÃO, VISÃO E VALORES
+   PROPÓSITO (missão, visão e valores)
+   ------------------------------------------------------------
+   Sai a fileira de três cartões iguais. A missão vira o bloco de
+   maior peso da página, a visão acompanha ao lado e os valores
+   saem da lista e viram uma faixa que anda em laço, de ponta a
+   ponta da tela.
    ============================================================ */
 
-.pilares {
+.proposito {
+  background: var(--fundo-alt);
+  padding-block: var(--secao) 0;
+  overflow: clip;
+}
+
+.proposito__topo {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: clamp(1rem, 1rem + 1.5vw, 2.5rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
+}
+@media (min-width: 900px) {
+  .proposito__topo { grid-template-columns: 1.1fr 1fr; }
+}
+
+.proposito__topo h2 {
+  font-size: var(--t-h2);
+  letter-spacing: -0.015em;
+}
+.proposito__apoio {
+  font-size: var(--t-corpo-g);
+  color: var(--texto-medio);
+  border-left: 2px solid var(--roxo-linha);
+  padding-left: clamp(1rem, 2vw, 1.75rem);
+}
+
+/* ---------- Os dois quadros ---------- */
+
+.proposito__grade {
+  display: grid;
   gap: clamp(1.25rem, 1rem + 1.5vw, 2rem);
 }
+@media (min-width: 900px) {
+  /* assimetria de propósito: a missão pesa mais que a visão */
+  .proposito__grade { grid-template-columns: 1.25fr 1fr; }
+}
 
-.pilar {
-  background: #fff;
-  border: 1px solid var(--linha);
+.quadro {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
   border-radius: var(--raio-g);
-  padding: clamp(1.75rem, 1.25rem + 1.5vw, 2.5rem);
-  transition: transform var(--transicao), box-shadow var(--transicao),
-              border-color var(--transicao);
-}
-.pilar:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--sombra-media);
-  border-color: var(--roxo-linha);
+  padding: clamp(1.75rem, 1.25rem + 2vw, 3rem);
 }
 
-.pilar__icone {
-  width: 60px; height: 60px;
+.quadro__cabeca {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: clamp(1.5rem, 1rem + 3vw, 3.5rem);
+}
+
+.quadro__num {
+  font-family: var(--fonte-titulo);
+  font-size: clamp(2.25rem, 1.6rem + 2.6vw, 3.5rem);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+}
+
+.quadro__icone {
   display: grid;
   place-items: center;
-  border-radius: 18px;
-  background: var(--roxo-suave);
-  color: var(--roxo);
-  margin-bottom: 1.4rem;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  flex: none;
 }
-.pilar__icone svg { width: 28px; height: 28px; }
-.pilar:nth-child(2) .pilar__icone { background: var(--ambar-suave); color: var(--ambar-texto); }
+.quadro__icone svg { width: 25px; height: 25px; }
 
-.pilar h3 {
-  font-size: var(--t-h3);
-  margin-bottom: 0.75rem;
+.quadro h3 {
+  font-size: clamp(1.35rem, 1.15rem + 1vw, 1.9rem);
+  letter-spacing: -0.01em;
 }
-.pilar p { color: var(--texto-medio); }
+.quadro p { font-size: var(--t-corpo-g); }
+
+/* Missão: bloco escuro, com o símbolo da marca em marca d'água */
+.quadro--missao {
+  background: linear-gradient(150deg, var(--roxo) 0%, var(--roxo-escuro) 55%, var(--roxo-profundo) 100%);
+  color: #fff;
+  box-shadow: var(--sombra-alta);
+}
+.quadro--missao h3 { color: #fff; }
+.quadro--missao p { color: rgba(255, 255, 255, 0.85); }
+.quadro--missao strong { color: var(--ambar); font-weight: 700; }
+.quadro--missao .quadro__num { color: rgba(255, 255, 255, 0.28); }
+.quadro--missao .quadro__icone {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--ambar);
+}
+
+.quadro__marca {
+  position: absolute;
+  right: -12%;
+  bottom: -18%;
+  width: min(58%, 320px);
+  opacity: 0.07;
+  pointer-events: none;
+  filter: grayscale(1) brightness(3);
+}
+
+/* Visão: bloco claro */
+.quadro--visao {
+  background: #fff;
+  border: 1px solid var(--linha);
+}
+.quadro--visao .quadro__num { color: var(--roxo-linha); }
+.quadro--visao .quadro__icone {
+  background: var(--ambar-suave);
+  color: var(--ambar-texto);
+}
+.quadro--visao p { color: var(--texto-medio); }
+.quadro--visao strong { color: var(--texto); font-weight: 700; }
+
+/* ---------- Valores em laço ---------- */
 
 .valores {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  margin-top: 1.25rem;
+  margin-top: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+  padding-block: clamp(2rem, 1.5rem + 2vw, 3rem) clamp(2rem, 1.5rem + 2vw, 3rem);
+  background: #fff;
+  border-top: 1px solid var(--linha);
 }
-.valores li {
-  background: var(--roxo-suave);
-  color: var(--roxo-escuro);
-  border-radius: 999px;
-  padding: 0.4rem 0.9rem;
-  font-size: 0.86rem;
-  font-weight: 700;
+
+/* a faixa de valores já separa: a seção seguinte não precisa do
+   respiro cheio de topo */
+.proposito + .secao { padding-top: clamp(2rem, 1.5rem + 2.5vw, 4rem); }
+
+.valores__cabeca {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(0.85rem, 2vw, 1.5rem);
+  margin-bottom: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+}
+.valores__cabeca .quadro__num { color: var(--roxo-linha); }
+.valores__cabeca h3 { font-size: clamp(1.35rem, 1.15rem + 1vw, 1.9rem); }
+.valores__cabeca p {
+  color: var(--texto-claro);
+  font-size: 0.95rem;
+  margin-top: 0.15rem;
+}
+
+/* As pontas somem na máscara: a faixa não bate na borda da tela */
+.valores__janela {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+}
+
+.valores__trilho {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  animation: valores-andam var(--duracao, 40s) linear infinite;
+}
+.valores__janela:hover .valores__trilho { animation-play-state: paused; }
+
+@keyframes valores-andam {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.valor {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  padding-right: clamp(1.25rem, 3vw, 2.5rem);
   font-family: var(--fonte-titulo);
+  font-size: clamp(1.1rem, 0.95rem + 0.9vw, 1.85rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--roxo-escuro);
+  white-space: nowrap;
+}
+/* losango âmbar separando um valor do outro */
+.valor::after {
+  content: "";
+  width: 9px;
+  height: 9px;
+  flex: none;
+  background: var(--ambar);
+  transform: rotate(45deg);
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .valores__trilho { animation: none; }
+  .valores__janela { overflow-x: auto; }
 }
 
 /* ============================================================

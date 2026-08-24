@@ -167,6 +167,52 @@
 
   iniciarCarrossel();
 
+  /* ---------- Faixas em laço (valores) ----------
+     Mesma mecânica do bloco faixa-marquee do registro da agência: o
+     JavaScript só duplica a lista (o laço precisa de duas cópias para
+     o translateX(-50%) emendar) e calcula a duração pela largura real,
+     para que a faixa ande sempre na mesma velocidade, seja ela curta
+     ou longa. Quem anima é o CSS. */
+  document.querySelectorAll("[data-laco]").forEach(function (faixa) {
+    var trilho = faixa.querySelector("[data-laco-trilho]");
+    if (!trilho || !trilho.children.length) return;
+
+    var velocidade = parseFloat(faixa.getAttribute("data-laco-velocidade")) || 40;
+
+    var originais = Array.prototype.slice.call(trilho.children);
+    var copia = document.createDocumentFragment();
+    originais.forEach(function (item) {
+      var clone = item.cloneNode(true);
+      clone.setAttribute("aria-hidden", "true");   // a cópia não é lida duas vezes
+      copia.appendChild(clone);
+    });
+    trilho.appendChild(copia);
+
+    function ajustarDuracao() {
+      var largura = trilho.scrollWidth / 2;
+      if (!largura) return;
+      trilho.style.setProperty("--duracao", (largura / velocidade).toFixed(1) + "s");
+    }
+
+    ajustarDuracao();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajustarDuracao);
+
+    var espera;
+    window.addEventListener("resize", function () {
+      clearTimeout(espera);
+      espera = setTimeout(ajustarDuracao, 150);
+    });
+
+    // fora da tela o laço para: nada de animar o que ninguém vê
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entradas) {
+        entradas.forEach(function (e) {
+          trilho.style.animationPlayState = e.isIntersecting ? "" : "paused";
+        });
+      }).observe(faixa);
+    }
+  });
+
   /* ============================================================
      2. SEM GSAP: mostra tudo e encerra
      ============================================================ */
@@ -255,7 +301,7 @@
   var emGrupo = new Set();
   var grupos = [];
 
-  [".numeros__barra", ".pilares", ".projetos", ".documentos", ".parceiros", ".apoio"].forEach(
+  [".numeros__barra", ".proposito__grade", ".projetos", ".documentos", ".parceiros", ".apoio"].forEach(
     function (seletor) {
       document.querySelectorAll(seletor).forEach(function (grupo) {
         var filhos = gsap.utils.toArray(grupo.children).filter(function (f) {
@@ -429,6 +475,19 @@
       ease: "none",
       scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.6 }
     });
+  });
+
+  // os números 01 e 02 sobem devagar enquanto a seção passa
+  gsap.utils.toArray(".quadro__num").forEach(function (num) {
+    gsap.fromTo(
+      num,
+      { y: 18 },
+      {
+        y: -18,
+        ease: "none",
+        scrollTrigger: { trigger: num.closest(".quadro") || num, start: "top bottom", end: "bottom top", scrub: 1 }
+      }
+    );
   });
 
   // as fotos das seções ganham um respiro ao rolar

@@ -661,6 +661,92 @@
 </section>
 
 <!-- ============================================================
+     GALERIA
+     Palco horizontal com encaixe: arrasta com o dedo, anda com as
+     setas e amplia em tela cheia.
+     ============================================================ -->
+<section class="secao mural" id="galeria" data-mural>
+  <div class="container">
+    <div class="mural__cabeca">
+      <div data-anima="cima">
+        <p class="etiqueta">Galeria</p>
+        <h2>O Instituto em imagens</h2>
+        <p>Atendimentos, mobilização, formação e as famílias que passaram por aqui.</p>
+      </div>
+      <p class="mural__contagem" data-anima="cima" aria-live="polite">
+        <b data-mural-atual>01</b><span>de 8</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="mural__palco" data-mural-palco tabindex="0"
+       aria-label="Galeria de fotos do Instituto, role para o lado para ver todas">
+    <button class="mural__item" type="button" data-mural-item data-rotulo="Atendimento">
+      <img src="/assets/img/galeria-1.svg" data-img="galeria-1" width="1000" height="1250"
+           alt="Atendimento de amamentação" loading="lazy">
+      <span class="mural__legenda">Atendimento <b>01</b></span>
+    </button>
+    <button class="mural__item" type="button" data-mural-item data-rotulo="Hora do Mamaço">
+      <img src="/assets/img/galeria-2.svg" data-img="galeria-2" width="1000" height="1250"
+           alt="Hora do Mamaço em Santos" loading="lazy">
+      <span class="mural__legenda">Hora do Mamaço <b>02</b></span>
+    </button>
+    <button class="mural__item" type="button" data-mural-item data-rotulo="Roda de conversa">
+      <img src="/assets/img/galeria-3.svg" data-img="galeria-3" width="1000" height="1250"
+           alt="Roda de conversa com gestantes" loading="lazy">
+      <span class="mural__legenda">Roda de conversa <b>03</b></span>
+    </button>
+    <button class="mural__item" type="button" data-mural-item data-rotulo="Formação">
+      <img src="/assets/img/galeria-4.svg" data-img="galeria-4" width="1000" height="1250"
+           alt="Formação de profissionais de saúde" loading="lazy">
+      <span class="mural__legenda">Formação <b>04</b></span>
+    </button>
+    <button class="mural__item" type="button" data-mural-item data-rotulo="Ação social">
+      <img src="/assets/img/galeria-5.svg" data-img="galeria-5" width="1000" height="1250"
+           alt="Ação social do Instituto" loading="lazy">
+      <span class="mural__legenda">Ação social <b>05</b></span>
+    </button>
+    <button class="mural__item" type="button" data-mural-item data-rotulo="Homenagem">
+      <img src="/assets/img/galeria-6.svg" data-img="galeria-6" width="1000" height="1250"
+           alt="Homenagem recebida pelo Instituto" loading="lazy">
+      <span class="mural__legenda">Homenagem <b>06</b></span>
+    </button>
+    <button class="mural__item" type="button" data-mural-item data-rotulo="Congresso">
+      <img src="/assets/img/galeria-7.svg" data-img="galeria-7" width="1000" height="1250"
+           alt="Participação em congresso científico" loading="lazy">
+      <span class="mural__legenda">Congresso <b>07</b></span>
+    </button>
+    <button class="mural__item" type="button" data-mural-item data-rotulo="Equipe">
+      <img src="/assets/img/galeria-8.svg" data-img="galeria-8" width="1000" height="1250"
+           alt="Equipe do Instituto" loading="lazy">
+      <span class="mural__legenda">Equipe <b>08</b></span>
+    </button>
+  </div>
+
+  <div class="container">
+    <div class="mural__controles">
+      <button class="mural__botao" type="button" data-mural-anterior aria-label="Foto anterior">
+        <svg aria-hidden="true"><use href="#i-chevron-left"/></svg>
+      </button>
+      <button class="mural__botao" type="button" data-mural-proximo aria-label="Próxima foto">
+        <svg aria-hidden="true"><use href="#i-chevron-right"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Ampliação da foto -->
+<div class="lupa" id="lupa" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Foto ampliada">
+  <button class="lupa__fechar" type="button" data-lupa-fechar aria-label="Fechar">
+    <svg aria-hidden="true"><use href="#i-x"/></svg>
+  </button>
+  <div>
+    <img data-lupa-img src="" alt="">
+    <p class="lupa__rotulo" data-lupa-rotulo></p>
+  </div>
+</div>
+
+<!-- ============================================================
      CHAMADA FINAL
      ============================================================ -->
 <section class="secao">
@@ -676,7 +762,7 @@
           Falar com o Instituto
           <svg aria-hidden="true"><use href="#i-mail"/></svg>
         </a>
-        <a class="btn btn--contorno" href="https://wa.me/5513997261037" target="_blank" rel="noopener">
+        <a class="btn btn--contorno" href="https://wa.me/5511964956563" target="_blank" rel="noopener">
           WhatsApp
           <svg aria-hidden="true"><use href="#i-marca-whatsapp"/></svg>
         </a>

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1100" width="1600" height="1100" role="img" aria-label="Gestantes">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6A239A"/>
+      <stop offset="1" stop-color="#3A1157"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="1100" fill="url(#g)"/>
+
+  <g transform="translate(728.5 335.5)">
+    
+    <g transform="scale(5.9583)" fill="none" stroke="#ffffff" stroke-opacity="0.55"
+       stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="2.5"/>
+      <circle cx="8.8" cy="8.8" r="1.6"/>
+      <path d="M21 14.5l-3.6-3.6a2 2 0 0 0-2.8 0L6.2 19.8"/>
+    </g>
+  </g>
+
+  <g text-anchor="middle" font-family="Montserrat, Segoe UI, Arial, sans-serif">
+    <text x="800" y="601.85" fill="#ffffff" fill-opacity="0.92"
+          font-size="61" font-weight="700">Gestantes</text>
+    <text x="800" y="675.35" fill="#ffffff" fill-opacity="0.5"
+          font-size="35" font-weight="600"
+          letter-spacing="6">ESPAÇO PARA FOTO</text>
+  </g>
+</svg>

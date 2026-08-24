@@ -213,6 +213,104 @@
     }
   });
 
+  /* ---------- Galeria do Instituto ----------
+     Palco que corre na horizontal com encaixe nativo, contador do
+     item atual e ampliação em tela cheia. Ideia da galeria do
+     Benedito; aqui a rolagem é do próprio navegador, então funciona
+     com o dedo, com a roda do mouse e sem JavaScript. */
+  (function galeria() {
+    var raiz = document.querySelector("[data-mural]");
+    if (!raiz) return;
+
+    var palco = raiz.querySelector("[data-mural-palco]");
+    var itens = Array.prototype.slice.call(raiz.querySelectorAll("[data-mural-item]"));
+    var contador = raiz.querySelector("[data-mural-atual]");
+    var anterior = raiz.querySelector("[data-mural-anterior]");
+    var proximo = raiz.querySelector("[data-mural-proximo]");
+    if (!palco || !itens.length) return;
+
+    var atual = 0;
+
+    function doisDigitos(n) { return (n < 10 ? "0" : "") + n; }
+
+    /* qual item está mais perto do início visível do palco */
+    function marcarAtual() {
+      var base = palco.getBoundingClientRect().left;
+      var melhor = 0;
+      var menorDistancia = Infinity;
+      itens.forEach(function (item, i) {
+        var d = Math.abs(item.getBoundingClientRect().left - base);
+        if (d < menorDistancia) { menorDistancia = d; melhor = i; }
+      });
+      if (melhor === atual) return;
+      atual = melhor;
+      if (contador) contador.textContent = doisDigitos(atual + 1);
+    }
+
+    var esperando = false;
+    palco.addEventListener("scroll", function () {
+      if (esperando) return;
+      esperando = true;
+      requestAnimationFrame(function () {
+        marcarAtual();
+        esperando = false;
+      });
+    }, { passive: true });
+
+    function irPara(indice) {
+      var i = Math.max(0, Math.min(itens.length - 1, indice));
+      var alvo = itens[i];
+      palco.scrollTo({
+        left: alvo.offsetLeft - itens[0].offsetLeft,
+        behavior: menosMovimento ? "auto" : "smooth"
+      });
+    }
+
+    if (proximo) proximo.addEventListener("click", function () { irPara(atual + 1); });
+    if (anterior) anterior.addEventListener("click", function () { irPara(atual - 1); });
+
+    palco.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowRight") { e.preventDefault(); irPara(atual + 1); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); irPara(atual - 1); }
+    });
+
+    /* ---------- Ampliação ---------- */
+    var lupa = document.getElementById("lupa");
+    if (!lupa) return;
+
+    var lupaImg = lupa.querySelector("[data-lupa-img]");
+    var lupaRotulo = lupa.querySelector("[data-lupa-rotulo]");
+    var lupaFechar = lupa.querySelector("[data-lupa-fechar]");
+    var quemAbriu = null;
+
+    function abrir(item) {
+      var img = item.querySelector("img");
+      if (!img) return;
+      quemAbriu = item;
+      lupaImg.setAttribute("src", img.getAttribute("src"));
+      lupaImg.setAttribute("alt", img.getAttribute("alt") || "");
+      lupaRotulo.textContent = item.getAttribute("data-rotulo") || "";
+      lupa.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      lupaFechar.focus({ preventScroll: true });
+    }
+
+    function fechar() {
+      lupa.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      if (quemAbriu) quemAbriu.focus({ preventScroll: true });
+    }
+
+    itens.forEach(function (item) {
+      item.addEventListener("click", function () { abrir(item); });
+    });
+    lupaFechar.addEventListener("click", fechar);
+    lupa.addEventListener("click", function (e) { if (e.target === lupa) fechar(); });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && lupa.getAttribute("aria-hidden") === "false") fechar();
+    });
+  })();
+
   /* ============================================================
      2. SEM GSAP: mostra tudo e encerra
      ============================================================ */

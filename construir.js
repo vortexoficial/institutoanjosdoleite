@@ -22,8 +22,29 @@ const { execFileSync } = require("child_process");
 
 const RAIZ = __dirname;
 const SRC = path.join(RAIZ, "src");
-const DIST = path.join(RAIZ, "dist");
 const PRODUCAO = process.argv.includes("--producao");
+
+/* --saida=docs   grava em outra pasta (o GitHub Pages só serve a raiz
+                  do repositório ou uma pasta chamada docs)
+   --base=/repo   prefixa todo caminho absoluto. No GitHub Pages o site
+                  não fica na raiz do domínio, e sem isso /css/style.css
+                  procuraria o arquivo no lugar errado. */
+const argumento = (nome) => {
+  const achou = process.argv.find((a) => a.startsWith("--" + nome + "="));
+  return achou ? achou.split("=").slice(1).join("=") : "";
+};
+
+const DIST = path.join(RAIZ, argumento("saida") || "dist");
+
+/* aceita "repo" ou "/repo" e sempre devolve "/repo".
+   O Git Bash converte argumento que começa com barra em caminho do
+   Windows, então a forma sem barra é a mais segura de digitar. */
+const BASE = (() => {
+  let v = (argumento("base") || "").trim().replace(/\/+$/, "");
+  if (!v) return "";
+  if (/^[a-zA-Z]:[\\/]/.test(v)) v = "/" + v.split(/[\\/]/).pop();  // desfaz a conversão do Git Bash
+  return v.startsWith("/") ? v : "/" + v;
+})();
 
 const d = new Date();
 const p = (n) => String(n).padStart(2, "0");
@@ -43,12 +64,14 @@ function listarHtml(dir, base = "") {
   return saida;
 }
 
+/* shell: true é obrigatório no Windows: sem ele o Node recusa
+   executar npx.cmd com EINVAL desde a versão 20 */
 function esbuild(entrada, saida, extra = []) {
-  execFileSync(
-    process.platform === "win32" ? "npx.cmd" : "npx",
-    ["esbuild", entrada, "--minify", `--outfile=${saida}`, ...extra],
-    { cwd: RAIZ, stdio: "pipe" }
-  );
+  execFileSync("npx", ["esbuild", entrada, "--minify", `--outfile=${saida}`, ...extra], {
+    cwd: RAIZ,
+    stdio: "pipe",
+    shell: true
+  });
 }
 
 /* ---------- 1. dist limpa ---------- */
@@ -121,6 +144,15 @@ for (const rel of paginas) {
     (_, attr, arquivo) => `${attr}="${arquivo}?v=${carimbo}"`
   );
 
+  /* prefixo de caminho, para o site rodar dentro de uma subpasta */
+  if (BASE) {
+    html = html
+      .replace(/(href|src)="\/(?!\/)/g, `$1="${BASE}/`)
+      .replace(/srcset="([^"]+)"/g, (_, valor) =>
+        `srcset="${valor.replace(/(^|,\s*)\/(?!\/)/g, `$1${BASE}/`)}"`
+      );
+  }
+
   const destino = path.join(DIST, rel);
   fs.mkdirSync(path.dirname(destino), { recursive: true });
   fs.writeFileSync(destino, html, "utf8");
@@ -133,9 +165,11 @@ fs.mkdirSync(path.join(DIST, "css"), { recursive: true });
 fs.mkdirSync(path.join(DIST, "js/vendor"), { recursive: true });
 
 if (PRODUCAO) {
-  esbuild("src/css/style.css", "dist/css/style.css");
+  // caminho de saída relativo, para respeitar o --saida
+  const saidaRel = path.relative(RAIZ, DIST).replace(/\\/g, "/");
+  esbuild("src/css/style.css", `${saidaRel}/css/style.css`);
   for (const f of fs.readdirSync(path.join(SRC, "js"))) {
-    if (f.endsWith(".js")) esbuild(`src/js/${f}`, `dist/js/${f}`);
+    if (f.endsWith(".js")) esbuild(`src/js/${f}`, `${saidaRel}/js/${f}`);
   }
 } else {
   fs.copyFileSync(path.join(SRC, "css/style.css"), path.join(DIST, "css/style.css"));
@@ -158,10 +192,11 @@ if (fs.existsSync(path.join(RAIZ, "painel"))) {
   const carimboPainel = PRODUCAO ? VERSAO : "dev" + Date.now();
   const paginaPainel = path.join(DIST, "painel/index.html");
   if (fs.existsSync(paginaPainel)) {
-    const html = ler(paginaPainel).replace(
+    let html = ler(paginaPainel).replace(
       /(href|src)="(\/painel\/(?:css|js)\/[^"?]+)"/g,
       (_, attr, arquivo) => `${attr}="${arquivo}?v=${carimboPainel}"`
     );
+    if (BASE) html = html.replace(/(href|src)="\/(?!\/)/g, `$1="${BASE}/`);
     fs.writeFileSync(paginaPainel, html, "utf8");
   }
 }
@@ -170,6 +205,10 @@ for (const f of ["robots.txt", "_headers", "_redirects"]) {
   const origem = path.join(RAIZ, f);
   if (fs.existsSync(origem)) fs.copyFileSync(origem, path.join(DIST, f));
 }
+
+/* O GitHub Pages passa tudo pelo Jekyll e ignora arquivo que começa
+   com sublinhado. Este arquivo vazio desliga esse processamento. */
+fs.writeFileSync(path.join(DIST, ".nojekyll"), "");
 
 /* ---------- resumo ---------- */
 

@@ -1,0 +1,28 @@
+# Arquivos versionados (?v=) podem ficar muito tempo em cache.
+# O HTML fica sem cache, para as mudanças chegarem na hora.
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/css/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/js/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/painel/css/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/painel/js/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/painel/*
+  X-Robots-Tag: noindex, nofollow

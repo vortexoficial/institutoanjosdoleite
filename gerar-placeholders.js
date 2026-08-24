@@ -100,7 +100,26 @@ const ESPACOS = [
   // Prova social
   { arquivo: "depoimento-1", largura: 600, altura: 600, titulo: "Mãe atendida" },
   { arquivo: "depoimento-2", largura: 600, altura: 600, titulo: "Mãe atendida" },
-  { arquivo: "depoimento-3", largura: 600, altura: 600, titulo: "Profissional" }
+  { arquivo: "depoimento-3", largura: 600, altura: 600, titulo: "Profissional" },
+  // Galeria do Instituto (palco horizontal na home)
+  { arquivo: "galeria-1", largura: 1000, altura: 1250, titulo: "Atendimento" },
+  { arquivo: "galeria-2", largura: 1000, altura: 1250, titulo: "Hora do Mamaço" },
+  { arquivo: "galeria-3", largura: 1000, altura: 1250, titulo: "Roda de conversa" },
+  { arquivo: "galeria-4", largura: 1000, altura: 1250, titulo: "Formação" },
+  { arquivo: "galeria-5", largura: 1000, altura: 1250, titulo: "Ação social" },
+  { arquivo: "galeria-6", largura: 1000, altura: 1250, titulo: "Homenagem" },
+  { arquivo: "galeria-7", largura: 1000, altura: 1250, titulo: "Congresso" },
+  { arquivo: "galeria-8", largura: 1000, altura: 1250, titulo: "Equipe" },
+
+  // Galeria da página da fundadora
+  { arquivo: "galeria-homenagens", largura: 900, altura: 900, titulo: "Homenagens" },
+  { arquivo: "galeria-camara", largura: 900, altura: 900, titulo: "Câmara Municipal" },
+  { arquivo: "galeria-capep", largura: 900, altura: 900, titulo: "CAPEP" },
+  { arquivo: "galeria-mamaco", largura: 900, altura: 900, titulo: "Hora do Mamaço" },
+  { arquivo: "galeria-entrevistas", largura: 900, altura: 900, titulo: "Entrevistas" },
+  { arquivo: "galeria-podcasts", largura: 900, altura: 900, titulo: "Podcasts" },
+  { arquivo: "galeria-congressos", largura: 900, altura: 900, titulo: "Congressos" },
+  { arquivo: "galeria-atendimentos", largura: 900, altura: 900, titulo: "Atendimentos" }
 ];
 
 fs.mkdirSync(DESTINO, { recursive: true });

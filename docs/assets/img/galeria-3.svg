@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1250" width="1000" height="1250" role="img" aria-label="Roda de conversa">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6A239A"/>
+      <stop offset="1" stop-color="#3A1157"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1000" height="1250" fill="url(#g)"/>
+
+  <g transform="translate(435 430)">
+    
+    <g transform="scale(5.4167)" fill="none" stroke="#ffffff" stroke-opacity="0.55"
+       stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="2.5"/>
+      <circle cx="8.8" cy="8.8" r="1.6"/>
+      <path d="M21 14.5l-3.6-3.6a2 2 0 0 0-2.8 0L6.2 19.8"/>
+    </g>
+  </g>
+
+  <g text-anchor="middle" font-family="Montserrat, Segoe UI, Arial, sans-serif">
+    <text x="500" y="671.75" fill="#ffffff" fill-opacity="0.92"
+          font-size="55" font-weight="700">Roda de conversa</text>
+    <text x="500" y="738.95" fill="#ffffff" fill-opacity="0.5"
+          font-size="32" font-weight="600"
+          letter-spacing="6">ESPAÇO PARA FOTO</text>
+  </g>
+</svg>

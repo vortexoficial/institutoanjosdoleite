@@ -1,0 +1,80 @@
+<!--dados
+{
+  "titulo": "Contato | Instituto Anjos do Leite",
+  "descricao": "Fale com o Instituto Anjos do Leite: WhatsApp, redes sociais e formulário de contato.",
+  "caminho": "/contato.html"
+}
+-->
+
+<section class="pagina-topo">
+  <div class="container">
+    <p class="etiqueta" data-anima="cima">Contato</p>
+    <h1 data-anima="cima">Fale com o Instituto</h1>
+    <p class="pagina-topo__apoio" data-anima="cima">Se você é mãe, profissional de saúde, empresa, imprensa ou representante público, fale com a gente. Respondemos a todas as mensagens.</p>
+  </div>
+</section>
+<section class="secao">
+  <div class="container contato__grade">
+    <div class="contato__canais" data-anima="cima">
+      <h2>Canais diretos</h2>
+
+      <a class="canal" href="https://wa.me/5511964956563" target="_blank" rel="noopener">
+        <span class="canal__icone" aria-hidden="true"><svg><use href="#i-marca-whatsapp"/></svg></span>
+        <span class="canal__texto">
+          <strong>WhatsApp</strong>
+          <span data-campo="whatsapp">(11) 96495-6563</span>
+        </span>
+        <svg class="canal__seta" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
+      </a>
+
+      <a class="canal" href="https://instagram.com/futuradesign_br" target="_blank" rel="noopener">
+        <span class="canal__icone" aria-hidden="true"><svg><use href="#i-marca-instagram"/></svg></span>
+        <span class="canal__texto">
+          <strong>Instagram</strong>
+          <span>@futuradesign_br</span>
+        </span>
+        <svg class="canal__seta" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
+      </a>
+
+      <div class="canal canal--simples">
+        <span class="canal__icone" aria-hidden="true"><svg><use href="#i-map-pin"/></svg></span>
+        <span class="canal__texto">
+          <strong>Onde atuamos</strong>
+          <span data-campo="endereco">Santos, Baixada Santista, São Paulo</span>
+        </span>
+      </div>
+    </div>
+
+    <form class="formulario" data-anima="cima" action="/api/contato" method="post">
+      <h2>Envie uma mensagem</h2>
+
+      <label for="nome">Nome</label>
+      <input type="text" id="nome" name="nome" autocomplete="name" required>
+
+      <label for="email">E-mail</label>
+      <input type="email" id="email" name="email" autocomplete="email" required>
+
+      <label for="assunto">Assunto</label>
+      <select id="assunto" name="assunto">
+        <option>Quero atendimento ou orientação</option>
+        <option>Sou profissional de saúde</option>
+        <option>Quero apoiar ou patrocinar</option>
+        <option>Sou da imprensa</option>
+        <option>Outro assunto</option>
+      </select>
+
+      <label for="mensagem">Mensagem</label>
+      <textarea id="mensagem" name="mensagem" rows="5" required></textarea>
+
+      <button class="btn btn--roxo" type="submit">
+        Enviar mensagem
+        <svg aria-hidden="true"><use href="#i-mail"/></svg>
+      </button>
+
+      <p class="formulario__aviso">
+        O envio do formulário entra no ar junto com o painel do Instituto. Enquanto isso, o
+        WhatsApp é o caminho mais rápido.
+      </p>
+    </form>
+  </div>
+</section>

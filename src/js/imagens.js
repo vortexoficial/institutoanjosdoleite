@@ -69,11 +69,47 @@
     .then(function (dados) {
       if (!dados || !dados.imagens) return;
       aplicar(dados.imagens);
+      montarGaleriaDoProjeto(dados.imagens);
       try {
         sessionStorage.setItem(CACHE, JSON.stringify({ em: Date.now(), mapa: dados.imagens }));
       } catch (e) {}
     })
     .catch(function () {});
+
+  /* ---------- Galeria de um projeto ----------
+     As fotos seguem a chave projeto-<slug>-1 até -5, enviadas no
+     painel. Se nenhuma existir, o bloco continua escondido. */
+  function montarGaleriaDoProjeto(mapa) {
+    var pagina = document.querySelector("[data-projeto-slug]");
+    var grade = document.querySelector("[data-projeto-galeria]");
+    if (!pagina || !grade) return;
+
+    var slug = pagina.getAttribute("data-projeto-slug");
+    var fotos = [];
+
+    for (var i = 1; i <= 5; i++) {
+      var registro = mapa["projeto-" + slug + "-" + i];
+      if (registro && registro.url) fotos.push(registro.url);
+    }
+    if (!fotos.length) return;
+
+    grade.textContent = "";
+    fotos.forEach(function (url, indice) {
+      var figura = document.createElement("figure");
+      figura.className = "projeto-galeria__item";
+
+      var img = document.createElement("img");
+      img.src = url;
+      img.alt = "Foto " + (indice + 1) + " do projeto";
+      img.loading = "lazy";
+
+      figura.appendChild(img);
+      grade.appendChild(figura);
+    });
+
+    var caixa = document.querySelector("[data-projeto-galeria-caixa]");
+    if (caixa) caixa.hidden = false;
+  }
 
   /* ---------- Textos editáveis pelo painel ----------
      Mesma ideia das fotos: data-campo="cnpj" e afins. O valor do

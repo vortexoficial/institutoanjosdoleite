@@ -2375,3 +2375,25 @@ ul, ol { list-style: none; padding: 0; }
   body { color: #000; background: #fff; }
   [data-anima] { opacity: 1 !important; transform: none !important; }
 }
+
+/* ---------- Galeria de um projeto ---------- */
+
+.projeto-galeria {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 90px), 1fr));
+  gap: 0.5rem;
+}
+.projeto-galeria__item {
+  margin: 0;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--roxo-suave);
+}
+.projeto-galeria__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.projeto-galeria__item:hover img { transform: scale(1.06); }

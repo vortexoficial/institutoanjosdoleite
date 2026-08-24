@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/institutoanjosdoleite/painel/css/painel.css?v=20260824T1019">
+<link rel="stylesheet" href="/institutoanjosdoleite/painel/css/painel.css?v=20260824T1034">
 </head>
 <body>
 
@@ -228,10 +228,19 @@
         <div class="cabecalho">
           <h2>Fotos do site</h2>
           <p>
-            Clique em trocar, escolha a imagem e pronto. Prefira fotos deitadas com pelo menos
-            1600 pixels de largura, em JPG ou WebP, até 8 MB.
+            Escolha a parte do site abaixo e envie as fotos. Prefira imagens deitadas com pelo
+            menos 1600 pixels de largura, em JPG ou WebP, até 8 MB.
           </p>
         </div>
+
+        <!-- uma aba por parte do site -->
+        <div class="subabas" id="subabas" role="tablist" aria-label="Partes do site"></div>
+
+        <div class="progresso" id="progressoGrupo">
+          <div class="progresso__barra"><span></span></div>
+          <p class="progresso__texto"></p>
+        </div>
+
         <div id="grupos"></div>
       </section>
 
@@ -275,9 +284,9 @@
           <textarea id="projetoAcoes" rows="5" maxlength="2000"></textarea>
           <span class="dica">Uma ação por linha.</span>
 
-          <label for="projetoImagem">Identificador da foto</label>
+          <label for="projetoImagem">Identificador da foto de capa</label>
           <input type="text" id="projetoImagem" maxlength="60" placeholder="projeto-mae-acolhida">
-          <span class="dica">O mesmo identificador que aparece na aba Fotos. A imagem é enviada por lá.</span>
+          <span class="dica">O mesmo identificador que aparece na aba Fotos. A capa é enviada por lá.</span>
 
           <label class="linha-caixa">
             <input type="checkbox" id="projetoPublicado" checked>
@@ -292,6 +301,17 @@
             <button class="botao botao--claro" type="button" id="cancelarProjeto">Cancelar</button>
           </div>
         </form>
+
+        <!-- Galeria do projeto: fica fora do formulário porque cada foto
+             é enviada sozinha, na hora, e não junto com o texto -->
+        <section class="editor" id="galeriaProjeto" hidden>
+          <h3>Galeria do projeto</h3>
+          <p class="dica">
+            Até cinco fotos, que aparecem na página do projeto. Cada uma é enviada na hora,
+            sem precisar salvar de novo.
+          </p>
+          <div class="galeria-projeto" id="galeriaProjetoEspacos"></div>
+        </section>
       </section>
 
       <!-- ---------- INFORMAÇÕES ---------- -->
@@ -329,6 +349,6 @@
 
 <div class="recado" id="recado" role="status" aria-live="polite"></div>
 
-<script src="/institutoanjosdoleite/painel/js/painel.js?v=20260824T1019"></script>
+<script src="/institutoanjosdoleite/painel/js/painel.js?v=20260824T1034"></script>
 </body>
 </html>

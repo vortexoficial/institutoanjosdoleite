@@ -19,6 +19,8 @@
   var GRUPOS = [
     {
       titulo: "Página inicial: banner do topo",
+      curto: "Banner do topo",
+      ajuda: "As cinco fotos que se alternam no topo da página inicial. Deitadas, bem iluminadas.",
       espacos: [
         { chave: "hero-1", rotulo: "Banner 1", nota: "Atendimento de amamentação" },
         { chave: "hero-2", rotulo: "Banner 2", nota: "Encontro com gestantes" },
@@ -29,6 +31,8 @@
     },
     {
       titulo: "Página inicial: seções",
+      curto: "Seções da home",
+      ajuda: "A faixa larga da nossa história e a foto usada na página da fundadora.",
       espacos: [
         { chave: "historia", rotulo: "Nossa história", nota: "Foto larga, entre o texto e a trajetória" },
         { chave: "fundadora", rotulo: "Fundadora", nota: "Usada se a foto recortada for trocada" }
@@ -36,6 +40,8 @@
     },
     {
       titulo: "Projetos",
+      curto: "Capas dos projetos",
+      ajuda: "A foto de capa de cada projeto, que aparece na lista da página inicial.",
       espacos: [
         { chave: "projeto-mae-acolhida", rotulo: "Mãe Acolhida", nota: "" },
         { chave: "projeto-hora-do-mamaco", rotulo: "Hora do Mamaço", nota: "" },
@@ -46,6 +52,8 @@
     },
     {
       titulo: "Galeria da página inicial",
+      curto: "Galeria da home",
+      ajuda: "As oito fotos do mural que corre na horizontal, no fim da página inicial.",
       espacos: [
         { chave: "galeria-1", rotulo: "Foto 1", nota: "Atendimento" },
         { chave: "galeria-2", rotulo: "Foto 2", nota: "Hora do Mamaço" },
@@ -59,6 +67,8 @@
     },
     {
       titulo: "Galeria da fundadora",
+      curto: "Galeria da fundadora",
+      ajuda: "Homenagens, Câmara, CAPEP, entrevistas, podcasts e congressos.",
       espacos: [
         { chave: "galeria-homenagens", rotulo: "Homenagens", nota: "" },
         { chave: "galeria-camara", rotulo: "Câmara Municipal", nota: "" },
@@ -72,6 +82,8 @@
     },
     {
       titulo: "Parceiros e apoiadores",
+      curto: "Parceiros",
+      ajuda: "Logos em PNG com fundo transparente ficam melhores.",
       espacos: [
         { chave: "parceiro-1", rotulo: "Parceiro 1", nota: "Logo com fundo transparente (PNG)" },
         { chave: "parceiro-2", rotulo: "Parceiro 2", nota: "" },
@@ -314,31 +326,85 @@
      FOTOS
      ============================================================ */
 
-  function montarFotos(mapa) {
-    var destino = $("grupos");
-    destino.textContent = "";
+  var grupoAberto = 0;
 
-    GRUPOS.forEach(function (grupo) {
-      var bloco = document.createElement("section");
-      bloco.className = "grupo";
+  /* Uma aba por parte do site. Sem isso a tela virava uma lista de 34
+     cartões e ninguém achava a foto que queria trocar. */
+  function montarSubabas(mapa) {
+    var barra = $("subabas");
+    barra.textContent = "";
 
-      var titulo = document.createElement("h3");
-      titulo.textContent = grupo.titulo;
-      bloco.appendChild(titulo);
+    GRUPOS.forEach(function (grupo, indice) {
+      var enviadas = grupo.espacos.filter(function (e) { return mapa[e.chave]; }).length;
 
-      var grade = document.createElement("div");
-      grade.className = "espacos";
+      var aba = document.createElement("button");
+      aba.type = "button";
+      aba.className = "subaba" + (indice === grupoAberto ? " ativa" : "");
+      aba.setAttribute("role", "tab");
+      aba.setAttribute("aria-selected", indice === grupoAberto ? "true" : "false");
 
-      grupo.espacos.forEach(function (espaco) {
-        grade.appendChild(cartaoDeFoto(espaco, mapa[espaco.chave]));
+      var nome = document.createElement("span");
+      nome.textContent = grupo.curto || grupo.titulo;
+      aba.appendChild(nome);
+
+      var conta = document.createElement("span");
+      conta.className = "subaba__conta" + (enviadas === grupo.espacos.length ? " completa" : "");
+      conta.textContent = enviadas + "/" + grupo.espacos.length;
+      aba.appendChild(conta);
+
+      aba.addEventListener("click", function () {
+        grupoAberto = indice;
+        montarFotos(estado.imagens);
       });
 
-      bloco.appendChild(grade);
-      destino.appendChild(bloco);
+      barra.appendChild(aba);
     });
   }
 
-  function cartaoDeFoto(espaco, registro) {
+  function montarFotos(mapa) {
+    montarSubabas(mapa);
+
+    var grupo = GRUPOS[grupoAberto] || GRUPOS[0];
+    var enviadas = grupo.espacos.filter(function (e) { return mapa[e.chave]; }).length;
+
+    /* barra de progresso da parte aberta */
+    var caixa = $("progressoGrupo");
+    var proporcao = grupo.espacos.length ? Math.round((enviadas / grupo.espacos.length) * 100) : 0;
+    caixa.querySelector(".progresso__barra span").style.width = proporcao + "%";
+    caixa.querySelector(".progresso__texto").textContent =
+      enviadas === grupo.espacos.length
+        ? "Todas as fotos desta parte já estão no ar."
+        : enviadas + " de " + grupo.espacos.length + " fotos enviadas nesta parte do site.";
+    caixa.classList.toggle("completo", enviadas === grupo.espacos.length);
+
+    var destino = $("grupos");
+    destino.textContent = "";
+
+    var bloco = document.createElement("section");
+    bloco.className = "grupo";
+
+    if (grupo.ajuda) {
+      var ajuda = document.createElement("p");
+      ajuda.className = "grupo__ajuda";
+      ajuda.textContent = grupo.ajuda;
+      bloco.appendChild(ajuda);
+    }
+
+    var grade = document.createElement("div");
+    grade.className = "espacos";
+
+    grupo.espacos.forEach(function (espaco) {
+      grade.appendChild(cartaoDeFoto(espaco, mapa[espaco.chave]));
+    });
+
+    bloco.appendChild(grade);
+    destino.appendChild(bloco);
+  }
+
+  /* aoMudar: o que refazer depois de enviar ou remover. A lista de
+     fotos remonta sozinha; a galeria de um projeto precisa remontar
+     ela mesma, porque vive em outra tela. */
+  function cartaoDeFoto(espaco, registro, aoMudar) {
     var cartao = document.createElement("article");
     cartao.className = "espaco";
 
@@ -400,7 +466,7 @@
       pedir("/api/imagens", { method: "POST", body: formulario })
         .then(function () {
           recado("Foto publicada: " + espaco.rotulo);
-          carregarFotos();
+          return carregarFotos().then(function () { if (aoMudar) aoMudar(); });
         })
         .catch(function (erro) {
           recado(erro.message, true);
@@ -422,7 +488,7 @@
         pedir("/api/imagens?chave=" + encodeURIComponent(espaco.chave), { method: "DELETE" })
           .then(function () {
             recado("Foto removida: " + espaco.rotulo);
-            carregarFotos();
+            return carregarFotos().then(function () { if (aoMudar) aoMudar(); });
           })
           .catch(function (erro) { recado(erro.message, true); });
       });
@@ -520,8 +586,42 @@
     });
   }
 
+  /* ---------- Galeria de um projeto (até 5 fotos) ----------
+     As chaves seguem o slug: projeto-<slug>-1 até -5. Por isso a
+     galeria só abre depois que o projeto foi salvo: antes disso o
+     slug ainda não existe e a foto ficaria órfã. */
+  var LIMITE_GALERIA = 5;
+
+  function chaveGaleria(slug, numero) {
+    return "projeto-" + slug + "-" + numero;
+  }
+
+  function montarGaleriaProjeto(slug) {
+    var caixa = $("galeriaProjeto");
+    var grade = $("galeriaProjetoEspacos");
+
+    if (!slug) {
+      caixa.hidden = true;
+      return;
+    }
+
+    caixa.hidden = false;
+    grade.textContent = "";
+
+    for (var i = 1; i <= LIMITE_GALERIA; i++) {
+      grade.appendChild(
+        cartaoDeFoto(
+          { chave: chaveGaleria(slug, i), rotulo: "Foto " + i, nota: "" },
+          estado.imagens[chaveGaleria(slug, i)],
+          function () { montarGaleriaProjeto(slug); }
+        )
+      );
+    }
+  }
+
   function abrirEditor(projeto) {
     editando = projeto ? projeto.slug : null;
+    montarGaleriaProjeto(editando);
     $("editorTitulo").textContent = projeto ? "Editando: " + projeto.nome : "Novo projeto";
     $("projetoNome").value = projeto ? projeto.nome || "" : "";
     $("projetoEtiqueta").value = projeto ? projeto.etiqueta || "" : "";
@@ -538,6 +638,7 @@
   function fecharEditor() {
     editando = null;
     $("editorProjeto").hidden = true;
+    $("galeriaProjeto").hidden = true;
   }
 
   $("novoProjeto").addEventListener("click", function () { abrirEditor(null); });
@@ -564,10 +665,20 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(corpo)
     })
-      .then(function () {
+      .then(function (dados) {
         recado("Projeto salvo.");
-        fecharEditor();
         carregarProjetos();
+
+        /* projeto novo: em vez de fechar, abre a galeria com o slug
+           que acabou de ser criado, que é o passo seguinte natural */
+        if (!editando && dados && dados.projeto) {
+          editando = dados.projeto.slug;
+          $("editorTitulo").textContent = "Editando: " + dados.projeto.nome;
+          montarGaleriaProjeto(editando);
+          $("galeriaProjeto").scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+          fecharEditor();
+        }
       })
       .catch(function (erro) { recado(erro.message, true); })
       .finally(function () { botao.disabled = false; });

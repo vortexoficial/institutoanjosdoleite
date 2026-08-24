@@ -690,3 +690,103 @@ textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0.001ms !important; }
 }
+
+/* ============================================================
+   SUB-ABAS DAS FOTOS
+   ------------------------------------------------------------
+   Uma por parte do site. Sem isso a tela virava uma lista de 34
+   cartões e ninguém achava a foto que queria trocar.
+   ============================================================ */
+
+.subabas {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.35rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--roxo-linha) transparent;
+}
+.subabas::-webkit-scrollbar { height: 5px; }
+.subabas::-webkit-scrollbar-thumb { background: var(--roxo-linha); border-radius: 999px; }
+
+.subaba {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: none;
+  min-height: 40px;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--linha);
+  border-radius: 999px;
+  background: var(--superficie);
+  color: var(--texto-medio);
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 0.86rem;
+  white-space: nowrap;
+  transition: background-color var(--transicao), border-color var(--transicao), color var(--transicao);
+}
+.subaba:hover { border-color: var(--roxo-linha); color: var(--roxo); }
+.subaba.ativa {
+  background: var(--roxo);
+  border-color: var(--roxo);
+  color: #fff;
+}
+
+.subaba__conta {
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  background: var(--fundo);
+  color: var(--texto-claro);
+}
+.subaba.ativa .subaba__conta { background: rgba(255, 255, 255, 0.2); color: #fff; }
+.subaba__conta.completa { background: #e6f6ec; color: var(--verde); }
+.subaba.ativa .subaba__conta.completa { background: rgba(255, 255, 255, 0.25); color: #fff; }
+
+/* ---------- Progresso da parte aberta ---------- */
+
+.progresso { margin-bottom: 1.5rem; max-width: 520px; }
+.progresso__barra {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--roxo-linha);
+  overflow: hidden;
+}
+.progresso__barra span {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: var(--ambar);
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.progresso.completo .progresso__barra span { background: var(--verde); }
+.progresso__texto {
+  margin-top: 0.5rem;
+  font-size: 0.86rem;
+  color: var(--texto-claro);
+}
+.progresso.completo .progresso__texto { color: var(--verde); }
+
+.grupo__ajuda {
+  margin-bottom: 1rem;
+  font-size: 0.92rem;
+  color: var(--texto-medio);
+}
+
+/* ============================================================
+   GALERIA DE UM PROJETO
+   ============================================================ */
+
+.galeria-projeto {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr));
+  gap: 0.85rem;
+  margin-top: 1rem;
+}
+.galeria-projeto .espaco__foto { aspect-ratio: 1; }
+.galeria-projeto .espaco__corpo { padding: 0.7rem 0.8rem 0.8rem; }
+.galeria-projeto .botao { font-size: 0.82rem; padding-inline: 0.75rem; }

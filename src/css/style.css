@@ -484,11 +484,27 @@ ul, ol { list-style: none; padding: 0; }
    HERO
    ============================================================ */
 
+/* O banner se ajusta à ALTURA da tela, não só à largura: em um
+   monitor de 23 polegadas ele respira, em um notebook de 15 ele
+   encolhe sozinho e continua cabendo inteiro na primeira tela. */
 .hero {
   position: relative;
-  padding-block: clamp(2.5rem, 1.5rem + 5vw, 5.5rem) clamp(3rem, 2rem + 5vw, 6rem);
+  /* o espaço de baixo é maior que a subida da barra de números,
+     senão ela encosta no conteúdo do banner */
+  padding-block: clamp(1.75rem, 3.5vh, 3.5rem) clamp(3.75rem, 8vh, 6rem);
   background: linear-gradient(170deg, var(--roxo-suave) 0%, #fff 55%);
   overflow: clip;
+}
+
+@media (min-width: 900px) {
+  .hero {
+    display: grid;
+    align-items: center;
+    /* desconta o cabeçalho e deixa uma faixa livre embaixo: a barra
+       de números aparece pela metade na primeira tela e convida a
+       rolar, em vez de ficar escondida logo abaixo da dobra */
+    min-height: calc(100dvh - var(--topo) - 4.5rem);
+  }
 }
 
 .hero__enfeite {
@@ -512,7 +528,7 @@ ul, ol { list-style: none; padding: 0; }
 .hero__grade {
   position: relative;
   display: grid;
-  gap: clamp(2.5rem, 1.5rem + 4vw, 4rem);
+  gap: clamp(2rem, 1.5rem + 3vw, 3.5rem);
   align-items: center;
 }
 
@@ -520,25 +536,27 @@ ul, ol { list-style: none; padding: 0; }
   .hero__grade { grid-template-columns: 1.05fr 1fr; }
 }
 
+/* Etiqueta discreta: é um apoio ao título, não concorre com ele */
 .hero__selo {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.45rem;
   background: #fff;
   border: 1px solid var(--roxo-linha);
   border-radius: 999px;
-  padding: 0.45rem 1rem 0.45rem 0.6rem;
+  padding: 0.3rem 0.8rem 0.3rem 0.55rem;
   font-family: var(--fonte-titulo);
-  font-size: 0.78rem;
+  font-size: clamp(0.62rem, 0.55rem + 0.25vw, 0.76rem);
   font-weight: 700;
   letter-spacing: 0.08em;
+  line-height: 1.3;
   text-transform: uppercase;
   color: var(--roxo);
   box-shadow: var(--sombra);
-  margin-bottom: 1.4rem;
+  margin-bottom: clamp(0.9rem, 2vh, 1.4rem);
 }
 .hero__selo span {
-  width: 9px; height: 9px;
+  width: 6px; height: 6px;
   border-radius: 50%;
   background: var(--ambar);
   flex: none;
@@ -548,6 +566,9 @@ ul, ol { list-style: none; padding: 0; }
   font-size: var(--t-hero);
   letter-spacing: -0.02em;
 }
+/* Uma linha por bloco: a quebra é decidida aqui, e não pela sorte
+   da largura da tela. "cuidado." sempre fecha sozinho embaixo. */
+.hero h1 span { display: block; }
 /* O destaque âmbar é pintado como fundo do próprio texto, e não
    como um traço solto embaixo: assim ele fica dentro da caixa da
    linha e a máscara da animação de entrada não corta.
@@ -563,46 +584,24 @@ ul, ol { list-style: none; padding: 0; }
   background-repeat: no-repeat;
 }
 
-.hero__texto > p {
-  margin-top: 1.5rem;
+/* :not(.hero__selo) é essencial: sem ele esta regra, mais específica
+   e mais abaixo no arquivo, engolia o tamanho da etiqueta do topo */
+.hero__texto > p:not(.hero__selo) {
+  margin-top: clamp(1rem, 2.2vh, 1.5rem);
   font-size: var(--t-corpo-g);
   color: var(--texto-medio);
-  max-width: 56ch;
+  max-width: 54ch;
 }
 
 .hero__acoes {
   display: flex;
   flex-wrap: wrap;
   gap: 0.9rem;
-  margin-top: 2rem;
+  margin-top: clamp(1.4rem, 3vh, 2rem);
 }
 .hero__acoes .btn { flex: 1 1 auto; }
 @media (min-width: 520px) {
   .hero__acoes .btn { flex: 0 0 auto; }
-}
-
-.hero__provas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(1.25rem, 3vw, 2.5rem);
-  margin-top: 2.5rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--roxo-linha);
-}
-.hero__provas strong {
-  display: block;
-  font-family: var(--fonte-titulo);
-  font-size: clamp(1.4rem, 1.2rem + 1vw, 1.9rem);
-  font-weight: 800;
-  color: var(--roxo);
-  line-height: 1.1;
-}
-.hero__provas span {
-  font-size: 0.82rem;
-  color: var(--texto-claro);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-weight: 700;
 }
 
 /* ---------- Carrossel ---------- */
@@ -619,7 +618,12 @@ ul, ol { list-style: none; padding: 0; }
   aspect-ratio: 4 / 3;
 }
 @media (min-width: 900px) {
-  .carrossel { aspect-ratio: 5 / 6; }
+  .carrossel {
+    aspect-ratio: 5 / 6;
+    /* teto de altura: num notebook de tela baixa a foto encolhe em
+       vez de empurrar os botões para fora da primeira tela */
+    max-height: calc(100dvh - var(--topo) - 11rem);
+  }
 }
 @media (min-width: 1200px) {
   .carrossel { aspect-ratio: 1 / 1; }
@@ -712,85 +716,159 @@ ul, ol { list-style: none; padding: 0; }
   background: var(--ambar);
 }
 
-/* Cartão de destaque: no celular ele entra no fluxo (nada de
-   sangrar para fora da tela); no desktop, flutua sobre a foto */
-.hero__cartao {
-  margin-top: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  background: #fff;
-  border-radius: var(--raio);
-  padding: 1rem 1.25rem;
-  box-shadow: var(--sombra-media);
-}
-.hero__cartao-icone {
-  width: 46px; height: 46px;
-  flex: none;
-  display: grid;
-  place-items: center;
-  border-radius: 12px;
-  background: var(--roxo-suave);
-  color: var(--roxo);
-}
-.hero__cartao-icone svg { width: 24px; height: 24px; }
-.hero__cartao strong {
-  display: block;
-  font-family: var(--fonte-titulo);
-  font-size: 1.3rem;
-  color: var(--texto);
-  line-height: 1.2;
-}
-.hero__cartao span {
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  font-weight: 700;
-  color: var(--texto-claro);
+/* ============================================================
+   BARRA DE NÚMEROS
+   ------------------------------------------------------------
+   Substitui a antiga faixa roxa de ponta a ponta. Agora é uma
+   peça só, elevada, que sobe sobre o fim do banner e desce sobre
+   o começo da seção seguinte: costura as duas em vez de separá-las.
+   ============================================================ */
+
+/* a barra já separa as duas seções: a de baixo não precisa do
+   respiro cheio de topo */
+.numeros + .secao { padding-top: clamp(1.5rem, 1rem + 2.5vw, 3.5rem); }
+
+.numeros {
+  position: relative;
+  z-index: 5;
+  /* sobe sobre o banner e empurra a seção seguinte para baixo */
+  margin-top: clamp(-2.5rem, -3.5vw, -1.75rem);
+  margin-bottom: clamp(1rem, 3vw, 2.5rem);
 }
 
-@media (min-width: 1200px) {
-  .hero__cartao {
+.numeros__barra {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  gap: clamp(1.25rem, 1rem + 1.2vw, 2rem);
+  padding: clamp(1.5rem, 1.25rem + 1.4vw, 2.35rem) clamp(1.25rem, 1rem + 1.5vw, 2.5rem);
+  border-radius: var(--raio-g);
+  background: linear-gradient(120deg, var(--roxo) 0%, var(--roxo-escuro) 62%, var(--roxo-profundo) 100%);
+  box-shadow: var(--sombra-alta);
+  color: #fff;
+}
+
+/* Brilho lento atravessando a barra. É o único movimento contínuo
+   da página: dá vida sem virar enfeite piscante. */
+.numeros__barra::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    transparent 38%,
+    rgba(251, 185, 33, 0.16) 47%,
+    rgba(255, 255, 255, 0.08) 50%,
+    transparent 60%
+  );
+  background-size: 260% 100%;
+  animation: brilho-barra 7s linear infinite;
+}
+
+@keyframes brilho-barra {
+  from { background-position: 160% 0; }
+  to { background-position: -60% 0; }
+}
+
+.numero {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 0.5rem;
+  padding-inline: 0.35rem;
+}
+
+/* Divisória só quando os cinco cabem lado a lado */
+@media (min-width: 1080px) {
+  .numero + .numero::before {
+    content: "";
     position: absolute;
-    left: -2.5rem;
-    bottom: -1.25rem;
-    margin-top: 0;
-    max-width: 280px;
+    left: calc(-1 * clamp(0.6rem, 0.5rem + 0.6vw, 1rem));
+    top: 12%;
+    bottom: 12%;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.16);
   }
 }
 
-/* ============================================================
-   INDICADORES
-   ============================================================ */
-
-.indicadores {
-  background: linear-gradient(135deg, var(--roxo) 0%, var(--roxo-escuro) 100%);
-  color: #fff;
-  padding-block: clamp(2.5rem, 1.5rem + 4vw, 4rem);
-}
-
-.indicadores__grade {
+.numero__icone {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
-  gap: clamp(1.5rem, 1rem + 2vw, 2.5rem);
-  text-align: center;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: var(--ambar);
+  transition: transform var(--transicao), background-color var(--transicao);
+}
+.numero__icone svg { width: 24px; height: 24px; }
+.numero:hover .numero__icone {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.18);
 }
 
-.indicador strong {
-  display: block;
+.numero strong {
   font-family: var(--fonte-titulo);
-  font-size: var(--t-num);
+  /* medida calibrada pela palavra mais larga ("Milhares"): maior que
+     isso ela quebra no meio, e palavra partida em número é erro feio */
+  font-size: clamp(1.55rem, 1.1rem + 1.4vw, 2.25rem);
   font-weight: 800;
   color: var(--ambar);
-  line-height: 1;
-  letter-spacing: -0.02em;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  overflow-wrap: normal;
+  hyphens: none;
 }
-.indicador span {
-  display: block;
-  margin-top: 0.6rem;
-  font-size: 0.92rem;
+
+.numero__rotulo {
+  font-size: clamp(0.78rem, 0.74rem + 0.15vw, 0.9rem);
+  line-height: 1.35;
   color: rgba(255, 255, 255, 0.82);
-  line-height: 1.4;
+  max-width: 22ch;
+}
+
+/* No celular, cinco blocos empilhados virariam uma torre de mais de
+   700 px. Cada número passa a ocupar uma linha só: ícone à esquerda,
+   número e legenda à direita. Continua sendo uma barra. */
+@media (max-width: 639px) {
+  .numeros__barra {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding-block: 0.5rem;
+  }
+
+  .numero {
+    grid-template-columns: auto 1fr;
+    justify-items: start;
+    text-align: left;
+    align-items: center;
+    gap: 0.1rem 0.9rem;
+    padding-block: 0.9rem;
+    padding-inline: 0;
+  }
+  .numero + .numero { border-top: 1px solid rgba(255, 255, 255, 0.14); }
+
+  .numero__icone {
+    grid-row: span 2;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+  }
+  .numero__icone svg { width: 21px; height: 21px; }
+
+  .numero strong {
+    font-size: 1.5rem;
+    align-self: end;
+  }
+  .numero__rotulo {
+    align-self: start;
+    max-width: none;
+    font-size: 0.8rem;
+  }
 }
 
 /* ============================================================

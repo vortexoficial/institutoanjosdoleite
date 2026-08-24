@@ -252,7 +252,7 @@
   var emGrupo = new Set();
   var grupos = [];
 
-  [".indicadores__grade", ".pilares", ".projetos", ".documentos", ".parceiros", ".apoio"].forEach(
+  [".numeros__barra", ".pilares", ".projetos", ".documentos", ".parceiros", ".apoio"].forEach(
     function (seletor) {
       document.querySelectorAll(seletor).forEach(function (grupo) {
         var filhos = gsap.utils.toArray(grupo.children).filter(function (f) {
@@ -275,7 +275,9 @@
         y: 0,
         duration: 0.9,
         ease: "power3.out",
-        scrollTrigger: { trigger: el, start: "top 90%", once: true }
+        // 97%: o que já aparece na primeira tela entra junto com ela,
+        // sem esperar o visitante rolar
+        scrollTrigger: { trigger: el, start: "top 97%", once: true }
       });
     });
   });

@@ -20,9 +20,12 @@
         Amamentação e primeira infância
       </p>
 
+      <!-- Cada linha é um bloco próprio: assim a palavra "cuidado"
+           fica sozinha na última linha em qualquer tela -->
       <h1 id="tituloHero">
-        Porque todo começo<br>
-        merece <em>cuidado</em>.
+        <span>Porque todo</span>
+        <span>começo merece</span>
+        <span><em>cuidado</em>.</span>
       </h1>
 
       <p data-anima="hero" data-campo="hero-texto">
@@ -42,20 +45,6 @@
         </a>
       </div>
 
-      <ul class="hero__provas" data-anima="hero">
-        <li>
-          <strong>28</strong>
-          <span>anos de enfermagem</span>
-        </li>
-        <li>
-          <strong>+20</strong>
-          <span>anos na amamentação</span>
-        </li>
-        <li>
-          <strong>14</strong>
-          <span>anos de Hora do Mamaço</span>
-        </li>
-      </ul>
     </div>
 
     <div class="hero__midia" data-anima="midia">
@@ -99,44 +88,46 @@
         </div>
       </div>
 
-      <div class="hero__cartao">
-        <span class="hero__cartao-icone" aria-hidden="true">
-          <svg><use href="#i-users"/></svg>
-        </span>
-        <span>
-          <strong data-contador="27000" data-prefixo="+">+27.000</strong>
-          <span>atendimentos realizados</span>
-        </span>
-      </div>
     </div>
   </div>
 </section>
 
 <!-- ============================================================
-     INDICADORES
+     BARRA DE NÚMEROS
+     Costura o banner à próxima seção: sobe sobre o fim de um e
+     desce sobre o começo do outro.
      ============================================================ -->
-<section class="indicadores" aria-label="Números do Instituto">
+<section class="numeros" aria-label="Números do Instituto">
   <div class="container">
-    <div class="indicadores__grade">
-      <div class="indicador" data-anima="cima">
+    <div class="numeros__barra" data-anima="cima">
+      <div class="numero" data-anima="numero">
+        <span class="numero__icone" aria-hidden="true"><svg><use href="#i-stethoscope"/></svg></span>
         <strong data-contador="27000" data-prefixo="+">+27.000</strong>
-        <span>Atendimentos realizados</span>
+        <span class="numero__rotulo">Atendimentos realizados</span>
       </div>
-      <div class="indicador" data-anima="cima">
+
+      <div class="numero" data-anima="numero">
+        <span class="numero__icone" aria-hidden="true"><svg><use href="#i-badge-check"/></svg></span>
         <strong data-contador="28">28</strong>
-        <span>Anos de experiência em Enfermagem</span>
+        <span class="numero__rotulo">Anos de experiência em Enfermagem</span>
       </div>
-      <div class="indicador" data-anima="cima">
+
+      <div class="numero" data-anima="numero">
+        <span class="numero__icone" aria-hidden="true"><svg><use href="#i-baby"/></svg></span>
         <strong data-contador="20" data-prefixo="+">+20</strong>
-        <span>Anos dedicados à amamentação</span>
+        <span class="numero__rotulo">Anos dedicados à amamentação</span>
       </div>
-      <div class="indicador" data-anima="cima">
+
+      <div class="numero" data-anima="numero">
+        <span class="numero__icone" aria-hidden="true"><svg><use href="#i-calendar-heart"/></svg></span>
         <strong data-contador="14">14</strong>
-        <span>Anos de atuação na Hora do Mamaço</span>
+        <span class="numero__rotulo">Anos de atuação na Hora do Mamaço</span>
       </div>
-      <div class="indicador" data-anima="cima">
+
+      <div class="numero" data-anima="numero">
+        <span class="numero__icone" aria-hidden="true"><svg><use href="#i-users"/></svg></span>
         <strong>Milhares</strong>
-        <span>de famílias impactadas</span>
+        <span class="numero__rotulo">de famílias impactadas</span>
       </div>
     </div>
   </div>

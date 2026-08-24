@@ -1402,76 +1402,190 @@ ul, ol { list-style: none; padding: 0; }
 
 /* ============================================================
    TRANSPARÊNCIA
+   ------------------------------------------------------------
+   Sai a grade de seis caixinhas soltas. Entram duas peças: a ficha
+   institucional (quem é o Instituto no papel) e o acervo, em forma
+   de registro, que é como um repositório público se parece.
    ============================================================ */
 
-.transparencia__grade {
+.transparencia {
+  position: relative;
+  overflow: clip;
+  background: linear-gradient(155deg, var(--roxo-escuro) 0%, var(--roxo-profundo) 70%);
+  color: #fff;
+}
+.transparencia h2,
+.transparencia h3 { color: #fff; }
+.transparencia .etiqueta { color: var(--ambar); }
+
+/* símbolo da marca em marca d'água, bem discreto */
+.transparencia__marca {
+  position: absolute;
+  right: -6%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(46%, 520px);
+  opacity: 0.05;
+  filter: grayscale(1) brightness(3);
+  pointer-events: none;
+}
+
+.transparencia__topo {
+  position: relative;
   display: grid;
-  gap: clamp(2rem, 1.5rem + 3vw, 3.5rem);
+  gap: clamp(1rem, 1rem + 1.5vw, 2.5rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
+}
+@media (min-width: 900px) {
+  .transparencia__topo { grid-template-columns: 1.1fr 1fr; }
+}
+.transparencia__topo h2 {
+  font-size: var(--t-h2);
+  letter-spacing: -0.015em;
+}
+.transparencia__apoio {
+  font-size: var(--t-corpo-g);
+  color: rgba(255, 255, 255, 0.78);
+  border-left: 2px solid rgba(255, 255, 255, 0.2);
+  padding-left: clamp(1rem, 2vw, 1.75rem);
+}
+
+.transparencia__grade {
+  position: relative;
+  display: grid;
+  gap: clamp(1.5rem, 1.25rem + 2vw, 3rem);
   align-items: start;
 }
 @media (min-width: 900px) {
-  .transparencia__grade { grid-template-columns: 1fr 1.1fr; }
+  .transparencia__grade { grid-template-columns: 1fr 1.15fr; }
 }
 
-.documentos {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
-  gap: 1rem;
-}
+/* ---------- Ficha institucional ---------- */
 
-.documento {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  background: rgba(255, 255, 255, 0.07);
+.ficha {
+  background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: var(--raio);
-  padding: 1.1rem 1.25rem;
-  transition: background var(--transicao), border-color var(--transicao),
-              transform var(--transicao);
+  border-radius: var(--raio-g);
+  padding: clamp(1.5rem, 1.25rem + 1.5vw, 2.25rem);
 }
-.documento:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: var(--ambar);
-  transform: translateY(-3px);
-}
-.documento svg { width: 22px; height: 22px; color: var(--ambar); flex: none; }
-.documento strong {
-  display: block;
-  font-family: var(--fonte-titulo);
-  font-size: 0.98rem;
-  color: #fff;
-}
-.documento span {
-  font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.cnpj-caixa {
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: var(--raio);
-  padding: 1.25rem 1.5rem;
-  margin-top: 1.75rem;
-}
-.cnpj-caixa span {
-  display: block;
-  font-size: 0.78rem;
+.ficha h3 {
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 700;
   color: var(--ambar);
-  margin-bottom: 0.35rem;
+  margin-bottom: 1.25rem;
 }
-.cnpj-caixa strong {
-  font-family: var(--fonte-titulo);
-  font-size: clamp(1.05rem, 1rem + 0.5vw, 1.35rem);
-  color: #fff;
-  /* CNPJ longo em tela estreita nunca estoura a caixa */
+
+.ficha__lista { display: grid; }
+.ficha__linha {
+  display: grid;
+  gap: 0.15rem;
+  padding-block: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.ficha__linha:first-child { border-top: 0; padding-top: 0; }
+@media (min-width: 520px) {
+  .ficha__linha { grid-template-columns: 128px 1fr; gap: 1rem; align-items: baseline; }
+}
+
+.ficha__linha dt {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+.ficha__linha dd {
+  color: rgba(255, 255, 255, 0.9);
+  /* razão social e CNPJ são longos: quebram dentro da caixa */
   overflow-wrap: anywhere;
+}
+.ficha__destaque {
+  font-family: var(--fonte-titulo);
+  font-size: clamp(1.1rem, 1rem + 0.6vw, 1.4rem);
+  font-weight: 800;
+  color: #fff !important;
+  letter-spacing: -0.01em;
+}
+
+.ficha .btn { margin-top: 1.75rem; width: 100%; }
+@media (min-width: 520px) {
+  .ficha .btn { width: auto; }
+}
+
+/* ---------- Acervo ---------- */
+
+.acervo h3 {
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ambar);
+  margin-bottom: 0.5rem;
+}
+
+.acervo__lista { display: grid; }
+
+.acervo__lista a {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(0.85rem, 2vw, 1.25rem);
+  padding-block: clamp(0.9rem, 2vw, 1.15rem);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: padding-left var(--transicao), border-color var(--transicao);
+}
+.acervo__lista a:hover {
+  padding-left: 0.5rem;
+  border-bottom-color: var(--ambar);
+}
+
+.acervo__icone {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex: none;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--ambar);
+  transition: background-color var(--transicao), transform var(--transicao);
+}
+.acervo__icone svg { width: 19px; height: 19px; }
+.acervo__lista a:hover .acervo__icone {
+  background: rgba(251, 185, 33, 0.18);
+  transform: translateY(-2px);
+}
+
+.acervo__texto { display: grid; gap: 0.1rem; min-width: 0; }
+.acervo__texto strong {
+  font-family: var(--fonte-titulo);
+  font-size: 1.02rem;
+  color: #fff;
+}
+.acervo__texto span {
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.4;
+}
+
+.acervo__seta {
+  width: 18px;
+  height: 18px;
+  color: rgba(255, 255, 255, 0.35);
+  flex: none;
+  transition: color var(--transicao), transform var(--transicao);
+}
+.acervo__lista a:hover .acervo__seta {
+  color: var(--ambar);
+  transform: translate(3px, -3px);
 }
 
 /* ============================================================
+   PARCEIROS
    PARCEIROS
    ============================================================ */
 
@@ -1663,6 +1777,29 @@ ul, ol { list-style: none; padding: 0; }
 }
 .rodape__base a { text-decoration: underline; text-underline-offset: 3px; }
 .rodape__base a:hover { color: #fff; }
+/* Assinatura da agência: presente, mas sem disputar com o Instituto */
+.rodape__autoria {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+.rodape__autoria a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+.rodape__autoria img {
+  width: 96px;
+  height: auto;
+  /* a marca é preta: sobre o rodapé escuro, vira branca */
+  filter: brightness(0) invert(1);
+  opacity: 0.5;
+  transition: opacity var(--transicao);
+}
+.rodape__autoria a:hover img { opacity: 0.95; }
+
 .rodape__legais { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; }
 .rodape__legais a {
   display: inline-flex;

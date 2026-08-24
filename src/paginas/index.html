@@ -448,77 +448,122 @@
 <!-- ============================================================
      TRANSPARÊNCIA
      ============================================================ -->
-<section class="secao secao--escura" id="transparencia">
-  <div class="container transparencia__grade">
-    <div>
-      <div class="cabecalho-secao" data-anima="cima">
+<section class="secao transparencia" id="transparencia">
+  <img class="transparencia__marca" src="/assets/simbolo.webp" alt="" aria-hidden="true" loading="lazy">
+
+  <div class="container">
+    <div class="transparencia__topo">
+      <div data-anima="cima">
         <p class="etiqueta">Transparência</p>
-        <h2>Contas abertas, confiança construída</h2>
-        <p>
-          Quem apoia o Instituto tem o direito de saber exatamente para onde vai cada recurso.
-          Nossos documentos ficam disponíveis para consulta pública.
-        </p>
+        <h2>Contas abertas,<br>confiança construída</h2>
       </div>
+      <p class="transparencia__apoio" data-anima="cima">
+        Quem apoia o Instituto tem o direito de saber para onde vai cada recurso.
+        Os documentos ficam aqui, em consulta pública, sem pedido e sem cadastro.
+      </p>
+    </div>
 
-      <div class="cnpj-caixa" data-anima="cima">
-        <span>Inscrição no CNPJ</span>
-        <strong data-campo="cnpj">00.000.000/0001-00</strong>
-      </div>
+    <div class="transparencia__grade">
 
-      <p style="margin-top:2rem" data-anima="cima">
+      <!-- Ficha institucional: quem é o Instituto no papel -->
+      <div class="ficha" data-anima="cima">
+        <h3>Ficha institucional</h3>
+        <dl class="ficha__lista">
+          <div class="ficha__linha">
+            <dt>Razão social</dt>
+            <dd data-campo="razao-social">Instituto Anjos do Leite de Apoio à Amamentação e à Primeira Infância</dd>
+          </div>
+          <div class="ficha__linha">
+            <dt>CNPJ</dt>
+            <dd class="ficha__destaque" data-campo="cnpj">00.000.000/0001-00</dd>
+          </div>
+          <div class="ficha__linha">
+            <dt>Natureza jurídica</dt>
+            <dd>Associação privada sem fins lucrativos</dd>
+          </div>
+          <div class="ficha__linha">
+            <dt>Sede</dt>
+            <dd data-campo="endereco">Santos, Baixada Santista, São Paulo</dd>
+          </div>
+        </dl>
+
         <a class="btn btn--principal" href="/transparencia.html">
           Ver a página de transparência
           <svg aria-hidden="true"><use href="#i-arrow-right"/></svg>
         </a>
-      </p>
-    </div>
+      </div>
 
-    <div class="documentos" data-anima="cima">
-      <a class="documento" href="/transparencia.html#estatuto">
-        <svg aria-hidden="true"><use href="#i-scroll-text"/></svg>
-        <span>
-          <strong>Estatuto</strong>
-          <span>Documento constitutivo</span>
-        </span>
-      </a>
-      <a class="documento" href="/transparencia.html#diretoria">
-        <svg aria-hidden="true"><use href="#i-users"/></svg>
-        <span>
-          <strong>Diretoria</strong>
-          <span>Quem responde pelo Instituto</span>
-        </span>
-      </a>
-      <a class="documento" href="/transparencia.html#relatorios">
-        <svg aria-hidden="true"><use href="#i-file-text"/></svg>
-        <span>
-          <strong>Relatórios</strong>
-          <span>Atividades por exercício</span>
-        </span>
-      </a>
-      <a class="documento" href="/transparencia.html#contas">
-        <svg aria-hidden="true"><use href="#i-hand-coins"/></svg>
-        <span>
-          <strong>Prestação de contas</strong>
-          <span>Origem e destino dos recursos</span>
-        </span>
-      </a>
-      <a class="documento" href="/transparencia.html#certidoes">
-        <svg aria-hidden="true"><use href="#i-badge-check"/></svg>
-        <span>
-          <strong>Certidões</strong>
-          <span>Regularidade institucional</span>
-        </span>
-      </a>
-      <a class="documento" href="/parceiros.html">
-        <svg aria-hidden="true"><use href="#i-handshake"/></svg>
-        <span>
-          <strong>Parceiros</strong>
-          <span>Quem caminha com a gente</span>
-        </span>
-      </a>
+      <!-- Documentos: lista de registro, e não caixas soltas -->
+      <div class="acervo" data-anima="cima">
+        <h3>O que está publicado</h3>
+        <ul class="acervo__lista">
+          <li>
+            <a href="/transparencia.html#estatuto">
+              <span class="acervo__icone" aria-hidden="true"><svg><use href="#i-scroll-text"/></svg></span>
+              <span class="acervo__texto">
+                <strong>Estatuto</strong>
+                <span>Documento constitutivo do Instituto</span>
+              </span>
+              <svg class="acervo__seta" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
+            </a>
+          </li>
+          <li>
+            <a href="/transparencia.html#diretoria">
+              <span class="acervo__icone" aria-hidden="true"><svg><use href="#i-users"/></svg></span>
+              <span class="acervo__texto">
+                <strong>Diretoria</strong>
+                <span>Quem responde pelo Instituto, com nome e cargo</span>
+              </span>
+              <svg class="acervo__seta" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
+            </a>
+          </li>
+          <li>
+            <a href="/transparencia.html#relatorios">
+              <span class="acervo__icone" aria-hidden="true"><svg><use href="#i-file-text"/></svg></span>
+              <span class="acervo__texto">
+                <strong>Relatórios de atividades</strong>
+                <span>O que foi feito em cada exercício</span>
+              </span>
+              <svg class="acervo__seta" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
+            </a>
+          </li>
+          <li>
+            <a href="/transparencia.html#contas">
+              <span class="acervo__icone" aria-hidden="true"><svg><use href="#i-hand-coins"/></svg></span>
+              <span class="acervo__texto">
+                <strong>Prestação de contas</strong>
+                <span>Origem e destino de cada recurso</span>
+              </span>
+              <svg class="acervo__seta" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
+            </a>
+          </li>
+          <li>
+            <a href="/transparencia.html#certidoes">
+              <span class="acervo__icone" aria-hidden="true"><svg><use href="#i-badge-check"/></svg></span>
+              <span class="acervo__texto">
+                <strong>Certidões</strong>
+                <span>Regularidade institucional em dia</span>
+              </span>
+              <svg class="acervo__seta" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
+            </a>
+          </li>
+          <li>
+            <a href="/parceiros.html">
+              <span class="acervo__icone" aria-hidden="true"><svg><use href="#i-handshake"/></svg></span>
+              <span class="acervo__texto">
+                <strong>Parceiros e apoiadores</strong>
+                <span>Quem sustenta os projetos junto com a gente</span>
+              </span>
+              <svg class="acervo__seta" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
+            </a>
+          </li>
+        </ul>
+      </div>
+
     </div>
   </div>
 </section>
+
 
 <!-- ============================================================
      PARCEIROS

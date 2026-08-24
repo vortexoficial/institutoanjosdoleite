@@ -34,6 +34,9 @@ Estado: Home pronta e aprovada nas 8 larguras. Faltam as outras 14 páginas (ver
 - Nenhum bloco de conteúdo com largura ou altura travada em pixel. Grades sempre com `minmax(min(100%, Xpx), 1fr)`. Texto nunca truncado.
 - Toda área clicável com pelo menos 44 px de altura.
 - O site funciona sem JavaScript e sem GSAP: as animações são acabamento. Tudo respeita `prefers-reduced-motion`.
+- Sinal das etiquetas de seção: losango âmbar (o mesmo que separa os valores na faixa em laço). Nada de barras ou traços decorativos.
+- Faixa que anda em laço: `data-laco` + `data-laco-trilho` (mecânica do bloco faixa-marquee do registro da agência). O JS duplica a lista e calcula a duração pela largura; quem anima é o CSS.
+- Assinatura da agência no rodapé: `/assets/futura-design.webp` (marca preta, invertida por filtro sobre o fundo escuro).
 - Foto nova no site: colocar `data-img="chave"` no HTML e a mesma chave na lista `GRUPOS` de `painel/js/painel.js`. Texto editável: `data-campo="nome"` no HTML e o nome em `CAMPOS` de `functions/api/conteudo.js` e de `painel/js/painel.js`.
 - Arquivos longos: gravar com a ferramenta Write. Nunca `Set-Content`/`Out-File` do PowerShell (corrompe acentos).
 

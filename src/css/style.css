@@ -937,80 +937,90 @@ ul, ol { list-style: none; padding: 0; }
 }
 
 /* ---------- Trajetória ----------
-   Mesma mecânica da linha do tempo do Central Dente (trilho que
-   preenche ao rolar, marcador que acende), com composição própria:
-   o ano ocupa uma coluna à esquerda e o texto respira sem caixa. */
+   Mesma construção da linha do tempo do Benedito: trilho na margem
+   esquerda, ano grande com um rótulo curto embaixo e o ponto sólido
+   com anel branco, que faz o marco furar o trilho em vez de ficar
+   apenas por cima dele. As cores são as daqui. */
 
 .trilha {
-  --coluna-ano: clamp(76px, 11vw, 132px);
-  --coluna-trilho: clamp(30px, 4vw, 48px);
+  --recuo: clamp(2rem, 5vw, 3.25rem);
+  --trilho-x: 7px;
   position: relative;
-  max-width: 940px;
+  max-width: 1000px;
 }
 
 .trilha__linha {
   position: absolute;
-  top: 0.75rem;
-  bottom: 0.75rem;
-  left: calc(var(--coluna-ano) + var(--coluna-trilho) / 2 - 1px);
-  width: 2px;
-  background: var(--roxo-linha);
-  border-radius: 2px;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  left: var(--trilho-x);
+  width: 3px;
+  border-radius: 3px;
+  background: rgba(251, 185, 33, 0.22);
+  overflow: hidden;
 }
 .trilha__progresso {
   display: block;
   width: 100%;
-  height: 0;
-  border-radius: 2px;
-  background: linear-gradient(180deg, var(--roxo) 0%, var(--ambar) 100%);
+  height: 100%;
+  border-radius: 3px;
+  background: var(--ambar);
+  transform: scaleY(0);
+  transform-origin: top center;
 }
 
 .marco {
+  position: relative;
+  z-index: 1;                 /* o marco passa na frente do trilho */
   display: grid;
-  grid-template-columns: var(--coluna-ano) var(--coluna-trilho) 1fr;
-  grid-template-areas: "ano ponto corpo";
-  align-items: start;
+  gap: 0.75rem;
+  padding: clamp(1.25rem, 2.5vw, 2rem) 0 clamp(1.25rem, 2.5vw, 2rem) var(--recuo);
 }
-.marco + .marco { margin-top: clamp(1.75rem, 1.25rem + 2vw, 3rem); }
+@media (min-width: 900px) {
+  .marco {
+    grid-template-columns: 200px 1fr;
+    gap: clamp(1.5rem, 3vw, 3rem);
+  }
+}
+
+.marco__marca {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+/* O anel branco é o que faz o ponto furar o trilho */
+.marco__ponto {
+  position: absolute;
+  top: 0.75rem;
+  left: calc(var(--trilho-x) - var(--recuo) - 5.5px);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--ambar);
+  box-shadow: 0 0 0 5px #fff;
+}
 
 .marco__ano {
-  grid-area: ano;
-  text-align: right;
-  padding-top: 0.15rem;
   font-family: var(--fonte-titulo);
-  font-size: clamp(1rem, 0.9rem + 0.6vw, 1.5rem);
+  font-size: clamp(1.9rem, 1.3rem + 2.2vw, 3rem);
   font-weight: 800;
-  letter-spacing: -0.01em;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--roxo);
+}
+.marco__rotulo {
+  font-family: var(--fonte-titulo);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--texto-claro);
-  transition: color 0.45s ease;
 }
 
-.marco__ponto {
-  grid-area: ponto;
-  justify-self: center;
-  margin-top: 0.45rem;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background: #fff;
-  border: 3px solid var(--roxo-linha);
-  transition: border-color 0.45s ease, box-shadow 0.45s ease, transform 0.45s ease;
-}
-
-/* Estado aceso: chega junto com o preenchimento do trilho */
-.marco.ativo .marco__ano { color: var(--roxo); }
-.marco.ativo .marco__ponto {
-  border-color: var(--ambar);
-  box-shadow: 0 0 0 6px rgba(251, 185, 33, 0.18);
-  transform: scale(1.12);
-}
-
-.marco__corpo {
-  grid-area: corpo;
-  padding-left: clamp(0.5rem, 1.5vw, 1.25rem);
-}
 .marco__corpo h3 {
-  font-size: clamp(1.05rem, 1rem + 0.45vw, 1.3rem);
+  font-size: clamp(1.05rem, 1rem + 0.5vw, 1.35rem);
   margin-bottom: 0.5rem;
 }
 .marco__corpo p { color: var(--texto-medio); }
@@ -1022,29 +1032,9 @@ ul, ol { list-style: none; padding: 0; }
   background: var(--roxo-suave);
   border-radius: var(--raio-g);
   padding: clamp(1.25rem, 1rem + 1.5vw, 2rem);
-  margin-left: clamp(0.25rem, 1vw, 0.75rem);
 }
-.marco--destaque .marco__ano { color: var(--roxo); }
-
-@media (max-width: 767px) {
-  .trilha { --coluna-ano: 0px; --coluna-trilho: 28px; }
-  .trilha__linha { left: calc(var(--coluna-trilho) / 2 - 1px); }
-
-  .marco {
-    grid-template-columns: var(--coluna-trilho) 1fr;
-    grid-template-areas:
-      "ponto ano"
-      "ponto corpo";
-    column-gap: 0.5rem;
-  }
-  .marco__ano {
-    text-align: left;
-    margin-bottom: 0.35rem;
-    font-size: 0.95rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .marco__corpo { padding-left: 0; }
+@media (min-width: 900px) {
+  .marco--destaque .marco__corpo { margin-top: -0.5rem; }
 }
 
 /* ---------- Assinatura de fechamento ----------

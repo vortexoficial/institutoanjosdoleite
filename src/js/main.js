@@ -177,12 +177,9 @@
       el.style.opacity = "1";
       el.style.transform = "none";
     });
-    // a trajetória entra pronta: trilho cheio e todos os marcos acesos
+    // a trajetória entra pronta, com o trilho inteiro preenchido
     var barraTrilha = document.getElementById("trilhaProgresso");
-    if (barraTrilha) barraTrilha.style.height = "100%";
-    document.querySelectorAll("[data-passo]").forEach(function (p) {
-      p.classList.add("ativo");
-    });
+    if (barraTrilha) barraTrilha.style.transform = "scaleY(1)";
     mostrarContadores();
     return;
   }
@@ -302,9 +299,10 @@
 
   /* ============================================================
      4b. TRAJETÓRIA
-     Trilho que se preenche conforme a página rola e marcos que
-     acendem ao entrar na tela. Mesma mecânica da linha do tempo do
-     Central Dente, que já se provou em produção.
+     Construção da linha do tempo do Benedito: o trilho se preenche
+     preso à rolagem e, quando o capítulo chega, o ponto estoura no
+     trilho, o ano e o rótulo entram pela esquerda (no sentido em que
+     a linha é lida) e o texto sobe atrás.
      ============================================================ */
 
   var trilha = document.getElementById("trilha");
@@ -336,37 +334,47 @@
     ScrollTrigger.addEventListener("refreshInit", ajustarFimDaLinha);
     ajustarFimDaLinha();
 
+    /* 1. O trilho, preso à rolagem. scaleY em vez de height: o
+       navegador resolve no compositor, sem recalcular layout a cada
+       quadro. */
     gsap.fromTo(
       progresso,
-      { height: "0%" },
+      { scaleY: 0 },
       {
-        height: "100%",
+        scaleY: 1,
         ease: "none",
         scrollTrigger: {
           trigger: trilha,
-          start: "top 62%",
-          end: "bottom 78%",
-          scrub: 0.6
+          start: "top 65%",
+          end: "bottom 80%",
+          scrub: 0.5,
+          invalidateOnRefresh: true
         }
       }
     );
 
-    passos.forEach(function (passo) {
-      ScrollTrigger.create({
-        trigger: passo,
-        start: "top 74%",
-        onEnter: function () { passo.classList.add("ativo"); },
-        onLeaveBack: function () { passo.classList.remove("ativo"); }
-      });
-
-      gsap.from(passo.querySelector(".marco__corpo"), {
-        opacity: 0,
-        x: window.innerWidth > 767 ? 28 : 0,
-        y: window.innerWidth > 767 ? 0 : 22,
-        duration: 0.8,
-        ease: "power3.out",
-        scrollTrigger: { trigger: passo, start: "top 86%", once: true }
-      });
+    /* 2. Cada capítulo, quando chega: o ponto estoura no trilho, o ano
+       e o rótulo entram pela esquerda e o texto sobe atrás. */
+    Array.prototype.forEach.call(passos, function (item) {
+      gsap
+        .timeline({ scrollTrigger: { trigger: item, start: "top 80%", once: true } })
+        .fromTo(
+          item.querySelectorAll("[data-ponto]"),
+          { scale: 0 },
+          { scale: 1, duration: 0.5, ease: "back.out(3)" }
+        )
+        .fromTo(
+          item.querySelectorAll("[data-marca]"),
+          { x: -28, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.7, stagger: 0.08, ease: "power3.out" },
+          "-=0.3"
+        )
+        .fromTo(
+          item.querySelectorAll("[data-texto]"),
+          { y: 22, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.75, stagger: 0.12, ease: "power3.out" },
+          "-=0.5"
+        );
     });
   }
 

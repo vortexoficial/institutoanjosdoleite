@@ -2397,3 +2397,16 @@ ul, ol { list-style: none; padding: 0; }
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .projeto-galeria__item:hover img { transform: scale(1.06); }
+
+/* Cards de projeto montados pelo painel: entram por conta própria,
+   já que os gatilhos do GSAP foram criados para os cards do HTML */
+.projeto--entra {
+  animation: projeto-entra 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+@keyframes projeto-entra {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .projeto--entra { animation: none; }
+}

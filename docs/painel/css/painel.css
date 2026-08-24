@@ -790,3 +790,160 @@ textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
 .galeria-projeto .espaco__foto { aspect-ratio: 1; }
 .galeria-projeto .espaco__corpo { padding: 0.7rem 0.8rem 0.8rem; }
 .galeria-projeto .botao { font-size: 0.82rem; padding-inline: 0.75rem; }
+
+/* ============================================================
+   ÍNDICE DE ÁLBUNS (fotos por parte do site)
+   ------------------------------------------------------------
+   Antes eram abas em fila que rolavam para o lado e se confundiam
+   com a barra de progresso. Agora todas as partes aparecem de uma
+   vez, cada uma com prévia e progresso.
+   ============================================================ */
+
+.albuns {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: clamp(0.85rem, 2vw, 1.25rem);
+}
+
+.album {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem;
+  background: var(--superficie);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio-g);
+  box-shadow: var(--sombra);
+  text-align: left;
+  transition: border-color var(--transicao), transform var(--transicao);
+}
+.album:hover { border-color: var(--roxo-linha); transform: translateY(-2px); }
+
+/* mosaico 2x2 com as primeiras fotos da parte */
+.album__mosaico {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3px;
+  width: 74px;
+  height: 74px;
+  flex: none;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--roxo-suave);
+}
+.album__quadro {
+  display: block;
+  background: var(--roxo-suave);
+  overflow: hidden;
+}
+.album__quadro img { width: 100%; height: 100%; object-fit: cover; }
+
+.album__corpo { display: grid; gap: 0.3rem; min-width: 0; }
+.album__corpo strong { font-family: var(--fonte-titulo); font-size: 1rem; }
+.album__contagem { font-size: 0.84rem; color: var(--texto-claro); }
+
+.album__barra {
+  display: block;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--roxo-linha);
+  overflow: hidden;
+  margin-top: 0.15rem;
+}
+.album__barra span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--ambar);
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.album--completo .album__barra span { background: var(--verde); }
+.album--completo .album__contagem { color: var(--verde); }
+
+.album__seta { width: 18px; height: 18px; color: var(--texto-claro); }
+.album:hover .album__seta { color: var(--roxo); }
+
+/* voltar para o índice */
+.voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 40px;
+  padding: 0.4rem 0.75rem 0.4rem 0.5rem;
+  margin-bottom: 1rem;
+  border: 0;
+  border-radius: var(--raio);
+  background: transparent;
+  color: var(--texto-medio);
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+.voltar:hover { background: var(--roxo-suave); color: var(--roxo); }
+.voltar svg { width: 17px; height: 17px; }
+
+/* ============================================================
+   FOTOS DE UM PROJETO
+   ============================================================ */
+
+.galeria-projeto {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr));
+  gap: 0.85rem;
+  margin-top: 1rem;
+}
+
+.foto-projeto {
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  overflow: hidden;
+  background: var(--superficie);
+  transition: border-color var(--transicao);
+}
+.foto-projeto--capa { border-color: var(--ambar); box-shadow: 0 0 0 2px rgba(251, 185, 33, 0.25); }
+
+.foto-projeto__quadro {
+  position: relative;
+  aspect-ratio: 1;
+  background: var(--roxo-suave);
+  display: grid;
+  place-items: center;
+}
+.foto-projeto__quadro img { width: 100%; height: 100%; object-fit: cover; }
+
+.foto-projeto__vazio { color: var(--roxo-linha); }
+.foto-projeto__vazio svg { width: 28px; height: 28px; }
+
+.foto-projeto__selo {
+  position: absolute;
+  top: 0.4rem;
+  left: 0.4rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: var(--ambar);
+  color: var(--roxo-escuro);
+  font-family: var(--fonte-titulo);
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.foto-projeto__selo svg { width: 12px; height: 12px; }
+
+.foto-projeto__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  padding: 0.6rem;
+}
+.foto-projeto__acoes .botao {
+  min-height: 36px;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  flex: 1 1 auto;
+}
+.foto-projeto__acoes .botao svg { width: 14px; height: 14px; }

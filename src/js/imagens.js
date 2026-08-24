@@ -15,8 +15,14 @@
   var CACHE = "iadl.imagens";
   var VALIDADE = 5 * 60 * 1000; // 5 minutos
 
+  /* último mapa de fotos conhecido. A lista de projetos precisa dele
+     para montar a capa certa: a capa pode ser uma foto enviada no
+     painel, e não o espaço reservado do build. */
+  var mapaAtual = {};
+
   function aplicar(mapa) {
     if (!mapa) return;
+    mapaAtual = mapa;
 
     document.querySelectorAll("[data-img]").forEach(function (el) {
       var registro = mapa[el.getAttribute("data-img")];
@@ -211,6 +217,16 @@
     if (!modelo) return;
 
     var molde = modelo.cloneNode(true);
+
+    /* O GSAP já criou os gatilhos de entrada para os cards que vieram
+       no HTML. Estes aqui são novos: se mantivessem data-anima, o CSS
+       os deixaria invisíveis e nenhuma animação viria revelá-los.
+       Foi o que apagou a seção de projetos em produção. */
+    molde.removeAttribute("data-anima");
+    molde.style.opacity = "";
+    molde.style.transform = "";
+    molde.classList.add("projeto--entra");
+
     lista.textContent = "";
 
     projetos.forEach(function (projeto) {
@@ -218,11 +234,31 @@
 
       var img = card.querySelector("img");
       if (img) {
+        /* a capa pode ser uma foto enviada no painel (projeto-slug-2)
+           ou o espaço reservado do build (projeto-slug). Se nem um nem
+           outro existir, cai num espaço genérico em vez de quebrar. */
         var chave = projeto.imagem || "projeto-" + projeto.slug;
+        var registro = mapaAtual[chave];
+
+        /* ordem de tentativa até alguma imagem carregar: a foto
+           enviada, o espaço reservado com o nome da capa, o do slug e,
+           por último, o genérico. Projeto criado no painel não tem
+           espaço reservado próprio, e sem essa cadeia ficava quebrado. */
+        var tentativas = [];
+        if (registro && registro.url) tentativas.push(registro.url);
+        tentativas.push("/assets/img/" + chave + ".svg");
+        tentativas.push("/assets/img/projeto-" + projeto.slug + ".svg");
+        tentativas.push("/assets/img/projeto-generico.svg");
+
+        var passo = 0;
         img.setAttribute("data-img", chave);
-        img.setAttribute("src", "/assets/img/" + chave + ".svg");
+        img.dataset.original = tentativas[1];
         img.setAttribute("alt", projeto.nome || "");
-        img.dataset.original = "/assets/img/" + chave + ".svg";
+        img.addEventListener("error", function () {
+          passo += 1;
+          if (passo < tentativas.length) img.setAttribute("src", tentativas[passo]);
+        });
+        img.setAttribute("src", tentativas[0]);
       }
 
       var etiqueta = card.querySelector(".projeto__etiqueta");

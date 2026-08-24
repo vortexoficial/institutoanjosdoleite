@@ -39,18 +39,6 @@
       ]
     },
     {
-      titulo: "Projetos",
-      curto: "Capas dos projetos",
-      ajuda: "A foto de capa de cada projeto, que aparece na lista da página inicial.",
-      espacos: [
-        { chave: "projeto-mae-acolhida", rotulo: "Mãe Acolhida", nota: "" },
-        { chave: "projeto-hora-do-mamaco", rotulo: "Hora do Mamaço", nota: "" },
-        { chave: "projeto-formacao", rotulo: "Formação de profissionais", nota: "" },
-        { chave: "projeto-educacao", rotulo: "Educação em Saúde", nota: "" },
-        { chave: "projeto-primeira-infancia", rotulo: "Primeira Infância", nota: "" }
-      ]
-    },
-    {
       titulo: "Galeria da página inicial",
       curto: "Galeria da home",
       ajuda: "As oito fotos do mural que corre na horizontal, no fim da página inicial.",
@@ -326,79 +314,130 @@
      FOTOS
      ============================================================ */
 
-  var grupoAberto = 0;
+  /* Índice de partes do site. Antes eram abas em fila, que no celular
+     rolavam para o lado e se confundiam com a barra de progresso.
+     Agora cada parte é um cartão: aparecem todas de uma vez, e clicar
+     abre só aquela. */
+  var albumAberto = null;
 
-  /* Uma aba por parte do site. Sem isso a tela virava uma lista de 34
-     cartões e ninguém achava a foto que queria trocar. */
-  function montarSubabas(mapa) {
-    var barra = $("subabas");
-    barra.textContent = "";
+  function montarAlbuns(mapa) {
+    var destino = $("albuns");
+    destino.textContent = "";
 
     GRUPOS.forEach(function (grupo, indice) {
       var enviadas = grupo.espacos.filter(function (e) { return mapa[e.chave]; }).length;
+      var total = grupo.espacos.length;
+      var completo = enviadas === total;
 
-      var aba = document.createElement("button");
-      aba.type = "button";
-      aba.className = "subaba" + (indice === grupoAberto ? " ativa" : "");
-      aba.setAttribute("role", "tab");
-      aba.setAttribute("aria-selected", indice === grupoAberto ? "true" : "false");
+      var cartao = document.createElement("button");
+      cartao.type = "button";
+      cartao.className = "album" + (completo ? " album--completo" : "");
 
-      var nome = document.createElement("span");
-      nome.textContent = grupo.curto || grupo.titulo;
-      aba.appendChild(nome);
-
-      var conta = document.createElement("span");
-      conta.className = "subaba__conta" + (enviadas === grupo.espacos.length ? " completa" : "");
-      conta.textContent = enviadas + "/" + grupo.espacos.length;
-      aba.appendChild(conta);
-
-      aba.addEventListener("click", function () {
-        grupoAberto = indice;
-        montarFotos(estado.imagens);
+      /* mosaico com as quatro primeiras: dá para reconhecer a parte
+         do site de relance, sem ler o título */
+      var mosaico = document.createElement("span");
+      mosaico.className = "album__mosaico";
+      grupo.espacos.slice(0, 4).forEach(function (espaco) {
+        var quadro = document.createElement("span");
+        quadro.className = "album__quadro";
+        var registro = mapa[espaco.chave];
+        var url = (registro && registro.url) || PADRAO[espaco.chave];
+        if (url) {
+          var img = document.createElement("img");
+          img.src = url;
+          img.alt = "";
+          img.loading = "lazy";
+          img.addEventListener("error", function () { img.remove(); });
+          quadro.appendChild(img);
+        }
+        mosaico.appendChild(quadro);
       });
+      cartao.appendChild(mosaico);
 
-      barra.appendChild(aba);
+      var corpo = document.createElement("span");
+      corpo.className = "album__corpo";
+
+      var titulo = document.createElement("strong");
+      titulo.textContent = grupo.curto || grupo.titulo;
+      corpo.appendChild(titulo);
+
+      var contagem = document.createElement("span");
+      contagem.className = "album__contagem";
+      contagem.textContent = completo
+        ? "Todas as " + total + " fotos no ar"
+        : enviadas + " de " + total + " enviadas";
+      corpo.appendChild(contagem);
+
+      var barra = document.createElement("span");
+      barra.className = "album__barra";
+      var preenche = document.createElement("span");
+      preenche.style.width = (total ? Math.round((enviadas / total) * 100) : 0) + "%";
+      barra.appendChild(preenche);
+      corpo.appendChild(barra);
+
+      cartao.appendChild(corpo);
+
+      var seta = icone("chevron-right");
+      seta.classList.add("album__seta");
+      cartao.appendChild(seta);
+
+      cartao.addEventListener("click", function () { abrirAlbum(indice); });
+      destino.appendChild(cartao);
     });
   }
 
-  function montarFotos(mapa) {
-    montarSubabas(mapa);
+  function abrirAlbum(indice) {
+    albumAberto = indice;
+    $("indiceAlbuns").hidden = true;
+    $("albumAberto").hidden = false;
+    montarEspacos(estado.imagens);
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }
 
-    var grupo = GRUPOS[grupoAberto] || GRUPOS[0];
+  function fecharAlbum() {
+    albumAberto = null;
+    $("albumAberto").hidden = true;
+    $("indiceAlbuns").hidden = false;
+    montarAlbuns(estado.imagens);
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }
+
+  $("voltarAlbuns").addEventListener("click", fecharAlbum);
+
+  function montarEspacos(mapa) {
+    var grupo = GRUPOS[albumAberto];
+    if (!grupo) return;
+
     var enviadas = grupo.espacos.filter(function (e) { return mapa[e.chave]; }).length;
+    var total = grupo.espacos.length;
 
-    /* barra de progresso da parte aberta */
+    $("albumTitulo").textContent = grupo.titulo;
+    $("albumAjuda").textContent = grupo.ajuda || "";
+
     var caixa = $("progressoGrupo");
-    var proporcao = grupo.espacos.length ? Math.round((enviadas / grupo.espacos.length) * 100) : 0;
-    caixa.querySelector(".progresso__barra span").style.width = proporcao + "%";
+    caixa.querySelector(".progresso__barra span").style.width =
+      (total ? Math.round((enviadas / total) * 100) : 0) + "%";
     caixa.querySelector(".progresso__texto").textContent =
-      enviadas === grupo.espacos.length
+      enviadas === total
         ? "Todas as fotos desta parte já estão no ar."
-        : enviadas + " de " + grupo.espacos.length + " fotos enviadas nesta parte do site.";
-    caixa.classList.toggle("completo", enviadas === grupo.espacos.length);
+        : enviadas + " de " + total + " fotos enviadas nesta parte do site.";
+    caixa.classList.toggle("completo", enviadas === total);
 
     var destino = $("grupos");
     destino.textContent = "";
 
-    var bloco = document.createElement("section");
-    bloco.className = "grupo";
-
-    if (grupo.ajuda) {
-      var ajuda = document.createElement("p");
-      ajuda.className = "grupo__ajuda";
-      ajuda.textContent = grupo.ajuda;
-      bloco.appendChild(ajuda);
-    }
-
     var grade = document.createElement("div");
     grade.className = "espacos";
-
     grupo.espacos.forEach(function (espaco) {
       grade.appendChild(cartaoDeFoto(espaco, mapa[espaco.chave]));
     });
+    destino.appendChild(grade);
+  }
 
-    bloco.appendChild(grade);
-    destino.appendChild(bloco);
+  /* Redesenha a tela de fotos no estado em que ela estiver */
+  function montarFotos(mapa) {
+    if (albumAberto === null) montarAlbuns(mapa);
+    else montarEspacos(mapa);
   }
 
   /* aoMudar: o que refazer depois de enviar ou remover. A lista de
@@ -596,6 +635,9 @@
     return "projeto-" + slug + "-" + numero;
   }
 
+  /* As fotos do projeto ficam aqui, e não na aba Fotos: quem cria um
+     projeto quer resolver tudo em uma tela só. A capa é escolhida
+     entre as fotos enviadas, e não digitada. */
   function montarGaleriaProjeto(slug) {
     var caixa = $("galeriaProjeto");
     var grade = $("galeriaProjetoEspacos");
@@ -608,15 +650,155 @@
     caixa.hidden = false;
     grade.textContent = "";
 
+    var capaAtual = $("projetoImagem").value;
+
     for (var i = 1; i <= LIMITE_GALERIA; i++) {
-      grade.appendChild(
-        cartaoDeFoto(
-          { chave: chaveGaleria(slug, i), rotulo: "Foto " + i, nota: "" },
-          estado.imagens[chaveGaleria(slug, i)],
-          function () { montarGaleriaProjeto(slug); }
-        )
-      );
+      grade.appendChild(cartaoFotoProjeto(slug, i, capaAtual));
     }
+  }
+
+  function cartaoFotoProjeto(slug, numero, capaAtual) {
+    var chave = chaveGaleria(slug, numero);
+    var registro = estado.imagens[chave];
+    var temFoto = !!(registro && registro.url);
+    var ehCapa = capaAtual === chave;
+
+    var cartao = document.createElement("article");
+    cartao.className = "foto-projeto" + (ehCapa ? " foto-projeto--capa" : "");
+
+    var moldura = document.createElement("div");
+    moldura.className = "foto-projeto__quadro";
+
+    if (temFoto) {
+      var img = document.createElement("img");
+      img.src = registro.url;
+      img.alt = "Foto " + numero + " do projeto";
+      img.loading = "lazy";
+      moldura.appendChild(img);
+    } else {
+      var vazio = document.createElement("span");
+      vazio.className = "foto-projeto__vazio";
+      vazio.appendChild(icone("image-plus"));
+      moldura.appendChild(vazio);
+    }
+
+    if (ehCapa) {
+      var selo = document.createElement("span");
+      selo.className = "foto-projeto__selo";
+      selo.appendChild(icone("star"));
+      selo.appendChild(document.createTextNode("Capa"));
+      moldura.appendChild(selo);
+    }
+
+    cartao.appendChild(moldura);
+
+    var acoes = document.createElement("div");
+    acoes.className = "foto-projeto__acoes";
+
+    var entrada = document.createElement("input");
+    entrada.type = "file";
+    entrada.accept = "image/jpeg,image/png,image/webp";
+    entrada.hidden = true;
+
+    var enviar = document.createElement("button");
+    enviar.type = "button";
+    enviar.className = "botao " + (temFoto ? "botao--claro" : "botao--ambar");
+    enviar.textContent = temFoto ? "Trocar" : "Enviar";
+    enviar.addEventListener("click", function () { entrada.click(); });
+
+    entrada.addEventListener("change", function () {
+      var arquivo = entrada.files && entrada.files[0];
+      if (!arquivo) return;
+
+      var formulario = new FormData();
+      formulario.append("chave", chave);
+      formulario.append("arquivo", arquivo);
+
+      enviar.disabled = true;
+      enviar.textContent = "Enviando...";
+
+      pedir("/api/imagens", { method: "POST", body: formulario })
+        .then(function () {
+          /* primeira foto do projeto vira a capa sozinha: é o que a
+             pessoa espera, e evita projeto publicado sem capa */
+          if (!$("projetoImagem").value) {
+            $("projetoImagem").value = chave;
+            salvarCapa(chave);
+          }
+          recado("Foto enviada.");
+          return carregarFotos().then(function () { montarGaleriaProjeto(slug); });
+        })
+        .catch(function (erro) {
+          recado(erro.message, true);
+          enviar.disabled = false;
+          enviar.textContent = temFoto ? "Trocar" : "Enviar";
+        });
+    });
+
+    acoes.appendChild(enviar);
+    acoes.appendChild(entrada);
+
+    if (temFoto && !ehCapa) {
+      var usarCapa = document.createElement("button");
+      usarCapa.type = "button";
+      usarCapa.className = "botao botao--claro";
+      usarCapa.appendChild(icone("star"));
+      usarCapa.appendChild(document.createTextNode("Capa"));
+      usarCapa.addEventListener("click", function () {
+        $("projetoImagem").value = chave;
+        salvarCapa(chave);
+        montarGaleriaProjeto(slug);
+      });
+      acoes.appendChild(usarCapa);
+    }
+
+    if (temFoto) {
+      var remover = document.createElement("button");
+      remover.type = "button";
+      remover.className = "botao botao--texto";
+      remover.textContent = "Remover";
+      remover.addEventListener("click", function () {
+        if (!confirm("Remover a foto " + numero + " deste projeto?")) return;
+        pedir("/api/imagens?chave=" + encodeURIComponent(chave), { method: "DELETE" })
+          .then(function () {
+            if ($("projetoImagem").value === chave) {
+              $("projetoImagem").value = "";
+              salvarCapa("");
+            }
+            recado("Foto removida.");
+            return carregarFotos().then(function () { montarGaleriaProjeto(slug); });
+          })
+          .catch(function (erro) { recado(erro.message, true); });
+      });
+      acoes.appendChild(remover);
+    }
+
+    cartao.appendChild(acoes);
+    return cartao;
+  }
+
+  /* a capa é salva na hora, junto com o resto do projeto que já existe */
+  function salvarCapa(chave) {
+    if (!editando) return;
+    var projeto = estado.projetos.find(function (p) { return p.slug === editando; });
+    if (!projeto) return;
+
+    pedir("/api/projetos", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        slug: projeto.slug,
+        nome: projeto.nome,
+        etiqueta: projeto.etiqueta,
+        resumo: projeto.resumo,
+        texto: projeto.texto,
+        acoes: projeto.acoes,
+        publicado: projeto.publicado,
+        imagem: chave
+      })
+    })
+      .then(function () { return carregarProjetos(); })
+      .catch(function (erro) { recado(erro.message, true); });
   }
 
   function abrirEditor(projeto) {

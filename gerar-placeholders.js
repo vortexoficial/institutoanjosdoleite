@@ -96,6 +96,7 @@ const ESPACOS = [
   { arquivo: "projeto-formacao", largura: 1000, altura: 750, titulo: "Formação" },
   { arquivo: "projeto-educacao", largura: 1000, altura: 750, titulo: "Educação em Saúde" },
   { arquivo: "projeto-primeira-infancia", largura: 1000, altura: 750, titulo: "Primeira Infância" },
+  { arquivo: "projeto-generico", largura: 1000, altura: 750, titulo: "Projeto" },
 
   // Prova social
   { arquivo: "depoimento-1", largura: 600, altura: 600, titulo: "Mãe atendida" },

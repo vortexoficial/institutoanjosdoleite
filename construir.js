@@ -112,6 +112,15 @@ for (const rel of paginas) {
     (_, attr, arquivo) => `${attr}="${arquivo}?v=${carimbo}"`
   );
 
+  /* Os espaços reservados de foto também levam carimbo: eles são
+     regerados por script e o cache de um ano do _headers deixaria o
+     desenho antigo na tela. Foto trocada pelo painel não passa por
+     aqui, ela já vem com a própria versão na URL. */
+  html = html.replace(
+    /(src|srcset)="(\/assets\/img\/[^"?]+)"/g,
+    (_, attr, arquivo) => `${attr}="${arquivo}?v=${carimbo}"`
+  );
+
   const destino = path.join(DIST, rel);
   fs.mkdirSync(path.dirname(destino), { recursive: true });
   fs.writeFileSync(destino, html, "utf8");

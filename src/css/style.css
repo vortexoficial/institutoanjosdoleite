@@ -2286,6 +2286,63 @@ ul, ol { list-style: none; padding: 0; }
 .lupa__fechar:hover { background: rgba(255, 255, 255, 0.2); }
 .lupa__fechar svg { width: 22px; height: 22px; }
 
+/* ---------- Página de um projeto ---------- */
+
+.projeto-pagina {
+  display: grid;
+  gap: clamp(2rem, 1.5rem + 3vw, 3.5rem);
+  align-items: start;
+}
+@media (min-width: 900px) {
+  .projeto-pagina { grid-template-columns: 1fr 340px; }
+}
+
+.projeto-lado { display: grid; gap: 1.25rem; }
+
+.projeto-lado__foto {
+  margin: 0;
+  border-radius: var(--raio-g);
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: var(--roxo-suave);
+  box-shadow: var(--sombra-media);
+}
+.projeto-lado__foto img { width: 100%; height: 100%; object-fit: cover; }
+
+.projeto-lado__caixa {
+  background: var(--fundo-alt);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio-g);
+  padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+}
+.projeto-lado__caixa h2 {
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--roxo);
+  margin-bottom: 1rem;
+}
+.projeto-lado__acoes { display: grid; gap: 0.75rem; }
+.projeto-lado__acoes li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.96rem;
+  color: var(--texto-medio);
+}
+.projeto-lado__acoes li::before {
+  content: "";
+  width: 7px; height: 7px;
+  margin-top: 0.55rem;
+  flex: none;
+  border-radius: 2px;
+  background: var(--ambar);
+  transform: rotate(45deg);
+}
+
+.projeto-lado__botoes { display: grid; gap: 0.75rem; }
+
 /* ============================================================
    ANIMAÇÃO
    ------------------------------------------------------------

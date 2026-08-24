@@ -95,7 +95,12 @@
     { campo: "whatsapp", rotulo: "WhatsApp", dica: "Formato (13) 99999-9999. Atualiza o botão flutuante e o rodapé.", tipo: "text" },
     { campo: "email", rotulo: "E-mail institucional", dica: "Usado na página de contato.", tipo: "text" },
     { campo: "endereco", rotulo: "Endereço da sede", dica: "Deixe em branco enquanto não houver sede fixa.", tipo: "text" },
-    { campo: "hero-texto", rotulo: "Texto do banner", dica: "O parágrafo abaixo do título na página inicial.", tipo: "textarea" }
+    { campo: "hero-texto", rotulo: "Texto do banner", dica: "O parágrafo abaixo do título na página inicial.", tipo: "textarea" },
+    { campo: "fundadora-cargo", rotulo: "Fundadora: cargo", dica: "Aparece acima do nome, na página da fundadora.", tipo: "text" },
+    { campo: "fundadora-nome", rotulo: "Fundadora: nome", dica: "Título da página da fundadora.", tipo: "text" },
+    { campo: "fundadora-resumo", rotulo: "Fundadora: resumo", dica: "A frase logo abaixo do nome.", tipo: "textarea" },
+    { campo: "fundadora-bio", rotulo: "Fundadora: biografia", dica: "Deixe uma linha em branco entre um parágrafo e outro.", tipo: "textarea" },
+    { campo: "fundadora-citacao", rotulo: "Fundadora: frase de fechamento", dica: "A citação em destaque no fim da página.", tipo: "textarea" }
   ];
 
   /* ---------- Atalhos ---------- */
@@ -164,8 +169,139 @@
     document.querySelectorAll(".aba").forEach(function (b) { b.classList.remove("ativa"); });
     aba.classList.add("ativa");
     $("painelFotos").hidden = aba.dataset.aba !== "fotos";
+    $("painelProjetos").hidden = aba.dataset.aba !== "projetos";
     $("painelInformacoes").hidden = aba.dataset.aba !== "informacoes";
   });
+
+  /* ---------- Projetos ---------- */
+
+  var editando = null;   // slug do projeto aberto no editor
+
+  function montarProjetos(projetos) {
+    var destino = $("listaProjetos");
+    destino.textContent = "";
+
+    if (!projetos.length) {
+      var vazio = document.createElement("p");
+      vazio.className = "vazio";
+      vazio.textContent =
+        "Nenhum projeto salvo ainda. Enquanto isso, o site mostra os cinco projetos escritos na criação do site.";
+      destino.appendChild(vazio);
+      return;
+    }
+
+    projetos.forEach(function (projeto) {
+      var linha = document.createElement("article");
+      linha.className = "registro";
+
+      var texto = document.createElement("div");
+      texto.className = "registro__texto";
+
+      var nome = document.createElement("strong");
+      nome.textContent = projeto.nome;
+      texto.appendChild(nome);
+
+      var detalhe = document.createElement("span");
+      detalhe.textContent =
+        "/projetos/" + projeto.slug + ".html" +
+        (projeto.publicado === false ? "  ·  não publicado" : "") +
+        (projeto.acoes && projeto.acoes.length ? "  ·  " + projeto.acoes.length + " ação(ões)" : "");
+      texto.appendChild(detalhe);
+
+      var acoes = document.createElement("div");
+      acoes.className = "registro__acoes";
+
+      var editar = document.createElement("button");
+      editar.type = "button";
+      editar.className = "botao botao--claro";
+      editar.textContent = "Editar";
+      editar.addEventListener("click", function () { abrirEditor(projeto); });
+
+      var remover = document.createElement("button");
+      remover.type = "button";
+      remover.className = "botao botao--texto";
+      remover.textContent = "Excluir";
+      remover.addEventListener("click", function () {
+        if (!confirm('Excluir o projeto "' + projeto.nome + '"? A página dele sai do ar.')) return;
+        pedir("/api/projetos?slug=" + encodeURIComponent(projeto.slug), { method: "DELETE" })
+          .then(function () {
+            recado("Projeto excluído.");
+            carregarProjetos();
+          })
+          .catch(function (erro) { recado(erro.message, true); });
+      });
+
+      acoes.appendChild(editar);
+      acoes.appendChild(remover);
+
+      linha.appendChild(texto);
+      linha.appendChild(acoes);
+      destino.appendChild(linha);
+    });
+  }
+
+  function abrirEditor(projeto) {
+    editando = projeto ? projeto.slug : null;
+    $("editorTitulo").textContent = projeto ? "Editando: " + projeto.nome : "Novo projeto";
+    $("projetoNome").value = projeto ? projeto.nome || "" : "";
+    $("projetoEtiqueta").value = projeto ? projeto.etiqueta || "" : "";
+    $("projetoResumo").value = projeto ? projeto.resumo || "" : "";
+    $("projetoTexto").value = projeto ? projeto.texto || "" : "";
+    $("projetoAcoes").value = projeto && projeto.acoes ? projeto.acoes.join("\n") : "";
+    $("projetoImagem").value = projeto ? projeto.imagem || "" : "";
+    $("projetoPublicado").checked = projeto ? projeto.publicado !== false : true;
+    $("editorProjeto").hidden = false;
+    $("editorProjeto").scrollIntoView({ behavior: "smooth", block: "start" });
+    $("projetoNome").focus();
+  }
+
+  function fecharEditor() {
+    editando = null;
+    $("editorProjeto").hidden = true;
+  }
+
+  $("novoProjeto").addEventListener("click", function () { abrirEditor(null); });
+  $("cancelarProjeto").addEventListener("click", fecharEditor);
+
+  $("editorProjeto").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var botao = $("salvarProjeto");
+    botao.disabled = true;
+    botao.textContent = "Salvando...";
+
+    var corpo = {
+      slug: editando || "",
+      nome: $("projetoNome").value,
+      etiqueta: $("projetoEtiqueta").value,
+      resumo: $("projetoResumo").value,
+      texto: $("projetoTexto").value,
+      imagem: $("projetoImagem").value,
+      publicado: $("projetoPublicado").checked,
+      acoes: $("projetoAcoes").value.split("\n").map(function (l) { return l.trim(); }).filter(Boolean)
+    };
+
+    pedir("/api/projetos", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(corpo)
+    })
+      .then(function () {
+        recado("Projeto salvo.");
+        fecharEditor();
+        carregarProjetos();
+      })
+      .catch(function (erro) { recado(erro.message, true); })
+      .finally(function () {
+        botao.disabled = false;
+        botao.textContent = "Salvar projeto";
+      });
+  });
+
+  function carregarProjetos() {
+    return pedir("/api/projetos")
+      .then(function (dados) { montarProjetos(dados.projetos || []); })
+      .catch(function (erro) { recado(erro.message, true); });
+  }
 
   /* ---------- Fotos ---------- */
 
@@ -363,6 +499,7 @@
     $("telaLogin").hidden = true;
     $("telaPainel").hidden = false;
     carregarFotos();
+    carregarProjetos();
     carregarCampos();
   }
 

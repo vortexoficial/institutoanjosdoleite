@@ -2,7 +2,7 @@
 
 Site institucional da ONG de apoio à amamentação e à primeira infância fundada por Sandra Abreu (Santos). Reformulação total iniciada em 24/08/2026: saiu uma página única centrada na fundadora, entra um site de 15 páginas no padrão das grandes fundações, com painel de conteúdo. Plano completo em `..\PLANO-DO-SITE.md`. Memória do cliente em `~/.claude/brain/clientes/instituto-anjos-do-leite/`.
 
-Estado: Home pronta e aprovada nas 8 larguras. Faltam as outras 14 páginas (ver o plano).
+Estado: 8 páginas no ar (home, fundadora, privacidade e as 5 de projeto). O menu leva a âncoras da própria home, que é onde está quase tudo o que o visitante procura. Só ganham página própria os conteúdos que o Instituto edita pelo painel: projetos e fundadora.
 
 ## Como rodar localmente
 - `npm install` uma vez (dependência única: esbuild, usada só no build de produção).
@@ -22,9 +22,10 @@ Estado: Home pronta e aprovada nas 8 larguras. Faltam as outras 14 páginas (ver
 - `src/css/style.css`: sistema de design inteiro. Toda cor e medida em `:root`.
 - `src/js/main.js`: GSAP (entrada do topo, revelar ao rolar, contadores, carrossel). `src/js/imagens.js`: aplica o que foi trocado no painel. `src/js/vendor/`: GSAP 3.13 local, sem CDN.
 - `assets/`: marca convertida e `img/` com os espaços reservados de foto (SVG gerados por `gerar-placeholders.js`).
-- `functions/`: `api/login.js`, `api/sessao.js`, `api/imagens.js`, `api/conteudo.js`, `api/_lib.js` (token HMAC de 12 h) e `midia/[chave].js`.
+- `functions/`: `api/login.js`, `api/sessao.js`, `api/imagens.js`, `api/conteudo.js`, `api/projetos.js`, `api/_projetos-padrao.js` (os 5 projetos de origem), `api/_lib.js` (token HMAC de 12 h) e `midia/[chave].js`.
 - `painel/`: painel do Instituto (trocar fotos e informações).
-- `construir.js` (build), `servir.js` (preview local), `verificar.js` (teste de responsividade), `gerar-icones.js`, `gerar-placeholders.js`.
+- `construir.js` (build; aceita `--producao`, `--saida=docs` e `--base=repo`), `servir.js` (preview local), `verificar.js` (teste de responsividade), `gerar-icones.js`, `gerar-placeholders.js`, `gerar-paginas.js` (páginas de projeto).
+- `docs/`: build publicado no GitHub Pages, para prévia. Gerado com `node construir.js --producao --saida=docs --base=institutoanjosdoleite`. Lá não existem Functions: o painel e as APIs só funcionam no Cloudflare.
 
 ## Convenções deste projeto
 - Português do Brasil em tudo, inclusive nomes de variáveis, classes CSS e comentários.

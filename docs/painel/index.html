@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/institutoanjosdoleite/painel/css/painel.css?v=20260824T0950">
+<link rel="stylesheet" href="/institutoanjosdoleite/painel/css/painel.css?v=20260824T1003">
 </head>
 <body>
 
@@ -35,6 +35,7 @@
       <img src="/institutoanjosdoleite/assets/logo-cor.webp" alt="Instituto Anjos do Leite" width="560" height="162">
       <nav class="abas" id="abas">
         <button class="aba ativa" type="button" data-aba="fotos">Fotos do site</button>
+        <button class="aba" type="button" data-aba="projetos">Projetos e ações</button>
         <button class="aba" type="button" data-aba="informacoes">Informações</button>
       </nav>
       <div class="cabecalho__acoes">
@@ -63,6 +64,64 @@
       <div id="grupos"></div>
     </section>
 
+    <!-- PROJETOS -->
+    <section class="secao-painel" id="painelProjetos" hidden>
+      <div class="intro">
+        <h2>Projetos e ações</h2>
+        <p>
+          Aqui o Instituto cria projetos novos, muda o texto dos que já existem e lista as
+          ações em andamento de cada um. Cada projeto é salvo sozinho, no próprio botão.
+        </p>
+        <p class="alerta">
+          O endereço da página é gerado a partir do nome do projeto. Mudar o nome muda o
+          endereço, e links antigos deixam de funcionar. Prefira ajustar o texto a renomear.
+        </p>
+      </div>
+
+      <div class="barra-acoes">
+        <button class="botao botao--principal" type="button" id="novoProjeto">Criar projeto</button>
+      </div>
+
+      <div id="listaProjetos"></div>
+
+      <form class="editor" id="editorProjeto" hidden>
+        <h3 id="editorTitulo">Novo projeto</h3>
+
+        <label for="projetoNome">Nome do projeto</label>
+        <input type="text" id="projetoNome" maxlength="90" required>
+
+        <label for="projetoEtiqueta">Etiqueta (uma palavra que classifica)</label>
+        <input type="text" id="projetoEtiqueta" maxlength="30" placeholder="Acolhimento, Formação, Mobilização...">
+
+        <label for="projetoResumo">Resumo (aparece na lista da página inicial)</label>
+        <textarea id="projetoResumo" rows="3" maxlength="400"></textarea>
+
+        <label for="projetoTexto">Texto da página</label>
+        <textarea id="projetoTexto" rows="10" maxlength="6000"></textarea>
+        <span class="dica">Deixe uma linha em branco entre um parágrafo e outro.</span>
+
+        <label for="projetoAcoes">Ações em andamento</label>
+        <textarea id="projetoAcoes" rows="5" maxlength="2000"></textarea>
+        <span class="dica">Uma ação por linha. Aparecem em lista na página do projeto.</span>
+
+        <label for="projetoImagem">Identificador da foto</label>
+        <input type="text" id="projetoImagem" maxlength="60" placeholder="projeto-mae-acolhida">
+        <span class="dica">
+          Use o mesmo identificador que aparece na aba Fotos do site. A foto é enviada por lá.
+        </span>
+
+        <label class="linha-caixa">
+          <input type="checkbox" id="projetoPublicado" checked>
+          <span>Publicado no site</span>
+        </label>
+
+        <div class="editor__botoes">
+          <button class="botao botao--principal" type="submit" id="salvarProjeto">Salvar projeto</button>
+          <button class="botao botao--claro" type="button" id="cancelarProjeto">Cancelar</button>
+        </div>
+      </form>
+    </section>
+
     <!-- INFORMAÇÕES -->
     <section class="secao-painel" id="painelInformacoes" hidden>
       <div class="intro">
@@ -80,6 +139,6 @@
 
 <div class="recado" id="recado" role="status" aria-live="polite"></div>
 
-<script src="/institutoanjosdoleite/painel/js/painel.js?v=20260824T0950"></script>
+<script src="/institutoanjosdoleite/painel/js/painel.js?v=20260824T1003"></script>
 </body>
 </html>

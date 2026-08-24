@@ -90,6 +90,7 @@ export async function exigirLogin(request, env) {
 
 export const CHAVE_IMAGENS = "site:imagens";
 export const CHAVE_CONTEUDO = "site:conteudo";
+export const CHAVE_PROJETOS = "site:projetos";
 
 async function lerJson(env, chave, padrao) {
   if (!env.CMS) return padrao;
@@ -104,3 +105,8 @@ async function lerJson(env, chave, padrao) {
 
 export const lerImagens = (env) => lerJson(env, CHAVE_IMAGENS, {});
 export const lerConteudo = (env) => lerJson(env, CHAVE_CONTEUDO, {});
+
+export async function lerProjetos(env) {
+  const lista = await lerJson(env, CHAVE_PROJETOS, []);
+  return Array.isArray(lista) ? lista : [];
+}

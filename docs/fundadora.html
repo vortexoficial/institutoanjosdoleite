@@ -26,7 +26,7 @@
   <link rel="preload" as="image" href="/institutoanjosdoleite/assets/img/hero-1.svg">
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/institutoanjosdoleite/css/style.css?v=20260824T0950">
+  <link rel="stylesheet" href="/institutoanjosdoleite/css/style.css?v=20260824T1003">
 
   <script type="application/ld+json">
   {
@@ -179,16 +179,19 @@
            alt="Instituto Anjos do Leite de Apoio à Amamentação e à Primeira Infância">
     </a>
 
+    <!-- O menu leva às seções da própria página inicial: quase tudo o
+         que o visitante procura está lá. Só projeto e fundadora têm
+         página própria, porque são conteúdo que o Instituto edita. -->
     <nav class="menu" aria-label="Menu principal">
-      <a href="/institutoanjosdoleite/instituto.html">O Instituto</a>
-      <a href="/institutoanjosdoleite/projetos.html">Projetos</a>
-      <a href="/institutoanjosdoleite/transparencia.html">Transparência</a>
-      <a href="/institutoanjosdoleite/imprensa.html">Imprensa</a>
-      <a href="/institutoanjosdoleite/parceiros.html">Parceiros</a>
-      <a href="/institutoanjosdoleite/contato.html">Contato</a>
+      <a href="/institutoanjosdoleite/#historia">O Instituto</a>
+      <a href="/institutoanjosdoleite/#projetos">Projetos</a>
+      <a href="/institutoanjosdoleite/#transparencia">Transparência</a>
+      <a href="/institutoanjosdoleite/#galeria">Galeria</a>
+      <a href="/institutoanjosdoleite/#parceiros">Parceiros</a>
+      <a href="/institutoanjosdoleite/#contato">Contato</a>
     </nav>
 
-    <a class="btn btn--principal topo__acao" href="/institutoanjosdoleite/apoie.html">
+    <a class="btn btn--principal topo__acao" href="/institutoanjosdoleite/#apoie">
       Apoie
       <svg aria-hidden="true"><use href="#i-heart"/></svg>
     </a>
@@ -212,17 +215,17 @@
     </div>
 
     <nav class="gaveta__links" aria-label="Menu do celular">
-      <a href="/institutoanjosdoleite/instituto.html">O Instituto <svg aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+      <a href="/institutoanjosdoleite/#historia">O Instituto <svg aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
       <a href="/institutoanjosdoleite/fundadora.html" aria-current="page">Fundadora <svg aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
-      <a href="/institutoanjosdoleite/projetos.html">Projetos <svg aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
-      <a href="/institutoanjosdoleite/transparencia.html">Transparência <svg aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
-      <a href="/institutoanjosdoleite/imprensa.html">Imprensa <svg aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
-      <a href="/institutoanjosdoleite/parceiros.html">Parceiros <svg aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
-      <a href="/institutoanjosdoleite/contato.html">Contato <svg aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+      <a href="/institutoanjosdoleite/#projetos">Projetos <svg aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+      <a href="/institutoanjosdoleite/#transparencia">Transparência <svg aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+      <a href="/institutoanjosdoleite/#galeria">Galeria <svg aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+      <a href="/institutoanjosdoleite/#parceiros">Parceiros <svg aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+      <a href="/institutoanjosdoleite/#contato">Contato <svg aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
     </nav>
 
     <div class="gaveta__rodape">
-      <a class="btn btn--principal" href="/institutoanjosdoleite/apoie.html">
+      <a class="btn btn--principal" href="/institutoanjosdoleite/#apoie">
         Apoie nossos Projetos
         <svg aria-hidden="true"><use href="#i-heart"/></svg>
       </a>
@@ -237,9 +240,9 @@
 <main id="conteudo">
 <section class="pagina-topo">
   <div class="container">
-    <p class="etiqueta" data-anima="cima">Fundadora e presidente</p>
-    <h1 data-anima="cima">Sandra Abreu</h1>
-    <p class="pagina-topo__apoio" data-anima="cima">Enfermeira, especialista em aleitamento materno e pioneira na Assessoria Especializada em Amamentação da Baixada Santista.</p>
+    <p class="etiqueta" data-anima="cima"><span data-campo="fundadora-cargo">Fundadora e presidente</span></p>
+    <h1 data-anima="cima" data-campo="fundadora-nome">Sandra Abreu</h1>
+    <p class="pagina-topo__apoio" data-anima="cima" data-campo="fundadora-resumo">Enfermeira, especialista em aleitamento materno e pioneira na Assessoria Especializada em Amamentação da Baixada Santista.</p>
   </div>
 </section>
 <section class="secao">
@@ -256,7 +259,7 @@
       </figcaption>
     </figure>
 
-    <div class="prosa" data-anima="cima">
+    <div class="prosa" data-anima="cima" data-campo-longo="fundadora-bio">
       <p>
         Sandra Abreu iniciou sua trajetória na área da saúde há 28 anos, atuando inicialmente
         como auxiliar de enfermagem, posteriormente como técnica de enfermagem e, em 2006,
@@ -347,7 +350,7 @@
   <div class="container">
     <figure class="assinatura" data-anima="cima">
       <svg class="assinatura__aspas" aria-hidden="true"><use href="#i-quote"/></svg>
-      <blockquote>
+      <blockquote data-campo="fundadora-citacao">
         Acredito que toda mãe merece ser acolhida, toda família merece apoio e toda criança
         merece um começo de vida saudável. Foi dessa convicção que nasceu o Instituto Anjos do Leite.
       </blockquote>
@@ -384,22 +387,22 @@
       <div>
         <h4>O Instituto</h4>
         <ul class="rodape__links">
-          <li><a href="/institutoanjosdoleite/instituto.html"><svg aria-hidden="true"><use href="#i-arrow-right"/></svg> Nossa história</a></li>
+          <li><a href="/institutoanjosdoleite/#historia"><svg aria-hidden="true"><use href="#i-arrow-right"/></svg> Nossa história</a></li>
           <li><a href="/institutoanjosdoleite/fundadora.html" aria-current="page"><svg aria-hidden="true"><use href="#i-arrow-right"/></svg> Fundadora</a></li>
-          <li><a href="/institutoanjosdoleite/projetos.html"><svg aria-hidden="true"><use href="#i-arrow-right"/></svg> Projetos</a></li>
-          <li><a href="/institutoanjosdoleite/parceiros.html"><svg aria-hidden="true"><use href="#i-arrow-right"/></svg> Parceiros</a></li>
-          <li><a href="/institutoanjosdoleite/imprensa.html"><svg aria-hidden="true"><use href="#i-arrow-right"/></svg> Imprensa</a></li>
+          <li><a href="/institutoanjosdoleite/#proposito"><svg aria-hidden="true"><use href="#i-arrow-right"/></svg> Missão e valores</a></li>
+          <li><a href="/institutoanjosdoleite/#galeria"><svg aria-hidden="true"><use href="#i-arrow-right"/></svg> Galeria</a></li>
+          <li><a href="/institutoanjosdoleite/#parceiros"><svg aria-hidden="true"><use href="#i-arrow-right"/></svg> Parceiros</a></li>
         </ul>
       </div>
 
       <div>
-        <h4>Transparência</h4>
-        <ul class="rodape__links">
-          <li><a href="/institutoanjosdoleite/transparencia.html"><svg aria-hidden="true"><use href="#i-arrow-right"/></svg> Estatuto</a></li>
-          <li><a href="/institutoanjosdoleite/transparencia.html"><svg aria-hidden="true"><use href="#i-arrow-right"/></svg> Diretoria</a></li>
-          <li><a href="/institutoanjosdoleite/transparencia.html"><svg aria-hidden="true"><use href="#i-arrow-right"/></svg> Relatórios</a></li>
-          <li><a href="/institutoanjosdoleite/transparencia.html"><svg aria-hidden="true"><use href="#i-arrow-right"/></svg> Prestação de contas</a></li>
-          <li><a href="/institutoanjosdoleite/apoie.html"><svg aria-hidden="true"><use href="#i-arrow-right"/></svg> Como apoiar</a></li>
+        <h4>Projetos</h4>
+        <ul class="rodape__links" data-lista-projetos-rodape>
+          <li><a href="/institutoanjosdoleite/projetos/mae-acolhida.html"><svg aria-hidden="true"><use href="#i-arrow-right"/></svg> Mãe Acolhida</a></li>
+          <li><a href="/institutoanjosdoleite/projetos/hora-do-mamaco.html"><svg aria-hidden="true"><use href="#i-arrow-right"/></svg> Hora do Mamaço</a></li>
+          <li><a href="/institutoanjosdoleite/projetos/formacao.html"><svg aria-hidden="true"><use href="#i-arrow-right"/></svg> Formação</a></li>
+          <li><a href="/institutoanjosdoleite/projetos/educacao-em-saude.html"><svg aria-hidden="true"><use href="#i-arrow-right"/></svg> Educação em Saúde</a></li>
+          <li><a href="/institutoanjosdoleite/projetos/primeira-infancia.html"><svg aria-hidden="true"><use href="#i-arrow-right"/></svg> Primeira Infância</a></li>
         </ul>
       </div>
 
@@ -419,7 +422,7 @@
             <span data-campo="endereco">Santos, Baixada Santista, São Paulo</span>
           </li>
         </ul>
-        <a class="btn btn--principal" href="/institutoanjosdoleite/contato.html" style="margin-top:1.5rem">
+        <a class="btn btn--principal" href="/institutoanjosdoleite/#contato" style="margin-top:1.5rem">
           Fale com o Instituto
           <svg aria-hidden="true"><use href="#i-arrow-right"/></svg>
         </a>
@@ -455,11 +458,11 @@
   <svg aria-hidden="true"><use href="#i-marca-whatsapp"/></svg>
 </a>
 
-<script src="/institutoanjosdoleite/js/vendor/gsap.min.js?v=20260824T0950" defer></script>
-<script src="/institutoanjosdoleite/js/vendor/ScrollTrigger.min.js?v=20260824T0950" defer></script>
-<script src="/institutoanjosdoleite/js/vendor/SplitText.min.js?v=20260824T0950" defer></script>
-<script src="/institutoanjosdoleite/js/main.js?v=20260824T0950" defer></script>
-<script src="/institutoanjosdoleite/js/imagens.js?v=20260824T0950" defer></script>
+<script src="/institutoanjosdoleite/js/vendor/gsap.min.js?v=20260824T1003" defer></script>
+<script src="/institutoanjosdoleite/js/vendor/ScrollTrigger.min.js?v=20260824T1003" defer></script>
+<script src="/institutoanjosdoleite/js/vendor/SplitText.min.js?v=20260824T1003" defer></script>
+<script src="/institutoanjosdoleite/js/main.js?v=20260824T1003" defer></script>
+<script src="/institutoanjosdoleite/js/imagens.js?v=20260824T1003" defer></script>
 
 </body>
 </html>

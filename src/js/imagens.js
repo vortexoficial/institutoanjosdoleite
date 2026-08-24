@@ -83,6 +83,7 @@
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (dados) {
       if (!dados || !dados.campos) return;
+
       document.querySelectorAll("[data-campo]").forEach(function (el) {
         var valor = dados.campos[el.getAttribute("data-campo")];
         if (typeof valor !== "string" || !valor.trim()) return;
@@ -91,6 +92,116 @@
           el.setAttribute("href", "https://wa.me/55" + valor.replace(/\D/g, ""));
         }
       });
+
+      /* Campos longos: cada linha em branco vira um parágrafo. É como
+         a biografia da fundadora é escrita no painel. */
+      document.querySelectorAll("[data-campo-longo]").forEach(function (el) {
+        var valor = dados.campos[el.getAttribute("data-campo-longo")];
+        if (typeof valor !== "string" || !valor.trim()) return;
+        el.textContent = "";
+        valor.split(/\n{2,}/).forEach(function (trecho) {
+          if (!trecho.trim()) return;
+          var p = document.createElement("p");
+          p.textContent = trecho.trim();
+          el.appendChild(p);
+        });
+      });
     })
     .catch(function () {});
+
+  /* ---------- Projetos criados no painel ----------
+     A lista da página inicial e o texto de cada página de projeto
+     vêm do painel quando existirem. Sem painel (ou sem nada salvo),
+     ficam valendo os projetos escritos no HTML. */
+  fetch("/api/projetos")
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (dados) {
+      if (!dados || !Array.isArray(dados.projetos) || !dados.projetos.length) return;
+      var projetos = dados.projetos.filter(function (p) { return p.publicado !== false; });
+      if (!projetos.length) return;
+
+      aplicarNaPagina(projetos);
+      aplicarNaLista(projetos);
+    })
+    .catch(function () {});
+
+  /* página de um projeto: sobrepõe o que estiver salvo */
+  function aplicarNaPagina(projetos) {
+    var alvo = document.querySelector("[data-projeto-slug]");
+    if (!alvo) return;
+
+    var slug = alvo.getAttribute("data-projeto-slug");
+    var projeto = projetos.find(function (p) { return p.slug === slug; });
+    if (!projeto) return;
+
+    var nome = document.querySelector("[data-projeto-nome]");
+    var etiqueta = document.querySelector("[data-projeto-etiqueta]");
+    var resumo = document.querySelector("[data-projeto-resumo]");
+    var texto = document.querySelector("[data-projeto-texto]");
+    var acoes = document.querySelector("[data-projeto-acoes]");
+
+    if (nome && projeto.nome) { nome.textContent = projeto.nome; document.title = projeto.nome + " | Instituto Anjos do Leite"; }
+    if (etiqueta && projeto.etiqueta) etiqueta.textContent = projeto.etiqueta;
+    if (resumo && projeto.resumo) resumo.textContent = projeto.resumo;
+
+    if (texto && projeto.texto) {
+      texto.textContent = "";
+      projeto.texto.split(/\n{2,}/).forEach(function (trecho) {
+        if (!trecho.trim()) return;
+        var p = document.createElement("p");
+        p.textContent = trecho.trim();
+        texto.appendChild(p);
+      });
+    }
+
+    if (acoes && projeto.acoes && projeto.acoes.length) {
+      acoes.textContent = "";
+      projeto.acoes.forEach(function (item) {
+        var li = document.createElement("li");
+        li.textContent = item;
+        acoes.appendChild(li);
+      });
+      var caixa = acoes.closest("[data-projeto-acoes-caixa]");
+      if (caixa) caixa.hidden = false;
+    }
+  }
+
+  /* lista de projetos da página inicial */
+  function aplicarNaLista(projetos) {
+    var lista = document.querySelector("[data-lista-projetos]");
+    if (!lista) return;
+
+    var modelo = lista.querySelector(".projeto");
+    if (!modelo) return;
+
+    var molde = modelo.cloneNode(true);
+    lista.textContent = "";
+
+    projetos.forEach(function (projeto) {
+      var card = molde.cloneNode(true);
+
+      var img = card.querySelector("img");
+      if (img) {
+        var chave = projeto.imagem || "projeto-" + projeto.slug;
+        img.setAttribute("data-img", chave);
+        img.setAttribute("src", "/assets/img/" + chave + ".svg");
+        img.setAttribute("alt", projeto.nome || "");
+        img.dataset.original = "/assets/img/" + chave + ".svg";
+      }
+
+      var etiqueta = card.querySelector(".projeto__etiqueta");
+      if (etiqueta) etiqueta.textContent = projeto.etiqueta || "Projeto";
+
+      var titulo = card.querySelector("h3");
+      if (titulo) titulo.textContent = projeto.nome || "";
+
+      var texto = card.querySelector("p");
+      if (texto) texto.textContent = projeto.resumo || "";
+
+      var link = card.querySelector("a");
+      if (link) link.setAttribute("href", "/projetos/" + projeto.slug + ".html");
+
+      lista.appendChild(card);
+    });
+  }
 })();

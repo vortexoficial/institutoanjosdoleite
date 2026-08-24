@@ -14,7 +14,14 @@ const CAMPOS = {
   whatsapp: { rotulo: "WhatsApp", limite: 30 },
   email: { rotulo: "E-mail institucional", limite: 120 },
   endereco: { rotulo: "Endereço da sede", limite: 200 },
-  "hero-texto": { rotulo: "Texto do banner", limite: 600 }
+  "hero-texto": { rotulo: "Texto do banner", limite: 600 },
+
+  /* Página da fundadora */
+  "fundadora-nome": { rotulo: "Nome da fundadora", limite: 90 },
+  "fundadora-cargo": { rotulo: "Cargo da fundadora", limite: 90 },
+  "fundadora-resumo": { rotulo: "Resumo da fundadora", limite: 400 },
+  "fundadora-bio": { rotulo: "Biografia da fundadora", limite: 8000 },
+  "fundadora-citacao": { rotulo: "Frase da fundadora", limite: 600 }
 };
 
 export async function onRequestGet({ env }) {

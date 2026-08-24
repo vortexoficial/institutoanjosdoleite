@@ -276,3 +276,60 @@ textarea { resize: vertical; min-height: 96px; }
 @media (prefers-reduced-motion: reduce) {
   * { transition-duration: 0.001ms !important; }
 }
+
+
+/* ---------- Projetos ---------- */
+
+.barra-acoes { margin-bottom: 1.5rem; }
+
+.registro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: #fff;
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  padding: 1rem 1.25rem;
+}
+.registro + .registro { margin-top: 0.75rem; }
+.registro__texto { display: grid; gap: 0.15rem; min-width: 0; }
+.registro__texto strong { font-family: var(--fonte-titulo); font-size: 1rem; }
+.registro__texto span { font-size: 0.85rem; color: var(--texto-claro); overflow-wrap: anywhere; }
+.registro__acoes { display: flex; gap: 0.5rem; align-items: center; }
+
+.vazio {
+  background: #fff;
+  border: 1px dashed var(--roxo-linha);
+  border-radius: var(--raio);
+  padding: 1.5rem;
+  color: var(--texto-medio);
+}
+
+.editor {
+  margin-top: 2rem;
+  background: #fff;
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  padding: clamp(1.25rem, 1rem + 1.5vw, 2rem);
+  display: grid;
+  gap: 0.35rem;
+}
+.editor h3 { font-size: 1.15rem; margin-bottom: 0.75rem; }
+.editor label {
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-top: 0.9rem;
+}
+.editor .dica { font-size: 0.82rem; color: var(--texto-claro); }
+.editor__botoes { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
+
+.linha-caixa {
+  display: flex !important;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1.25rem !important;
+}
+.linha-caixa input { width: 20px; height: 20px; min-height: 0; }
